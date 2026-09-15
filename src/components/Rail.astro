@@ -60,6 +60,7 @@ const involvement = initiatives.slice(4);
         </ul>
       </section>
 
+      <div class="drawer__col">
       <section class="drawer__group">
         <h2 class="drawer__heading">Take part</h2>
         <ul class="drawer__list">
@@ -97,6 +98,7 @@ const involvement = initiatives.slice(4);
           }
         </ul>
       </section>
+      </div>
     </div>
 
     <div class="drawer__foot">
@@ -181,15 +183,17 @@ const involvement = initiatives.slice(4);
     gap: var(--space-l);
   }
 
+  .drawer__col {
+    display: grid;
+    gap: var(--space-l);
+    align-content: start;
+  }
+
   @media (min-width: 64rem) {
     .drawer__cols {
       grid-template-columns: repeat(2, 1fr);
       column-gap: var(--space-xl);
-    }
-
-    /* The foundation group sits under the shorter column. */
-    .drawer__group:last-child {
-      grid-column: 2;
+      align-items: start;
     }
   }
 
