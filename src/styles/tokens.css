@@ -1,12 +1,27 @@
 /*
-  Design tokens for The StillHer Foundation.
+  Design tokens for The Still Her Foundation.
 
-  Every design value on the site is defined here and nowhere else.
+  This file is the only place design values are defined. Nothing else in the codebase
+  should carry a raw hex, a raw pixel size, or a raw duration.
 
   Contrast rule, non negotiable:
-  --teal (#5BBCC9) is 2.2:1 on white. It NEVER carries text.
-  --teal-ink (#1F6670) is 6.6:1 on white and 5.9:1 on cream. All teal text uses it.
-  --gold (#C9A961) is a hairline accent only. --gold-ink carries small text.
+    --teal (#5BBCC9) is 2.21:1 on white and 1.99:1 on cream. It NEVER carries text.
+      Use it for the emblem, rules, bands, large fills and decorative strokes only.
+    --teal-ink (#1F6670) is 6.58:1 on white and 5.90:1 on cream. All teal text,
+      every link and every teal button fill uses this one.
+    --gold (#C9A961) is a hairline accent only, never a large fill and never text.
+    --gold-ink (#7A6229) is 5.82:1 on white and 5.22:1 on cream, so it can carry
+      small caps labels and rules that sit next to text.
+    --sand (#D9C8AE) is a border and edge colour, not a text background. Only --ink
+      clears AA on it (10.60:1); --teal-ink lands at 4.02:1 there. Use --sand-tint
+      for any surface that will hold body copy.
+
+  Full ratio table lives in brand/BRAND_GUIDE.md.
+*/
+
+/* ---------------------------------------------------------------- Fonts ---
+   Self hosted, latin and latin-ext only. Bodoni Moda and Jost are variable, so
+   one file per style covers the whole weight range.
 */
 
 @font-face {
@@ -22,6 +37,17 @@
 
 @font-face {
   font-family: 'Bodoni Moda';
+  src: url('/fonts/BodoniModa-var-latin-ext.woff2') format('woff2-variations');
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Bodoni Moda';
   src: url('/fonts/BodoniModa-italic-var-latin.woff2') format('woff2-variations');
   font-weight: 400 900;
   font-style: italic;
@@ -32,14 +58,36 @@
 }
 
 @font-face {
+  font-family: 'Bodoni Moda';
+  src: url('/fonts/BodoniModa-italic-var-latin-ext.woff2') format('woff2-variations');
+  font-weight: 400 900;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
   font-family: 'Jost';
   src: url('/fonts/Jost-var-latin.woff2') format('woff2-variations');
-  font-weight: 300 700;
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
     U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
     U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Jost';
+  src: url('/fonts/Jost-var-latin-ext.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 @font-face {
@@ -53,8 +101,19 @@
     U+2215, U+FEFF, U+FFFD;
 }
 
+@font-face {
+  font-family: 'Pinyon Script';
+  src: url('/fonts/PinyonScript-400-latin-ext.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 :root {
-  /* ---------------- Colour ---------------- */
+  /* ---------------------------------------------------------- Colour --- */
   --teal: #5bbcc9;
   --teal-ink: #1f6670;
   --gold: #c9a961;
@@ -67,12 +126,12 @@
   --ink-soft: #5d574e;
   --error: #9a2f23;
 
-  /* ---------------- Type ---------------- */
-  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni MT', Georgia, serif;
-  --font-sans: 'Jost', 'Futura', 'Century Gothic', system-ui, sans-serif;
+  /* ------------------------------------------------------------ Type --- */
+  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni MT', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Jost', 'Futura', 'Century Gothic', system-ui, -apple-system, sans-serif;
   --font-script: 'Pinyon Script', 'Snell Roundhand', 'Apple Chancery', cursive;
 
-  /* Fluid scale, 320px to 1440px viewport. */
+  /* Fluid scale, 320px to 1440px viewport. --step-0 is body copy. */
   --step--2: clamp(0.6875rem, 0.66rem + 0.14vw, 0.75rem);
   --step--1: clamp(0.8125rem, 0.78rem + 0.17vw, 0.9375rem);
   --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
@@ -80,12 +139,12 @@
   --step-2: clamp(1.4375rem, 1.28rem + 0.78vw, 1.9375rem);
   --step-3: clamp(1.75rem, 1.47rem + 1.4vw, 2.625rem);
   --step-4: clamp(2.125rem, 1.65rem + 2.36vw, 3.625rem);
-  --step-5: clamp(2.625rem, 1.75rem + 4.38vw, 5.375rem);
+  --step-5: clamp(2.625rem, 1.62rem + 5.02vw, 5.75rem);
 
   --track-wide: 0.18em;
   --track-widest: 0.3em;
 
-  /* ---------------- Space ---------------- */
+  /* ----------------------------------------------------------- Space --- */
   --space-3xs: 0.25rem;
   --space-2xs: 0.5rem;
   --space-xs: 0.75rem;
@@ -95,25 +154,29 @@
   --space-xl: 3.5rem;
   --space-2xl: clamp(4rem, 3rem + 5vw, 7rem);
 
+  /* Never below 1.25rem, so phone width keeps a real side gutter. */
   --gutter: clamp(1.25rem, 1rem + 2vw, 3rem);
 
-  /* ---------------- Layout ---------------- */
+  /* ---------------------------------------------------------- Layout --- */
   --measure: 68ch;
-  --measure-wide: 80rem;
-  --rail-w: 15rem;
+  --measure-wide: 88rem;
+  --rail-w: 15rem; /* drawer width only, no longer a desktop rail */
 
-  /* ---------------- Radii ---------------- */
+  /* ----------------------------------------------------------- Radii --- */
   --radius-s: 4px;
   --radius-m: 6px;
   --radius-pill: 999px;
 
-  /* ---------------- Elevation ---------------- */
-  --shadow-soft: 0 1px 2px color-mix(in srgb, var(--ink) 5%, transparent),
+  /* ------------------------------------------------------- Elevation --- */
+  /* Light cream ground, so both shadows stay barely there. */
+  --shadow-soft:
+    0 1px 2px color-mix(in srgb, var(--ink) 5%, transparent),
     0 6px 16px color-mix(in srgb, var(--ink) 4%, transparent);
-  --shadow-lift: 0 2px 6px color-mix(in srgb, var(--ink) 7%, transparent),
+  --shadow-lift:
+    0 2px 6px color-mix(in srgb, var(--ink) 7%, transparent),
     0 18px 40px color-mix(in srgb, var(--ink) 9%, transparent);
 
-  /* ---------------- Motion ---------------- */
+  /* ---------------------------------------------------------- Motion --- */
   --dur-fast: 160ms;
   --dur-base: 280ms;
   --dur-slow: 520ms;

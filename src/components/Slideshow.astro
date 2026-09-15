@@ -10,6 +10,7 @@
  * which is why a pending slide gets a designed frame rather than a gap.
  */
 import Placeholder from './Placeholder.astro';
+import Picture from './Picture.astro';
 import type { Pending } from '@/config/site';
 
 export interface Slide {
@@ -21,6 +22,10 @@ export interface Slide {
   body: string;
   image?: string;
   imageAlt?: string;
+  /** Generated imagery slot name, for example "rths-road". */
+  slot?: string;
+  /** object-position for the slot image. */
+  focus?: string;
   /** Rendered as a designed empty frame when no image exists yet. */
   framePrompt?: string;
   ctas?: { label: string; href: string; style?: 'primary' | 'ghost' }[];
@@ -55,14 +60,13 @@ const { slides, label = 'Featured' } = Astro.props;
           aria-hidden={i === 0 ? undefined : 'true'}
         >
           <div class="slides__media">
-            {slide.image ? (
-              <img
-                src={slide.image}
+            {slide.slot ? (
+              <Picture
+                slot={slide.slot}
                 alt={slide.imageAlt ?? ''}
-                width="1280"
-                height="1600"
+                ratio="4 / 5"
+                focus={slide.focus ?? '50% 50%'}
                 loading={i === 0 ? 'eager' : 'lazy'}
-                decoding="async"
               />
             ) : (
               <div class="ph-frame" style="--ph-ratio: 4 / 5">
@@ -181,7 +185,7 @@ const { slides, label = 'Featured' } = Astro.props;
     }
   }
 
-  .slides__media img,
+  .slides__media :global(.pic img),
   .slides__media .ph-frame {
     width: 100%;
     aspect-ratio: 4 / 5;

@@ -303,7 +303,7 @@ const linkHref = kind === 'link' && detail.value ? detail.value : '';
     return fallbackCopy(text);
   }
 
-  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
+  document.querySelectorAll<HTMLButtonElement>('[data-giving] .give__copy').forEach((button) => {
     const card = button.closest<HTMLElement>('[data-giving]');
     const status = card?.querySelector<HTMLElement>('[data-copy-status]') ?? null;
     const label = button.querySelector<HTMLElement>('[data-copy-label]');
@@ -340,11 +340,4 @@ const linkHref = kind === 'link' && detail.value ? detail.value : '';
       }, REVERT_MS);
     });
   });
-
-  // Buttons with nothing to copy stay visible but inert.
-  document.querySelectorAll<HTMLButtonElement>('button[aria-disabled="true"]:not([data-copy])').forEach(
-    (button) => {
-      button.addEventListener('click', (e) => e.preventDefault());
-    }
-  );
 </script>

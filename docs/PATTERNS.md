@@ -137,7 +137,7 @@ Alt text describes the image. Decorative images take `alt=""`. No em-dashes in a
 ## Hard constraints, every one is a review blocker
 
 1. **No em-dashes.** Not in copy, alt text, meta tags, comments or commit messages. Use periods, commas, colons or line breaks. `grep -r "—" dist/` must return nothing.
-2. **Never name the financial services firm.** The strings "Premier Financial Alliance" and "National Life Group" must appear nowhere, including comments. Financial services are presented only as "Her Future".
+2. **Never name the financial services firm or its carrier.** Neither company name may appear anywhere in this repo, including code comments. Financial services are presented only as "Her Future" under the foundation. This is a legal constraint, not a style preference.
 3. **No invented facts.** No stat, date, venue, testimonial, doctor, partner or quote that did not come from the transcript or the existing site.
 4. **No AI images of real people.** The legacy repo's `hero.png`, `portrait.png`, `hands.png` and `leah-young.png` are AI generated and are captioned as real people. Do NOT use them. Use `.ph-frame` instead.
 5. **Do not publish Good Weekend dates or a venue.** "Spring 2027, dates to be announced" only.

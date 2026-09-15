@@ -117,15 +117,10 @@ const jsonLd = {
     </script>
 
     <style is:global>
-      /* The fixed rail claims its width back from the page on desktop. */
+      /* No side rail any more. Every page runs the full width of the screen
+         and content is centred by .wrap, the way a charity site normally is. */
       .shell {
         min-height: 60vh;
-      }
-
-      @media (min-width: 64rem) {
-        .shell:not(.shell--bare) {
-          margin-left: var(--rail-w);
-        }
       }
 
       main:focus {

@@ -8,18 +8,8 @@
  */
 import Base from '@/layouts/Base.astro';
 import HerFutureFunnel from '@/components/HerFutureFunnel.astro';
+import Picture from '@/components/Picture.astro';
 import { herFuture } from '@/config/site';
-
-import desk640Avif from '@/assets/images/her-future-desk-640.avif';
-import desk1280Avif from '@/assets/images/her-future-desk-1280.avif';
-import desk1920Avif from '@/assets/images/her-future-desk-1920.avif';
-import desk640Webp from '@/assets/images/her-future-desk-640.webp';
-import desk1280Webp from '@/assets/images/her-future-desk-1280.webp';
-import desk1920Webp from '@/assets/images/her-future-desk-1920.webp';
-
-const avifSet = `${desk640Avif.src} 640w, ${desk1280Avif.src} 1280w, ${desk1920Avif.src} 1920w`;
-const webpSet = `${desk640Webp.src} 640w, ${desk1280Webp.src} 1280w, ${desk1920Webp.src} 1920w`;
-const sizes = '(min-width: 64rem) 50vw, 100vw';
 
 const pillars = [
   {
@@ -89,25 +79,20 @@ const howItWorks = [
         </div>
 
         <div class="hf-hero__media">
-          <picture>
-            <source type="image/avif" srcset={avifSet} sizes={sizes} />
-            <source type="image/webp" srcset={webpSet} sizes={sizes} />
-            <img
-              src={desk1280Webp.src}
-              width={desk1280Webp.width}
-              height={desk1280Webp.height}
-              alt="A leather notebook, a fountain pen and a folded teal cloth on a pale wooden desk in soft window light."
-              loading="eager"
-              decoding="async"
-            />
-          </picture>
+          <Picture
+            slot="her-future-desk"
+            alt="A leather notebook, a fountain pen and a folded teal cloth on a pale wooden desk in soft window light."
+            ratio="4 / 3"
+            focus="50% 60%"
+            loading="eager"
+          />
         </div>
       </div>
     </div>
   </section>
 
   <!-- Pillars -->
-  <section class="section section--white" aria-labelledby="pillars-heading">
+  <section class="section section--cream" aria-labelledby="pillars-heading">
     <div class="wrap">
       <span class="label">Four pillars</span>
       <h2 id="pillars-heading">Where we can <span class="em">begin</span></h2>
@@ -161,7 +146,7 @@ const howItWorks = [
   <HerFutureFunnel />
 
   <!-- CTA repeat -->
-  <section class="section section--tight section--white hf-repeat">
+  <section class="section section--tight section--cream hf-repeat">
     <div class="wrap--narrow">
       <hr class="rule rule--short" />
       <p class="hf-repeat__line">Planning is an act of care. Start with twenty minutes.</p>
@@ -204,16 +189,8 @@ const howItWorks = [
     line-height: 1.3;
   }
 
-  .hf-hero__media picture,
-  .hf-hero__media img {
-    width: 100%;
-    height: auto;
+  .hf-hero__media :global(.pic img) {
     border-radius: var(--radius-m);
-  }
-
-  .hf-hero__media img {
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
     box-shadow: var(--shadow-lift);
   }
 

@@ -4,6 +4,7 @@ import Slideshow, { type Slide } from '@/components/Slideshow.astro';
 import InitiativePanels from '@/components/InitiativePanels.astro';
 import Newsletter from '@/components/Newsletter.astro';
 import Placeholder from '@/components/Placeholder.astro';
+import Picture from '@/components/Picture.astro';
 import { org, mission, impactStats } from '@/config/site';
 
 /**
@@ -18,7 +19,9 @@ const slides: Slide[] = [
     title: 'Road to Her Smile',
     emphasis: 'Her Smile',
     body: 'A documentary that gives the road to redemption back to a woman who had it stolen from her. Our first project backed by the Protecting Her Ecosystem initiative.',
-    framePrompt: 'Road to Her Smile',
+    slot: 'rths-road',
+    focus: '50% 45%',
+    imageAlt: 'An open road at golden hour, stretching toward the horizon.',
     ctas: [
       { label: 'Donate', href: '/support', style: 'primary' },
       { label: 'Learn more', href: '/road-to-her-smile', style: 'ghost' },
@@ -30,7 +33,9 @@ const slides: Slide[] = [
     title: 'The Good Weekend Tournament',
     emphasis: 'Good',
     body: 'Three days of sport and company. A committee dinner on Friday, The Good Girls Tournament on Saturday, The Good Guys Tournament on Sunday. It funds the work of the foundation.',
-    framePrompt: 'The Good Weekend',
+    slot: 'good-weekend-terrace',
+    focus: '50% 55%',
+    imageAlt: 'A club terrace laid for dinner, white linen and gold cutlery in evening light.',
     ctas: [{ label: 'Register interest', href: '/the-good-weekend', style: 'ghost' }],
   },
   {
@@ -64,7 +69,9 @@ const slides: Slide[] = [
     label: 'Editorial',
     title: 'The campaign',
     body: 'A new campaign shoot is in production. Activist, survivor, and entirely herself.',
-    framePrompt: 'Campaign photography in production',
+    slot: 'texture-teal-wash',
+    focus: '50% 50%',
+    imageAlt: 'A teal watercolour wash bleeding across cream paper.',
     note: {
       value: '',
       pending: true,
@@ -79,8 +86,17 @@ const slides: Slide[] = [
   <!-- Hero -->
   <section class="hero">
     <div class="hero__media">
-      <div class="ph-frame" style="--ph-ratio: 3 / 4">
-        Portrait of Nani Rosen<br />photoshoot in production
+      <div class="hero__frame">
+        <Picture
+          slot="hero-backplate"
+          alt=""
+          ratio="3 / 4"
+          focus="62% 50%"
+          loading="eager"
+          sizes="(min-width: 52rem) 40vw, 100vw"
+          class="hero__backplate"
+        />
+        <p class="hero__await">Portrait of Nani Rosen<br />photoshoot in production</p>
       </div>
     </div>
 
@@ -98,7 +114,7 @@ const slides: Slide[] = [
   </section>
 
   <!-- Slideshow -->
-  <section class="section section--white">
+  <section class="section section--cream">
     <div class="wrap">
       <header class="section__head">
         <span class="label">From the foundation</span>
@@ -168,7 +184,7 @@ const slides: Slide[] = [
   </section>
 
   <!-- Newsletter -->
-  <section class="section section--white">
+  <section class="section section--cream">
     <div class="wrap wrap--narrow">
       <Newsletter
         source="home"
@@ -197,8 +213,36 @@ const slides: Slide[] = [
     }
   }
 
-  .hero__media .ph-frame {
-    width: 100%;
+  /* The portrait slot waits on Nani's shoot. Until it lands, the campaign
+     backplate holds the frame so the hero reads as designed, not as a gap. */
+  .hero__frame {
+    position: relative;
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+
+  .hero__frame::after {
+    content: '';
+    position: absolute;
+    inset: var(--space-xs);
+    border: 1px solid var(--gold);
+    opacity: 0.45;
+    border-radius: calc(var(--radius-m) - 4px);
+    pointer-events: none;
+  }
+
+  .hero__await {
+    position: absolute;
+    inset-inline: 0;
+    bottom: var(--space-l);
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--ink-soft);
   }
 
   .hero__headline {

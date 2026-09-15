@@ -2,54 +2,40 @@
 /**
  * Top bar.
  *
- * Three things only: About Us, the centred SHF emblem, About the Founder.
- * This is a hard requirement from the Sep 14 meeting. Nothing else goes here.
- * No social icons, no donate button, no rail links.
+ * Menu button on the left, centred SHF emblem, Donate on the right.
+ * The same at every width.
  *
- * The split around a centred monogram mirrors the L'Echelon reference.
+ * The centred monogram with a split either side keeps the L'Echelon reference
+ * that Nani asked for. Everything else moved into the drawer so that page
+ * content gets the full width of the screen, which is how a charity site is
+ * normally built and which the earlier fixed desktop rail was costing us.
+ *
+ * Donate stays permanently visible, because burying the primary action of a
+ * fundraising site behind a menu is the one thing a hamburger must not do.
  */
-import { topNav, org } from '@/config/site';
-
-const path = Astro.url.pathname;
-const isCurrent = (href: string) => path === href || path.startsWith(href + '/');
+import { org, railCta } from '@/config/site';
 ---
 
 <header class="topbar">
   <div class="topbar__inner">
-    <nav class="topbar__side topbar__side--start" aria-label="About">
-      <a
-        href={topNav[0].href}
-        class="topbar__link"
-        aria-current={isCurrent(topNav[0].href) ? 'page' : undefined}
-      >
-        {topNav[0].label}
-      </a>
-    </nav>
+    <button
+      type="button"
+      class="topbar__menu"
+      aria-expanded="false"
+      aria-controls="site-drawer"
+      data-drawer-open
+    >
+      <span class="topbar__burger" aria-hidden="true"></span>
+      <span class="topbar__menu-label">Menu</span>
+    </button>
 
     <a href="/" class="topbar__emblem" aria-label={`${org.name}, home`}>
       <img src="/brand/emblem.svg" alt="" width="56" height="56" />
     </a>
 
-    <nav class="topbar__side topbar__side--end" aria-label="Founder">
-      <a
-        href={topNav[1].href}
-        class="topbar__link"
-        aria-current={isCurrent(topNav[1].href) ? 'page' : undefined}
-      >
-        {topNav[1].label}
-      </a>
-    </nav>
-
-    <button
-      type="button"
-      class="topbar__menu"
-      aria-expanded="false"
-      aria-controls="rail-drawer"
-      data-drawer-open
-    >
-      <span class="visually-hidden">Open menu</span>
-      <span class="topbar__burger" aria-hidden="true"></span>
-    </button>
+    <div class="topbar__end">
+      <a href={railCta.href} class="btn btn--primary topbar__donate">{railCta.label}</a>
+    </div>
   </div>
 </header>
 
@@ -58,9 +44,9 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
     position: sticky;
     top: 0;
     z-index: 60;
-    background: color-mix(in srgb, var(--cream) 88%, transparent);
+    background: color-mix(in srgb, var(--white) 90%, transparent);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--sand) 70%, transparent);
   }
 
   .topbar__inner {
@@ -73,79 +59,39 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
     min-height: 4.5rem;
   }
 
-  .topbar__side {
-    display: flex;
+  /* ---------------- Menu button ---------------- */
+  .topbar__menu {
+    display: inline-flex;
     align-items: center;
-  }
-
-  .topbar__side--end {
-    justify-content: flex-end;
-  }
-
-  .topbar__link {
+    gap: 0.7rem;
+    justify-self: start;
+    background: none;
+    border: 0;
+    padding: 0.7rem 0.25rem;
+    color: var(--ink);
     font-family: var(--font-sans);
     font-size: var(--step--2);
     text-transform: uppercase;
     letter-spacing: var(--track-widest);
-    color: var(--ink);
-    text-decoration: none;
-    padding-block: 0.5em;
-    position: relative;
   }
 
-  .topbar__link::after {
+  .topbar__burger {
+    position: relative;
+    display: block;
+    width: 1.4rem;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .topbar__burger::before,
+  .topbar__burger::after {
     content: '';
     position: absolute;
     left: 0;
-    right: 0;
-    bottom: 0.15em;
+    width: 1.4rem;
     height: 1px;
-    background: var(--gold);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--dur-base) var(--ease);
-  }
-
-  .topbar__link:hover::after,
-  .topbar__link[aria-current='page']::after {
-    transform: scaleX(1);
-  }
-
-  .topbar__emblem {
-    display: block;
-    line-height: 0;
-    grid-column: 2;
-  }
-
-  .topbar__emblem img {
-    width: clamp(2.5rem, 5vw, 3.5rem);
-    height: auto;
-  }
-
-  /* Menu button appears only where the fixed rail is hidden. */
-  .topbar__menu {
-    display: none;
-    position: absolute;
-    left: var(--gutter);
-    background: none;
-    border: 0;
-    padding: 0.75rem 0.25rem;
-  }
-
-  .topbar__burger,
-  .topbar__burger::before,
-  .topbar__burger::after {
-    display: block;
-    width: 1.35rem;
-    height: 1px;
-    background: var(--ink);
+    background: currentColor;
     transition: transform var(--dur-fast) var(--ease);
-  }
-
-  .topbar__burger::before,
-  .topbar__burger::after {
-    content: '';
-    position: relative;
   }
 
   .topbar__burger::before {
@@ -153,26 +99,56 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
   }
 
   .topbar__burger::after {
-    top: 5px;
+    top: 6px;
   }
 
-  @media (max-width: 63.999rem) {
-    .topbar__inner {
-      position: relative;
-    }
+  .topbar__menu:hover .topbar__burger::before {
+    transform: translateY(-1px);
+  }
 
-    .topbar__menu {
-      display: block;
-    }
+  .topbar__menu:hover .topbar__burger::after {
+    transform: translateY(1px);
+  }
 
-    /* The two About links move into the drawer on small screens. */
-    .topbar__side {
-      display: none;
-    }
+  /* The word "Menu" is a usability win on desktop, where a bare icon reads as
+     ambiguous. It drops on phones, where the icon alone is understood. */
+  .topbar__menu-label {
+    display: none;
+  }
 
-    .topbar__emblem {
-      grid-column: 1 / -1;
-      justify-self: center;
+  @media (min-width: 48rem) {
+    .topbar__menu-label {
+      display: inline;
+    }
+  }
+
+  /* ---------------- Emblem ---------------- */
+  .topbar__emblem {
+    display: block;
+    line-height: 0;
+    grid-column: 2;
+  }
+
+  .topbar__emblem img {
+    width: clamp(2.5rem, 4.5vw, 3.25rem);
+    height: auto;
+  }
+
+  /* ---------------- Donate ---------------- */
+  .topbar__end {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .topbar__donate {
+    padding: 0.7em 1.5em;
+  }
+
+  @media (max-width: 29.999rem) {
+    .topbar__donate {
+      padding: 0.7em 1.1em;
+      font-size: var(--step--2);
     }
   }
 </style>

@@ -9,6 +9,9 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
+    // Serve /about rather than redirecting it to /about/. This keeps the URL
+    // the visitor sees identical to the canonical URL in the page head.
+    "html_handling": "drop-trailing-slash",
     // The Worker runs first only for these paths. Everything else is served
     // straight from dist/ without invoking the Worker. The legacy .html paths
     // are listed so the Worker can issue 301 redirects for them.

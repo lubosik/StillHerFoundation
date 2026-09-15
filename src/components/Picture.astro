@@ -1,0 +1,63 @@
+---
+/**
+ * A responsive picture for the generated editorial imagery.
+ *
+ * Every slot exists as AVIF and WebP at 1920, 1280 and 640, in /images.
+ * Source images are 16:9, so a portrait crop leans on object-position.
+ * Pass `focus` to steer that crop per image.
+ */
+interface Props {
+  /** Slot name, for example "rths-road". */
+  slot: string;
+  alt: string;
+  /** CSS aspect-ratio for the rendered box. */
+  ratio?: string;
+  /** object-position, to steer a tight crop. */
+  focus?: string;
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+  class?: string;
+}
+
+const {
+  slot,
+  alt,
+  ratio = '4 / 5',
+  focus = '50% 50%',
+  sizes = '(min-width: 64rem) 50vw, 100vw',
+  loading = 'lazy',
+  class: className = '',
+} = Astro.props;
+
+const widths = [640, 1280, 1920];
+const srcset = (ext: string) => widths.map((w) => `/images/${slot}-${w}.${ext} ${w}w`).join(', ');
+---
+
+<picture class:list={['pic', className]}>
+  <source type="image/avif" srcset={srcset('avif')} sizes={sizes} />
+  <source type="image/webp" srcset={srcset('webp')} sizes={sizes} />
+  <img
+    src={`/images/${slot}-1280.webp`}
+    alt={alt}
+    width="1280"
+    height="720"
+    loading={loading}
+    decoding="async"
+    style={`--pic-ratio: ${ratio}; --pic-focus: ${focus};`}
+  />
+</picture>
+
+<style>
+  .pic,
+  .pic img {
+    display: block;
+    width: 100%;
+  }
+
+  .pic img {
+    aspect-ratio: var(--pic-ratio, 4 / 5);
+    object-fit: cover;
+    object-position: var(--pic-focus, 50% 50%);
+    height: auto;
+  }
+</style>

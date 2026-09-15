@@ -6,6 +6,15 @@
  * Panels stack on phones, run two up on tablets, four across on desktop.
  */
 import { initiatives } from '@/config/site';
+import Picture from './Picture.astro';
+
+/** Per image crop, since the sources are 16:9 and the panels are tall. */
+const FOCUS: Record<string, string> = {
+  'rths-road': '50% 42%',
+  'good-weekend-course': '52% 55%',
+  'retreat-spa': '55% 50%',
+  'her-future-desk': '50% 55%',
+};
 ---
 
 <section class="panels" aria-label="Our initiatives">
@@ -13,9 +22,13 @@ import { initiatives } from '@/config/site';
     initiatives.map((item) => (
       <a class="panel" href={item.href}>
         <div class="panel__media">
-          <div class="ph-frame" style="--ph-ratio: 3 / 4" aria-hidden="true">
-            {item.title}
-          </div>
+          <Picture
+            slot={item.image}
+            alt=""
+            ratio="3 / 4"
+            focus={FOCUS[item.image] ?? '50% 50%'}
+            sizes="(min-width: 68rem) 25vw, (min-width: 40rem) 50vw, 100vw"
+          />
         </div>
 
         <div class="panel__body">
@@ -43,8 +56,8 @@ import { initiatives } from '@/config/site';
   .panels {
     display: grid;
     gap: 1px;
-    background: var(--sand);
-    border-block: 1px solid var(--sand);
+    background: color-mix(in srgb, var(--sand) 75%, transparent);
+    border-block: 1px solid color-mix(in srgb, var(--sand) 75%, transparent);
   }
 
   @media (min-width: 40rem) {
@@ -62,7 +75,7 @@ import { initiatives } from '@/config/site';
   .panel {
     position: relative;
     display: block;
-    background: var(--cream);
+    background: var(--white);
     color: var(--ink);
     text-decoration: none;
     padding: 0;
@@ -76,17 +89,30 @@ import { initiatives } from '@/config/site';
     z-index: -2;
   }
 
-  .panel__media .ph-frame {
+  .panel__media :global(.pic),
+  .panel__media :global(.pic img) {
     width: 100%;
     height: 100%;
-    aspect-ratio: auto;
-    border: 0;
-    border-radius: 0;
-    color: transparent;
   }
 
-  .panel__media .ph-frame::after {
-    display: none;
+  .panel__media :global(.pic img) {
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  /* A cream scrim so the copy keeps AA contrast over the photograph. */
+  .panel__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      var(--white) 0%,
+      var(--white) 30%,
+      color-mix(in srgb, var(--white) 86%, transparent) 46%,
+      color-mix(in srgb, var(--white) 30%, transparent) 70%,
+      transparent 100%
+    );
   }
 
   /* A soft teal wash rises on hover. This is the whole interaction. */
@@ -97,8 +123,8 @@ import { initiatives } from '@/config/site';
     z-index: -1;
     background: linear-gradient(
       to top,
-      color-mix(in srgb, var(--teal) 30%, transparent),
-      transparent 60%
+      color-mix(in srgb, var(--teal) 26%, transparent),
+      transparent 55%
     );
     opacity: 0;
     transition: opacity var(--dur-slow) var(--ease);
@@ -113,7 +139,7 @@ import { initiatives } from '@/config/site';
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    min-height: clamp(20rem, 42vh, 30rem);
+    min-height: clamp(28rem, 68vh, 40rem);
     padding: var(--space-l);
   }
 
@@ -130,14 +156,15 @@ import { initiatives } from '@/config/site';
     font-family: var(--font-display);
     font-size: var(--step-3);
     line-height: 1.05;
-    margin: 0 0 var(--space-2xs);
+    margin: 0 0 var(--space-xs);
   }
 
   .panel__descriptor {
-    font-size: var(--step--1);
-    color: var(--ink-soft);
+    font-size: var(--step-0);
+    line-height: 1.5;
+    color: var(--ink);
     margin: 0;
-    max-width: 30ch;
+    max-width: 32ch;
   }
 
   .panel__more {
