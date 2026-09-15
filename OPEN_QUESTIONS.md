@@ -56,3 +56,26 @@ Last updated: 15 September 2026
 
 16. **Impact band statistics.**
     Every number is a placeholder. The band renders as a finished design with "Pending" values rather than invented figures. Nani needs to supply real numbers or the band should be removed before launch.
+
+17. **The top bar no longer matches Nani's Sep 14 instruction, and she should be told.**
+    She asked for exactly three things in the top bar: About Us, the centred SHF emblem, and About the Founder, with everything else in a left rail.
+
+    What is built instead: a Menu button, the centred emblem, and on desktop the priority links "Road to Her Smile" and "About Us" plus a permanent Donate button. The left rail is gone and the whole site lives in a drawer.
+
+    Why it changed: Bosi reviewed the first deploy and asked for full width pages and a hamburger on desktop, because the fixed rail was squeezing every container. Research across seven reference charity sites found none of them uses a persistent desktop sidebar, including the British Thyroid Foundation that Nani cited. See `reference/CHARITY_PATTERNS.md`.
+
+    The centred monogram with a split either side, which was the part she cared about visually, is preserved. But the two About links are no longer both in the top bar, so this is a real deviation from her stated wish. Worth a sentence to her rather than letting her discover it.
+
+18. **The impact band publishes nothing.**
+    All three statistics render as "Pending". It is honest and it is designed, but a first time visitor sees three empty numbers. Either Nani supplies real figures or the band should be removed before launch. It is one array in `src/config/site.ts`.
+
+19. **Trust signals a credible charity site normally carries, which we cannot build yet.**
+    The research flagged these as the difference between reading as an organisation and reading as a campaign. Each is blocked on a fact that does not exist yet, not on design work:
+    - A "how can we help" support block. The foundation does not yet run a helpline or information service, and implying one would be false.
+    - A donation block with preset amounts and what each one funds. Card giving hands off to an external page, and stating what an amount funds would be invented.
+    - Regulator or accreditation badges. 501(c)(3) status is still pending.
+    - Named stories with photographs. The only real photograph available has unconfirmed provenance.
+    - Partner or recognition logos. No partner is confirmed.
+
+20. **Two credentials in git history need revoking.**
+    A GitHub personal access token was hardcoded in the old `origin` remote URL, and an OpenRouter key is committed in `generate-images.js` on `main` and under the `legacy-rths-v1` tag. Neither is on `rebuild/foundation`, but both are in history and should be treated as compromised.
