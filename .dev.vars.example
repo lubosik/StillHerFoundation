@@ -31,3 +31,7 @@ NOTIFY_EMAIL=
 # Optional sender address for notifications. Must be on a domain verified in
 # Resend. Defaults to "The StillHer Foundation <notifications@stillherfoundation.org>".
 NOTIFY_FROM=
+
+# Set to "true" ONLY in local development. It adds http://localhost and
+# http://127.0.0.1 to the CORS allow list. Never set this in production.
+ALLOW_LOCAL_ORIGINS=true

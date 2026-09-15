@@ -452,3 +452,29 @@ verbatim. The null-byte and 2000-character rules on `notes` still return
 Gotcha for local dev: wrangler keys the local D1 file by `database_id`. If
 `database_id` changes, run `npm run db:local` again or every request will
 `500` with `no such table: rate_limits`.
+
+
+## Correction, 15 September 2026
+
+An earlier version of this document claimed the in-memory rate limit gate
+absorbs requests before they reach D1. A live review found that it does not
+engage in production: requests spread across Worker isolates, so no single
+in-memory map ever reaches the threshold and D1 carries every request.
+
+The limit still holds correctly, because D1 is the real counter. The in-memory
+map is only a cheap first gate for the case where consecutive requests happen
+to land on the same isolate. Do not rely on it for cost saving.
+
+Two further behaviours worth recording:
+
+**Lone surrogates.** A JSON escape such as "\ud800" decodes cleanly through
+TextDecoder but leaves a lone surrogate in the string, which D1 stores as
+invalid UTF-8. `str()` now rejects these with `isWellFormed()`.
+
+**Local origins.** `http://localhost` and `http://127.0.0.1` are no longer in
+the default CORS allow list. They are added only when `ALLOW_LOCAL_ORIGINS` is
+set to the string "true", which belongs in `.dev.vars` and never in production.
+
+**Depth guard.** A payload nested more than six levels deep now returns
+"Request is malformed." rather than the money guard's message, which was
+telling visitors to remove fields they had never sent.

@@ -95,7 +95,7 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
     <label class="field" for={`${id}-message`}>
       <span class="field__label">{messageLabel}</span>
-      <textarea id={`${id}-message`} name="message" required maxlength="2000" rows="5"></textarea>
+      <textarea id={`${id}-message`} name="message" required maxlength="4000" rows="5"></textarea>
     </label>
 
     {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey} data-size="flexible"></div>}

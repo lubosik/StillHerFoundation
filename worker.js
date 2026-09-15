@@ -140,6 +140,14 @@ const MONEY_TERMS_PATTERN = new RegExp(
 const ALLOWED_ORIGIN_PATTERNS = [
   /^https:\/\/(www\.)?stillherfoundation\.org$/,
   /^https:\/\/stillher-foundation(-[a-z0-9-]+)?\.[a-z0-9-]+\.workers\.dev$/,
+];
+
+/**
+ * Local origins are only trusted when explicitly enabled, which happens in
+ * .dev.vars and never in production. Without this, any page a visitor runs on
+ * their own machine could post to the live API.
+ */
+const LOCAL_ORIGIN_PATTERNS = [
   /^http:\/\/localhost(:\d+)?$/,
   /^http:\/\/127\.0\.0\.1(:\d+)?$/,
 ];
@@ -216,11 +224,17 @@ function fail(status, error, headers) {
 /* Origin / CORS                                                        */
 /* ------------------------------------------------------------------ */
 
-function resolveAllowedOrigin(request, url) {
+function resolveAllowedOrigin(request, url, env) {
   const origin = request.headers.get('Origin');
   if (!origin) return { origin: null, allowed: true }; // non-browser client, no CORS needed
   if (origin === url.origin) return { origin, allowed: true };
-  const allowed = ALLOWED_ORIGIN_PATTERNS.some((pattern) => pattern.test(origin));
+
+  const patterns =
+    env && env.ALLOW_LOCAL_ORIGINS === 'true'
+      ? [...ALLOWED_ORIGIN_PATTERNS, ...LOCAL_ORIGIN_PATTERNS]
+      : ALLOWED_ORIGIN_PATTERNS;
+
+  const allowed = patterns.some((pattern) => pattern.test(origin));
   return { origin: allowed ? origin : null, allowed };
 }
 
@@ -375,6 +389,11 @@ function str(body, key, opts) {
   if (value.length > max) throw new ValidationError(`${label} is too long.`);
   const pattern = multiline ? CONTROL_CHARS_MULTI_LINE : CONTROL_CHARS_SINGLE_LINE;
   if (pattern.test(value)) throw new ValidationError(`${label} contains invalid characters.`);
+  // A JSON escape such as "\ud800" decodes cleanly but leaves a lone surrogate,
+  // which D1 would store as invalid UTF-8 and which breaks any later export.
+  if (typeof value.isWellFormed === 'function' && !value.isWellFormed()) {
+    throw new ValidationError(`${label} contains invalid characters.`);
+  }
   return value;
 }
 
@@ -413,7 +432,9 @@ function isHoneypotTripped(body) {
  * MONEY_TERMS_PATTERN.
  */
 function hasMoneyShapedKey(value, depth = 0) {
-  if (depth > 6) return true; // absurdly nested payloads are rejected outright
+  // An absurdly nested payload is malformed, not a money question. It gets its
+  // own error so the visitor is not told to remove fields they never sent.
+  if (depth > 6) throw new ValidationError('Request is malformed.');
   if (Array.isArray(value)) {
     return value.some((v) => hasMoneyShapedKey(v, depth + 1));
   }
@@ -649,7 +670,7 @@ async function handleApi(request, env, ctx, url) {
   const log = (status, reason) =>
     console.log(`[stillher] rid=${requestId} route=${route} status=${status}${reason ? ` reason=${reason}` : ''}`);
 
-  const { origin, allowed } = resolveAllowedOrigin(request, url);
+  const { origin, allowed } = resolveAllowedOrigin(request, url, env);
   const cors = corsHeaders(origin);
   const baseHeaders = { ...cors, 'X-Request-Id': requestId };
 
