@@ -26,7 +26,7 @@ const involvement = initiatives.slice(4);
 
 <div class="drawer-backdrop" data-drawer-backdrop hidden></div>
 
-<nav id="site-drawer" class="drawer" aria-label="Site menu" data-drawer>
+<nav id="site-drawer" class="drawer" aria-label="Site menu" data-drawer inert aria-hidden="true">
   <div class="drawer__inner">
     <div class="drawer__head">
       <a href="/" class="drawer__brand">
@@ -281,6 +281,10 @@ const involvement = initiatives.slice(4);
 
     function open() {
       lastFocused = document.activeElement as HTMLElement;
+      // The drawer ships inert so its 12 links stay out of the tab order and
+      // its three group headings stay out of the heading outline until opened.
+      drawer!.removeAttribute('inert');
+      drawer!.removeAttribute('aria-hidden');
       drawer!.dataset.open = 'true';
       backdrop!.hidden = false;
       // Next frame, so the transition actually runs.
@@ -291,12 +295,28 @@ const involvement = initiatives.slice(4);
     }
 
     function close() {
+      // Move focus out before making the subtree inert, or the browser is left
+      // with focus on an inert element.
+      if (drawer!.contains(document.activeElement)) lastFocused?.focus();
+      drawer!.setAttribute('inert', '');
+      drawer!.setAttribute('aria-hidden', 'true');
       delete drawer!.dataset.open;
       delete backdrop!.dataset.open;
       backdrop!.hidden = true;
       openBtn!.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
       lastFocused?.focus();
+    }
+
+    // Safety net for browsers without inert support.
+    if (!('inert' in HTMLElement.prototype)) {
+      drawer.style.visibility = 'hidden';
+      const syncVisibility = () => {
+        drawer.style.visibility = drawer.dataset.open === 'true' ? 'visible' : 'hidden';
+      };
+      openBtn.addEventListener('click', () => requestAnimationFrame(syncVisibility));
+      closeBtn.addEventListener('click', () => window.setTimeout(syncVisibility, 300));
+      backdrop.addEventListener('click', () => window.setTimeout(syncVisibility, 300));
     }
 
     openBtn.addEventListener('click', open);

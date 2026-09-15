@@ -3,11 +3,18 @@ import { org, railNav, topNav, social } from '@/config/site';
 import Placeholder from './Placeholder.astro';
 import Newsletter from './Newsletter.astro';
 import Wordmark from './Wordmark.astro';
+import InstagramIcon from './InstagramIcon.astro';
 
 const year = new Date().getFullYear();
 const links = railNav.filter((i) => !('divider' in i)) as { label: string; href: string }[];
+
+const socials = [
+  { field: social.foundationInstagram, label: 'The StillHer Foundation on Instagram' },
+  { field: social.naniInstagram, label: 'Nani Rosen on Instagram' },
+];
 ---
 
+{/* Defined once, used by both social entries. */}
 <footer class="footer">
   <div class="wrap">
     <div class="footer__top">
@@ -47,7 +54,7 @@ const links = railNav.filter((i) => !('divider' in i)) as { label: string; href:
     <div class="footer__bottom">
       <div class="footer__legal">
         <p class="footer__legal-line">
-          <Placeholder field={org.legalName} /> is a nonprofit organisation.
+          <Placeholder field={org.legalName} /> is a nonprofit organisation.{' '}
           <Placeholder field={org.taxStatus} />
         </p>
         <p class="footer__legal-line footer__legal-line--quiet">
@@ -57,26 +64,25 @@ const links = railNav.filter((i) => !('divider' in i)) as { label: string; href:
       </div>
 
       <ul class="footer__social" aria-label="Social">
-        <li>
-          <a href={social.foundationInstagram.value} rel="me noopener" target="_blank">
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
-              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/>
-              <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/>
-            </svg>
-            <span class="visually-hidden">The StillHer Foundation on Instagram</span>
-          </a>
-        </li>
-        <li>
-          <a href={social.naniInstagram.value} rel="me noopener" target="_blank">
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
-              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/>
-              <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/>
-            </svg>
-            <span class="visually-hidden">Nani Rosen on Instagram</span>
-          </a>
-        </li>
+        {
+          socials.map((item) => (
+            <li>
+              {item.field.pending ? (
+                /* No handle yet. A link with no href is not a link, so this
+                   renders as plain content until Nani sends the URL. */
+                <span class="is-pending" title="Handle to be confirmed">
+                  <InstagramIcon />
+                  <span class="visually-hidden">{item.label}, handle to be confirmed</span>
+                </span>
+              ) : (
+                <a href={item.field.value} rel="me noopener" target="_blank">
+                  <InstagramIcon />
+                  <span class="visually-hidden">{item.label}</span>
+                </a>
+              )}
+            </li>
+          ))
+        }
       </ul>
 
       <ul class="footer__legal-links">
@@ -205,6 +211,15 @@ const links = railNav.filter((i) => !('divider' in i)) as { label: string; href:
 
   .footer__social a:hover {
     color: var(--gold);
+  }
+
+  /* No handle yet, so the icon shows the channel exists without promising a
+     link that goes nowhere. */
+  .footer__social .is-pending {
+    display: block;
+    padding: 0.4rem;
+    color: var(--cream);
+    opacity: 0.45;
   }
 
   .footer__legal-links {

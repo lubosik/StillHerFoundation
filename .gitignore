@@ -5,7 +5,8 @@ dist/
 .dev.vars
 .DS_Store
 *.log
-.env
+# .env holds only PUBLIC_SITE_URL, no secrets, so it is committed
+# .env
 .env.*
 reference/*.docx
 

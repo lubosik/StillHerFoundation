@@ -212,7 +212,10 @@ export const sponsors = ['John Victoria', 'Juliana', 'Pollyanna', 'Your Name Her
 /* Navigation                                                          */
 /* ------------------------------------------------------------------ */
 
-/** Top bar. Only these three things. Nothing else goes up here. */
+/**
+ * The two About pages. These live in the drawer, and "About Us" is also one of
+ * the priority links kept visible in the top bar on desktop.
+ */
 export const topNav = [
   { label: 'About Us', href: '/about' },
   { label: 'About the Founder', href: '/founder' },

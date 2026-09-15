@@ -138,14 +138,30 @@ const isCurrent = (href: string) => path === href || path.startsWith(href + '/')
   }
 
   /* The word "Menu" is a usability win on desktop, where a bare icon reads as
-     ambiguous. It drops on phones, where the icon alone is understood. */
+     ambiguous. On phones it is hidden visually but kept in the accessibility
+     tree, because display: none would strip the button's accessible name and
+     leave screen reader users with an unlabelled button. */
   .topbar__menu-label {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   @media (min-width: 48rem) {
     .topbar__menu-label {
-      display: inline;
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
     }
   }
 

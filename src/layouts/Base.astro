@@ -17,6 +17,8 @@ interface Props {
   unveil?: boolean;
   /** Drop the left rail offset, for full bleed pages. */
   bare?: boolean;
+  /** Keep this page out of search results. Used by the 404. */
+  noindex?: boolean;
 }
 
 const {
@@ -25,6 +27,7 @@ const {
   ogImage = seo.ogImage,
   unveil = false,
   bare = false,
+  noindex = false,
 } = Astro.props;
 
 const fullTitle = title === org.name ? title : `${title} | ${seo.titleSuffix}`;
@@ -54,7 +57,7 @@ const jsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical.toString()} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <link rel="canonical" href={canonical.toString()} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

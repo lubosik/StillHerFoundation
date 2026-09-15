@@ -1,9 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { loadEnv } from 'vite';
 import sitemap from '@astrojs/sitemap';
 
-// The domain is not purchased yet. Update `site` once stillherfoundation.org is live.
-const SITE = process.env.PUBLIC_SITE_URL || 'https://stillherfoundation.org';
+// astro.config runs before Vite loads .env, so read it explicitly here.
+// PUBLIC_SITE_URL drives canonical tags, the sitemap, Open Graph URLs and
+// robots.txt. Change it in .env when the real domain goes live.
+const { PUBLIC_SITE_URL } = loadEnv(process.env.NODE_ENV ?? 'production', process.cwd(), '');
+const SITE = PUBLIC_SITE_URL || 'https://stillherfoundation.org';
 
 export default defineConfig({
   site: SITE,
