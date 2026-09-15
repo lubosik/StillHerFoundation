@@ -24,6 +24,18 @@ const links = railNav.filter((i) => !('divider' in i)) as { label: string; href:
         </ul>
       </nav>
 
+      <nav class="footer__nav" aria-label="Governance">
+        <h2 class="label label--on-dark">Governance</h2>
+        <ul>
+          <li><a href="/about">Our story</a></li>
+          <li><a href="/founder">Our founder</a></li>
+          <li><a href="/partnerships">Partnerships and press</a></li>
+          <li><a href="/privacy">Privacy policy</a></li>
+          <li><a href="/terms">Terms of use</a></li>
+          <li><a href={`mailto:${org.email.value}`}>Contact us</a></li>
+        </ul>
+      </nav>
+
       <div class="footer__news">
         <h2 class="label label--on-dark">Keep up with our newsletter</h2>
         <Newsletter source="footer" compact />
@@ -33,11 +45,16 @@ const links = railNav.filter((i) => !('divider' in i)) as { label: string; href:
     <hr class="footer__rule" />
 
     <div class="footer__bottom">
-      <p class="footer__legal">
-        &copy; {year} <Placeholder field={org.legalName} />. All rights reserved.
-        <br />
-        <Placeholder field={org.taxStatus} />
-      </p>
+      <div class="footer__legal">
+        <p class="footer__legal-line">
+          <Placeholder field={org.legalName} /> is a nonprofit organisation.
+          <Placeholder field={org.taxStatus} />
+        </p>
+        <p class="footer__legal-line footer__legal-line--quiet">
+          <Placeholder field={org.address} hideWhenEmpty />
+          &copy; {year} <Placeholder field={org.legalName} />. All rights reserved.
+        </p>
+      </div>
 
       <ul class="footer__social" aria-label="Social">
         <li>
@@ -86,7 +103,14 @@ const links = railNav.filter((i) => !('divider' in i)) as { label: string; href:
 
   @media (min-width: 48rem) {
     .footer__top {
-      grid-template-columns: auto 1fr 1.2fr;
+      grid-template-columns: auto 1fr 1fr;
+      gap: var(--space-xl);
+    }
+  }
+
+  @media (min-width: 68rem) {
+    .footer__top {
+      grid-template-columns: auto 1fr 1fr 1.2fr;
       gap: var(--space-2xl);
     }
   }
@@ -151,10 +175,20 @@ const links = railNav.filter((i) => !('divider' in i)) as { label: string; href:
   }
 
   .footer__legal {
-    font-size: var(--step--2);
-    opacity: 0.75;
-    margin: 0;
+    max-width: 44ch;
+  }
+
+  .footer__legal-line {
+    font-size: var(--step--1);
+    margin: 0 0 var(--space-3xs);
     max-width: none;
+    color: var(--cream);
+  }
+
+  .footer__legal-line--quiet {
+    font-size: var(--step--2);
+    opacity: 0.7;
+    margin-bottom: 0;
   }
 
   .footer__social {

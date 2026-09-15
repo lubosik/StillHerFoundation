@@ -13,7 +13,21 @@
  * Donate stays permanently visible, because burying the primary action of a
  * fundraising site behind a menu is the one thing a hamburger must not do.
  */
-import { org, railCta } from '@/config/site';
+import { org, railCta, topNav } from '@/config/site';
+
+/**
+ * Priority plus. These stay visible on desktop so the menu never has to be
+ * opened to learn what the foundation does. Everything else is in the drawer.
+ * The British Thyroid Foundation, Nani's own reference, uses exactly this
+ * pattern: a hamburger paired with an always visible priority cluster.
+ */
+const priority = [
+  { label: 'Road to Her Smile', href: '/road-to-her-smile' },
+  { label: 'About Us', href: '/about' },
+];
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || path.startsWith(href + '/');
 ---
 
 <header class="topbar">
@@ -34,6 +48,19 @@ import { org, railCta } from '@/config/site';
     </a>
 
     <div class="topbar__end">
+      <nav class="topbar__priority" aria-label="Primary">
+        {
+          priority.map((item) => (
+            <a
+              href={item.href}
+              class="topbar__link"
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
       <a href={railCta.href} class="btn btn--primary topbar__donate">{railCta.label}</a>
     </div>
   </div>
@@ -139,6 +166,50 @@ import { org, railCta } from '@/config/site';
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap: var(--space-m);
+  }
+
+  /* Hidden on narrow screens, where the drawer carries everything. */
+  .topbar__priority {
+    display: none;
+    align-items: center;
+    gap: var(--space-m);
+  }
+
+  @media (min-width: 64rem) {
+    .topbar__priority {
+      display: flex;
+    }
+  }
+
+  .topbar__link {
+    position: relative;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink);
+    text-decoration: none;
+    padding-block: 0.5em;
+    white-space: nowrap;
+  }
+
+  .topbar__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.15em;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease);
+  }
+
+  .topbar__link:hover::after,
+  .topbar__link[aria-current='page']::after {
+    transform: scaleX(1);
   }
 
   .topbar__donate {
