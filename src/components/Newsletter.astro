@@ -1,0 +1,106 @@
+---
+/**
+ * Newsletter signup. Posts to /api/subscribe.
+ * Honeypot field included. Turnstile widget renders only when a site key is set.
+ */
+interface Props {
+  source: string;
+  heading?: string;
+  blurb?: string;
+  compact?: boolean;
+}
+
+const { source, heading, blurb, compact = false } = Astro.props;
+const id = `nl-${source}`;
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<div class:list={['newsletter', compact && 'newsletter--compact']}>
+  {heading && <h2 class="newsletter__heading">{heading}</h2>}
+  {blurb && <p class="newsletter__blurb">{blurb}</p>}
+
+  <form class="newsletter__form" data-form data-endpoint="/api/subscribe" novalidate>
+    <input type="hidden" name="source" value={source} />
+
+    <div class="hp" aria-hidden="true">
+      <label for={`${id}-website`}>Leave this field empty</label>
+      <input type="text" id={`${id}-website`} name="website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="newsletter__row">
+      <label class="visually-hidden" for={`${id}-email`}>Email address</label>
+      <input
+        type="email"
+        id={`${id}-email`}
+        name="email"
+        placeholder="Your email address"
+        required
+        autocomplete="email"
+        maxlength="254"
+      />
+      <button type="submit" class="btn btn--primary">Sign up</button>
+    </div>
+
+    {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey} data-size="flexible"></div>}
+
+    <p class="form__status" data-status role="status" aria-live="polite"></p>
+  </form>
+</div>
+
+<style>
+  .newsletter__heading {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-xs);
+  }
+
+  .newsletter__blurb {
+    font-size: var(--step-0);
+    margin-bottom: var(--space-m);
+  }
+
+  .newsletter__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .newsletter__row input {
+    flex: 1 1 14rem;
+    min-width: 0;
+    padding: 0.85em 1em;
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-pill);
+    background: var(--white);
+    color: var(--ink);
+    font-size: var(--step--1);
+  }
+
+  .newsletter__row input:focus {
+    border-color: var(--teal-ink);
+  }
+
+  .newsletter--compact .newsletter__row input {
+    border-color: color-mix(in srgb, var(--cream) 35%, transparent);
+    background: transparent;
+    color: var(--cream);
+  }
+
+  .newsletter--compact .newsletter__row input::placeholder {
+    color: color-mix(in srgb, var(--cream) 65%, transparent);
+  }
+
+  .newsletter--compact .btn {
+    border-color: var(--gold);
+    background: transparent;
+    color: var(--gold);
+  }
+
+  .newsletter--compact .btn:hover {
+    background: var(--gold);
+    color: var(--ink);
+  }
+
+  .cf-turnstile {
+    margin-top: var(--space-s);
+  }
+</style>

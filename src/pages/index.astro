@@ -1,0 +1,305 @@
+---
+import Base from '@/layouts/Base.astro';
+import Slideshow, { type Slide } from '@/components/Slideshow.astro';
+import InitiativePanels from '@/components/InitiativePanels.astro';
+import Newsletter from '@/components/Newsletter.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import { org, mission, impactStats } from '@/config/site';
+
+/**
+ * Five slides. The Dubai slide is deliberately thin: Nani asked for a slot
+ * that holds space for the speech, and there is no speech text yet. It must
+ * still read as finished, never as broken.
+ */
+const slides: Slide[] = [
+  {
+    id: 'rths',
+    label: 'Current Campaign',
+    title: 'Road to Her Smile',
+    emphasis: 'Her Smile',
+    body: 'A documentary that gives the road to redemption back to a woman who had it stolen from her. Our first project backed by the Protecting Her Ecosystem initiative.',
+    framePrompt: 'Road to Her Smile',
+    ctas: [
+      { label: 'Donate', href: '/support', style: 'primary' },
+      { label: 'Learn more', href: '/road-to-her-smile', style: 'ghost' },
+    ],
+  },
+  {
+    id: 'good-weekend',
+    label: 'Coming Soon',
+    title: 'The Good Weekend Tournament',
+    emphasis: 'Good',
+    body: 'Three days of sport and company. A committee dinner on Friday, The Good Girls Tournament on Saturday, The Good Guys Tournament on Sunday. It funds the work of the foundation.',
+    framePrompt: 'The Good Weekend',
+    ctas: [{ label: 'Register interest', href: '/the-good-weekend', style: 'ghost' }],
+  },
+  {
+    id: 'dubai',
+    label: 'Wisdom & Wealth Summit, Dubai',
+    title: 'Holding space for Dubai speech',
+    body: 'Nani Rosen received the Wisdom & Wealth award for her philanthropy and activism. The acceptance speech will be published here.',
+    framePrompt: 'Award photography to follow',
+    note: {
+      value: '',
+      pending: true,
+      fallback: 'Speech excerpt and award photography to follow.',
+      note: 'Dubai award photos and the acceptance speech text or video.',
+    },
+  },
+  {
+    id: 'interview',
+    label: 'The Interview',
+    title: 'In conversation',
+    body: 'Nani sat down for an interview at the Wisdom & Wealth Summit. The full conversation will be published here.',
+    framePrompt: 'Interview to follow',
+    note: {
+      value: '',
+      pending: true,
+      fallback: 'Interview footage to follow.',
+      note: 'Wisdom & Wealth Summit interview link or footage.',
+    },
+  },
+  {
+    id: 'editorial',
+    label: 'Editorial',
+    title: 'The campaign',
+    body: 'A new campaign shoot is in production. Activist, survivor, and entirely herself.',
+    framePrompt: 'Campaign photography in production',
+    note: {
+      value: '',
+      pending: true,
+      fallback: 'Campaign photography in production.',
+      note: "Nani's new photoshoot imagery.",
+    },
+  },
+];
+---
+
+<Base title={org.name} unveil>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__media">
+      <div class="ph-frame" style="--ph-ratio: 3 / 4">
+        Portrait of Nani Rosen<br />photoshoot in production
+      </div>
+    </div>
+
+    <div class="hero__copy">
+      <span class="label">The StillHer Foundation</span>
+      <h1 class="hero__headline">{mission.headline}</h1>
+      <p class="hero__mission">{mission.statement}</p>
+      <p class="hero__supporting">{mission.supporting}</p>
+
+      <div class="hero__ctas">
+        <a href="/support" class="btn btn--primary">Donate</a>
+        <a href="/about" class="btn btn--ghost">About the foundation</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slideshow -->
+  <section class="section section--white">
+    <div class="wrap">
+      <header class="section__head">
+        <span class="label">From the foundation</span>
+        <h2 class="section__title">The work, <span class="em">right now</span></h2>
+      </header>
+      <Slideshow slides={slides} label="Foundation highlights" />
+    </div>
+  </section>
+
+  <!-- Initiative panels -->
+  <section class="section--panels">
+    <div class="wrap">
+      <header class="section__head section__head--centred">
+        <span class="label">Our initiatives</span>
+        <h2 class="section__title">Four ways we <span class="em">show up</span></h2>
+      </header>
+    </div>
+    <InitiativePanels />
+  </section>
+
+  <!-- Protecting Her Ecosystem -->
+  <section class="section section--sand">
+    <div class="wrap wrap--narrow ecosystem">
+      <span class="label">The initiative</span>
+      <h2 class="section__title">Protecting <span class="em">Her</span> Ecosystem</h2>
+      <p class="ecosystem__lede">
+        Taking care of ourselves is how we protect a woman's ecosystem. It connects the
+        documentaries, the speaking, the retreats and the planning for her future into one piece
+        of work.
+      </p>
+      <p class="ecosystem__pending">
+        <Placeholder
+          field={{
+            value: '',
+            pending: true,
+            fallback: 'The full initiative is being written. More to come.',
+            note: 'Protecting Her Ecosystem concept copy, currently being drafted by Nani.',
+          }}
+        />
+      </p>
+      <a href="/about" class="btn btn--gold">Read about the foundation</a>
+    </div>
+  </section>
+
+  <!-- Impact band -->
+  <section class="section impact">
+    <div class="wrap">
+      <header class="section__head section__head--centred">
+        <span class="label">Our impact</span>
+      </header>
+      <ul class="impact__list">
+        {
+          impactStats.map((stat) => (
+            <li class="impact__item">
+              <span class="impact__value">
+                <Placeholder field={stat.value} />
+              </span>
+              <span class="impact__label">{stat.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="impact__note">
+        We publish numbers only once they are verified. These will be filled in shortly.
+      </p>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="section section--white">
+    <div class="wrap wrap--narrow">
+      <Newsletter
+        source="home"
+        heading="Keep up with our newsletter"
+        blurb="Stories from the work, news from the campaigns, and guidance for women living with Graves' disease."
+      />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+    padding-block: var(--space-2xl);
+    padding-inline: var(--gutter);
+    width: min(100%, var(--measure-wide));
+    margin-inline: auto;
+  }
+
+  @media (min-width: 52rem) {
+    .hero {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .hero__media .ph-frame {
+    width: 100%;
+  }
+
+  .hero__headline {
+    font-size: var(--step-5);
+    margin-bottom: var(--space-l);
+  }
+
+  .hero__mission {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 44ch;
+  }
+
+  .hero__supporting {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--teal-ink);
+  }
+
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-top: var(--space-l);
+  }
+
+  .section__head {
+    margin-bottom: var(--space-xl);
+  }
+
+  .section__head--centred {
+    text-align: center;
+  }
+
+  .section__head--centred .label {
+    text-align: center;
+  }
+
+  .section__title {
+    font-size: var(--step-4);
+    margin: 0;
+  }
+
+  .section--panels {
+    padding-block: var(--space-2xl) 0;
+  }
+
+  .ecosystem__lede {
+    font-size: var(--step-1);
+    line-height: 1.55;
+  }
+
+  .ecosystem__pending {
+    margin-bottom: var(--space-l);
+  }
+
+  .impact__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+    text-align: center;
+    border-block: 1px solid var(--gold);
+    padding-block: var(--space-xl);
+  }
+
+  @media (min-width: 40rem) {
+    .impact__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .impact__item + .impact__item {
+      border-left: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
+    }
+  }
+
+  .impact__value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--teal-ink);
+  }
+
+  .impact__label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--ink-soft);
+    margin-top: var(--space-xs);
+  }
+
+  .impact__note {
+    text-align: center;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin: var(--space-m) auto 0;
+  }
+</style>

@@ -1,0 +1,297 @@
+---
+import Base from '@/layouts/Base.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import { mission, social, isPlaceholder } from '@/config/site';
+
+/**
+ * About the founder.
+ *
+ * The transcript is deliberately thin on biography. Only what Nani said on
+ * the record is stated here. The rest is held as placeholders until she
+ * supplies it. No birthplace, no diagnosis date, no career history, no
+ * quotes, no award year.
+ */
+
+const bioBlocks = [
+  {
+    kicker: 'Her story',
+    field: {
+      value: '',
+      pending: true,
+      fallback: "Nani's story, in her own words, will be published here.",
+      note: "Founder biography paragraph one: Nani's story in her own words.",
+    },
+  },
+  {
+    kicker: 'Living with Graves',
+    field: {
+      value: '',
+      pending: true,
+      fallback: "What living with Graves' disease has meant for her, and why she refuses to let it define her.",
+      note: "Founder biography paragraph two: her Graves' disease experience, as she wants it told.",
+    },
+  },
+  {
+    kicker: 'The work',
+    field: {
+      value: '',
+      pending: true,
+      fallback: 'How the foundation came to be, and what she is building next.',
+      note: 'Founder biography paragraph three: the origin of the foundation.',
+    },
+  },
+] as const;
+
+const awardNote = {
+  value: '',
+  pending: true,
+  fallback: 'Award photography and a note from Nani on the summit to follow.',
+  note: 'Dubai award photographs, including the shot of Nani holding the award.',
+};
+
+const instagramPending = isPlaceholder(social.naniInstagram);
+---
+
+<Base
+  title="About the Founder"
+  description="Nani Rosen, survivor and activist, founder of The StillHer Foundation and recipient of the Wisdom & Wealth award in Dubai."
+>
+  <!-- Portrait and introduction -->
+  <section class="section founder-hero">
+    <div class="wrap founder-hero__grid">
+      <div class="founder-hero__media">
+        <div class="ph-frame" style="--ph-ratio: 3 / 4">
+          Portrait of Nani Rosen<br />activist, survivor, campaign energy
+        </div>
+      </div>
+
+      <div class="founder-hero__copy">
+        <span class="label">About the founder</span>
+        <h1>Nani Rosen, <span class="em">survivor</span> and activist</h1>
+        <p class="founder-hero__lede">
+          Founder of The StillHer Foundation and founding leader of the Protecting Her Ecosystem
+          initiative. Nani lives with Graves' disease, and she built the foundation on one line:
+        </p>
+        <p class="founder-hero__tagline">{mission.headline}</p>
+        <p>
+          She speaks on Graves' disease, resilience and women in business, and she is growing a
+          community of women who refuse to be put in a box by a diagnosis.
+        </p>
+        <div class="founder-hero__ctas">
+          <a href="/speaker" class="btn btn--primary">Nani as a speaker</a>
+          <a href="/about" class="btn btn--ghost">About the foundation</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Biography, held as placeholders -->
+  <section class="section section--white">
+    <div class="wrap wrap--narrow">
+      <header class="section__head">
+        <span class="label">In her words</span>
+        <h2 class="section__title">The <span class="em">road</span> so far</h2>
+      </header>
+      <div class="bio">
+        {
+          bioBlocks.map((block) => (
+            <div class="bio__block">
+              <span class="label label--gold">{block.kicker}</span>
+              <p class="bio__text">
+                <Placeholder field={block.field} />
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Wisdom & Wealth award -->
+  <section class="section section--sand">
+    <div class="wrap award">
+      <div class="award__media">
+        <div class="ph-frame" style="--ph-ratio: 4 / 5">
+          Nani holding the award<br />photography to follow
+        </div>
+      </div>
+      <div class="award__copy">
+        <span class="label">Recognition</span>
+        <h2 class="section__title">Wisdom &amp; <span class="em">Wealth</span></h2>
+        <p class="award__lede">
+          Nani received the Wisdom &amp; Wealth award in Dubai for her philanthropy and her
+          activism in raising awareness of Graves' disease.
+        </p>
+        <p>
+          At the summit she gave both an interview and an acceptance speech. Excerpts will be
+          shared here as they are released.
+        </p>
+        <p class="award__pending"><Placeholder field={awardNote} /></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Follow Nani -->
+  <section class="section follow">
+    <div class="wrap wrap--narrow follow__inner">
+      <span class="label">Follow Nani</span>
+      <h2 class="section__title">Keep <span class="em">company</span> with her</h2>
+      <p>The day to day of the work, the campaign, and the community, on Instagram.</p>
+
+      {
+        instagramPending ? (
+          <p class="follow__pending">
+            <svg
+              class="follow__icon"
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <circle cx="17.3" cy="6.7" r="1" fill="currentColor" />
+            </svg>
+            <Placeholder field={social.naniInstagram} fallback="Instagram handle to be announced" />
+          </p>
+        ) : (
+          <a class="btn btn--gold follow__link" href={social.naniInstagram.value} rel="me noopener">
+            <svg
+              class="follow__icon"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <circle cx="17.3" cy="6.7" r="1" fill="currentColor" />
+            </svg>
+            Follow Nani on Instagram
+          </a>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .founder-hero__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .founder-hero__grid {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .founder-hero__media .ph-frame {
+    width: 100%;
+  }
+
+  .founder-hero__lede {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 46ch;
+  }
+
+  .founder-hero__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+    color: var(--teal-ink);
+  }
+
+  .founder-hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-top: var(--space-l);
+  }
+
+  .section__head {
+    margin-bottom: var(--space-xl);
+  }
+
+  .section__title {
+    font-size: var(--step-4);
+    margin: 0;
+  }
+
+  .bio {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .bio__block {
+    padding-top: var(--space-m);
+    border-top: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  }
+
+  .bio__text {
+    font-size: var(--step-1);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .award {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .award {
+      grid-template-columns: 0.7fr 1.3fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .award__media .ph-frame {
+    width: 100%;
+  }
+
+  .award__lede {
+    font-size: var(--step-1);
+    line-height: 1.55;
+    margin-top: var(--space-m);
+  }
+
+  .award__pending {
+    margin-bottom: 0;
+  }
+
+  .follow__inner {
+    text-align: center;
+  }
+
+  .follow__inner .label {
+    text-align: center;
+  }
+
+  .follow__inner p {
+    margin-inline: auto;
+    margin-top: var(--space-m);
+  }
+
+  .follow__pending {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    color: var(--ink-soft);
+  }
+
+  .follow__link {
+    margin-top: var(--space-m);
+  }
+
+  .follow__icon {
+    flex: none;
+  }
+</style>

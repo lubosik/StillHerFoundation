@@ -1,0 +1,282 @@
+---
+/**
+ * Left rail.
+ *
+ * Fixed and vertical on desktop. Becomes a full height drawer from the left
+ * on smaller screens, opened by the menu button in the top bar.
+ *
+ * Order is fixed by the brief. Road to Her Smile is always first.
+ * Donate is a pill CTA pinned to the bottom of the rail.
+ *
+ * On small screens the two About links join the drawer, since the top bar
+ * drops them to keep the emblem centred.
+ */
+import { railNav, railCta, topNav, org } from '@/config/site';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || path.startsWith(href + '/');
+---
+
+<div class="rail-backdrop" data-drawer-backdrop hidden></div>
+
+<nav id="rail-drawer" class="rail" aria-label="Foundation sections" data-drawer>
+  <div class="rail__inner">
+    <button type="button" class="rail__close" data-drawer-close>
+      <span class="visually-hidden">Close menu</span>
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    <ul class="rail__list">
+      {
+        railNav.map((item) =>
+          'divider' in item ? (
+            <li class="rail__divider" role="separator" />
+          ) : (
+            <li>
+              <a
+                href={item.href}
+                class="rail__link"
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          )
+        )
+      }
+    </ul>
+
+    <ul class="rail__list rail__list--about">
+      {
+        topNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="rail__link"
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a href={railCta.href} class="btn btn--primary rail__cta">{railCta.label}</a>
+  </div>
+</nav>
+
+<style>
+  .rail {
+    --rail-pad: var(--space-l);
+  }
+
+  .rail__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--rail-pad);
+    gap: var(--space-m);
+  }
+
+  .rail__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .rail__list--about {
+    display: none;
+    border-top: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    padding-top: var(--space-m);
+  }
+
+  .rail__link {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink);
+    text-decoration: none;
+    padding-block: 0.55em;
+    position: relative;
+    transition: color var(--dur-fast) var(--ease);
+  }
+
+  .rail__link::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--space-xs) * -1);
+    top: 50%;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transform: translateY(-50%);
+    transition: width var(--dur-base) var(--ease);
+  }
+
+  .rail__link:hover,
+  .rail__link[aria-current='page'] {
+    color: var(--teal-ink);
+  }
+
+  .rail__link[aria-current='page'] {
+    font-weight: 500;
+  }
+
+  .rail__divider {
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+    margin-block: var(--space-s);
+    list-style: none;
+  }
+
+  .rail__cta {
+    margin-top: auto;
+    width: 100%;
+  }
+
+  .rail__close {
+    display: none;
+    align-self: flex-end;
+    background: none;
+    border: 0;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--ink);
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* ---------------- Desktop: fixed rail ---------------- */
+  @media (min-width: 64rem) {
+    .rail {
+      position: fixed;
+      top: 4.5rem;
+      left: 0;
+      bottom: 0;
+      width: var(--rail-w);
+      border-right: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+      background: var(--cream);
+      z-index: 50;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+  }
+
+  /* ---------------- Mobile: drawer ---------------- */
+  @media (max-width: 63.999rem) {
+    .rail {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: min(20rem, 85vw);
+      background: var(--cream);
+      z-index: 90;
+      transform: translateX(-100%);
+      transition: transform var(--dur-base) var(--ease);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      box-shadow: var(--shadow-lift);
+    }
+
+    .rail[data-open='true'] {
+      transform: translateX(0);
+    }
+
+    .rail__close,
+    .rail__list--about {
+      display: flex;
+    }
+
+    .rail__list--about {
+      flex-direction: column;
+    }
+
+    .rail-backdrop {
+      position: fixed;
+      inset: 0;
+      background: color-mix(in srgb, var(--ink) 40%, transparent);
+      z-index: 80;
+      opacity: 0;
+      transition: opacity var(--dur-base) var(--ease);
+    }
+
+    .rail-backdrop[data-open='true'] {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  // Drawer. Focus trapped while open, Escape closes, focus returns to the trigger.
+  const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+  const backdrop = document.querySelector<HTMLElement>('[data-drawer-backdrop]');
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-drawer-open]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-drawer-close]');
+
+  if (drawer && backdrop && openBtn && closeBtn) {
+    const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea';
+    let lastFocused: HTMLElement | null = null;
+
+    const isDrawerMode = () => !window.matchMedia('(min-width: 64rem)').matches;
+
+    function open() {
+      if (!isDrawerMode()) return;
+      lastFocused = document.activeElement as HTMLElement;
+      drawer!.dataset.open = 'true';
+      backdrop!.hidden = false;
+      // Next frame, so the transition runs.
+      requestAnimationFrame(() => (backdrop!.dataset.open = 'true'));
+      openBtn!.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      drawer!.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+    }
+
+    function close() {
+      delete drawer!.dataset.open;
+      delete backdrop!.dataset.open;
+      backdrop!.hidden = true;
+      openBtn!.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      lastFocused?.focus();
+    }
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    backdrop.addEventListener('click', close);
+
+    document.addEventListener('keydown', (e) => {
+      if (drawer.dataset.open !== 'true') return;
+
+      if (e.key === 'Escape') {
+        close();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const items = Array.from(drawer.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+          (el) => el.offsetParent !== null
+        );
+        if (!items.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    // Leaving drawer mode while open would strand the page scroll lock.
+    window.matchMedia('(min-width: 64rem)').addEventListener('change', (e) => {
+      if (e.matches && drawer.dataset.open === 'true') close();
+    });
+  }
+</script>

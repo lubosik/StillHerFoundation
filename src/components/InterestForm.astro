@@ -1,0 +1,165 @@
+---
+/**
+ * Event interest form. Posts to /api/interest.
+ *
+ * `good_weekend` asks the visitor how they would like to take part
+ * (sponsor, golfer or guest). `retreat` asks only for name and email.
+ * Submission is handled by the shared `data-form` handler in src/scripts/forms.ts.
+ */
+interface Props {
+  event: 'good_weekend' | 'retreat';
+  heading?: string;
+  blurb?: string;
+}
+
+const {
+  event,
+  heading = 'Register your interest',
+  blurb = 'Leave your details and we will write to you first when the details are announced.',
+} = Astro.props;
+
+const id = `interest-${event}`;
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const wantsRole = event === 'good_weekend';
+
+/** Values match the API contract in docs/BACKEND.md. Labels are what the visitor reads. */
+const roles = [
+  { value: 'sponsor', label: 'Sponsor' },
+  { value: 'golfer', label: 'Golfer' },
+  { value: 'guest', label: 'Guest' },
+] as const;
+---
+
+<div class="interest">
+  <div class="interest__intro">
+    <span class="label label--gold">Be the first to know</span>
+    <h2 class="interest__heading">{heading}</h2>
+    <p class="interest__blurb">{blurb}</p>
+  </div>
+
+  <form
+    class="interest__form"
+    data-form
+    data-endpoint="/api/interest"
+    data-success="Thank you. You are on the list, and you will hear from us first."
+    novalidate
+  >
+    <input type="hidden" name="event" value={event} />
+
+    <div class="hp" aria-hidden="true">
+      <label for={`${id}-website`}>Leave this field empty</label>
+      <input type="text" id={`${id}-website`} name="website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="interest__row">
+      <label class="field" for={`${id}-name`}>
+        <span class="field__label">Name</span>
+        <input
+          type="text"
+          id={`${id}-name`}
+          name="name"
+          required
+          maxlength="120"
+          autocomplete="name"
+        />
+      </label>
+
+      <label class="field" for={`${id}-email`}>
+        <span class="field__label">Email address</span>
+        <input
+          type="email"
+          id={`${id}-email`}
+          name="email"
+          required
+          maxlength="254"
+          autocomplete="email"
+        />
+      </label>
+    </div>
+
+    {
+      wantsRole && (
+        <label class="field" for={`${id}-role`}>
+          <span class="field__label">I would like to join as</span>
+          <select id={`${id}-role`} name="role" required>
+            <option value="">Choose one</option>
+            {roles.map((role) => (
+              <option value={role.value}>{role.label}</option>
+            ))}
+          </select>
+        </label>
+      )
+    }
+
+    {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey} data-size="flexible"></div>}
+
+    <div class="interest__actions">
+      <button type="submit" class="btn btn--primary">Register interest</button>
+    </div>
+
+    <p class="form__status" data-status role="status" aria-live="polite"></p>
+  </form>
+</div>
+
+<style>
+  .interest {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 56rem) {
+    .interest {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .interest__heading {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-xs);
+  }
+
+  .interest__blurb {
+    color: var(--ink-soft);
+    margin-bottom: 0;
+  }
+
+  .interest__form {
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    padding: var(--space-l);
+    position: relative;
+  }
+
+  /* The gold inner sliver, so the form reads as a designed object. */
+  .interest__form::before {
+    content: '';
+    position: absolute;
+    inset: var(--space-xs);
+    border: 1px solid var(--gold);
+    opacity: 0.4;
+    border-radius: calc(var(--radius-m) - 4px);
+    pointer-events: none;
+  }
+
+  .interest__row {
+    display: grid;
+    gap: 0 var(--space-m);
+  }
+
+  @media (min-width: 40rem) {
+    .interest__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .interest__actions {
+    margin-top: var(--space-2xs);
+  }
+
+  .cf-turnstile {
+    margin-bottom: var(--space-m);
+  }
+</style>

@@ -1,0 +1,34 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "stillher-foundation",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // The Worker runs first only for these paths. Everything else is served
+    // straight from dist/ without invoking the Worker. The legacy .html paths
+    // are listed so the Worker can issue 301 redirects for them.
+    "run_worker_first": [
+      "/api/*",
+      "/index.html",
+      "/the-tradegy.html",
+      "/her-road.html",
+      "/who-is-lia.html",
+      "/film.html",
+      "/mission.html",
+      "/press.html"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "stillher-foundation",
+      "database_id": "fe36b47f-1ca6-4f01-9a9a-47ae7dd71ccc",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

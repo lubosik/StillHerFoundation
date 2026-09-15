@@ -1,0 +1,168 @@
+---
+import { org, railNav, topNav, social } from '@/config/site';
+import Placeholder from './Placeholder.astro';
+import Newsletter from './Newsletter.astro';
+
+const year = new Date().getFullYear();
+const links = railNav.filter((i) => !('divider' in i)) as { label: string; href: string }[];
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img src="/brand/lockup-stacked.svg" alt={org.name} width="200" height="160" />
+      </div>
+
+      <nav class="footer__nav" aria-label="Footer">
+        <h2 class="label label--on-dark">The Foundation</h2>
+        <ul>
+          {topNav.map((i) => <li><a href={i.href}>{i.label}</a></li>)}
+          {links.map((i) => <li><a href={i.href}>{i.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <div class="footer__news">
+        <h2 class="label label--on-dark">Keep up with our newsletter</h2>
+        <Newsletter source="footer" compact />
+      </div>
+    </div>
+
+    <hr class="footer__rule" />
+
+    <div class="footer__bottom">
+      <p class="footer__legal">
+        &copy; {year} <Placeholder field={org.legalName} />. All rights reserved.
+        <br />
+        <Placeholder field={org.taxStatus} />
+      </p>
+
+      <ul class="footer__social" aria-label="Social">
+        <li>
+          <a href={social.foundationInstagram.value} rel="me noopener" target="_blank">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/>
+            </svg>
+            <span class="visually-hidden">The StillHer Foundation on Instagram</span>
+          </a>
+        </li>
+        <li>
+          <a href={social.naniInstagram.value} rel="me noopener" target="_blank">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/>
+            </svg>
+            <span class="visually-hidden">Nani Rosen on Instagram</span>
+          </a>
+        </li>
+      </ul>
+
+      <ul class="footer__legal-links">
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href={`mailto:${org.email.value}`}>{org.email.value}</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink);
+    color: var(--cream);
+    padding-block: var(--space-2xl) var(--space-l);
+    margin-top: var(--space-2xl);
+  }
+
+  .footer__top {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__top {
+      grid-template-columns: auto 1fr 1.2fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .footer__brand img {
+    width: clamp(9rem, 14vw, 12rem);
+    height: auto;
+  }
+
+  .footer__nav ul,
+  .footer__social,
+  .footer__legal-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer__nav ul {
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  .footer__nav a,
+  .footer__legal-links a {
+    color: var(--cream);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    text-decoration: none;
+    opacity: 0.85;
+    transition: opacity var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+
+  .footer__nav a:hover,
+  .footer__legal-links a:hover {
+    opacity: 1;
+    color: var(--gold);
+  }
+
+  .footer__rule {
+    border: 0;
+    border-top: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+    margin-block: var(--space-xl) var(--space-l);
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+  }
+
+  .footer__legal {
+    font-size: var(--step--2);
+    opacity: 0.75;
+    margin: 0;
+    max-width: none;
+  }
+
+  .footer__social {
+    display: flex;
+    gap: var(--space-s);
+  }
+
+  .footer__social a {
+    color: var(--cream);
+    display: block;
+    padding: 0.4rem;
+    transition: color var(--dur-fast) var(--ease);
+  }
+
+  .footer__social a:hover {
+    color: var(--gold);
+  }
+
+  .footer__legal-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+/**
+ * Renders a pending value from site.ts.
+ *
+ * In dev it gets a gold dashed outline so nothing ships by accident.
+ * In production it degrades to a neutral, tasteful fallback.
+ */
+import type { Pending } from '@/config/site';
+
+interface Props {
+  field: Pending<string>;
+  /** Shown in production when the field has no fallback of its own. */
+  fallback?: string;
+  /** Render nothing at all when pending and no fallback exists. */
+  hideWhenEmpty?: boolean;
+  class?: string;
+}
+
+const { field, fallback, hideWhenEmpty = false, class: className = '' } = Astro.props;
+
+const isPending = field.pending || !field.value;
+const shown = !isPending ? field.value : field.fallback || fallback || '';
+const hide = isPending && !shown && hideWhenEmpty;
+---
+
+{
+  !hide &&
+    (isPending ? (
+      <span class:list={['ph', className]} data-dev={import.meta.env.DEV}>
+        {shown || 'Coming soon'}
+      </span>
+    ) : (
+      <span class={className}>{shown}</span>
+    ))
+}

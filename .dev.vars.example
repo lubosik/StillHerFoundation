@@ -1,0 +1,33 @@
+# The StillHer Foundation: local secrets for `wrangler dev`.
+#
+# Copy this file to `.dev.vars` (which is gitignored) and fill in real values.
+# NEVER commit `.dev.vars`. In production, set each of these with:
+#   npx wrangler secret put TURNSTILE_SECRET_KEY
+#   npx wrangler secret put IP_SALT
+#   npx wrangler secret put RESEND_API_KEY
+#   npx wrangler secret put NOTIFY_EMAIL
+#   npx wrangler secret put NOTIFY_FROM
+#
+# Every variable is optional for local development. The Worker degrades safely
+# when a value is missing (see docs/BACKEND.md).
+
+# Cloudflare Turnstile secret key. When set, every form POST must carry a valid
+# turnstileToken. When unset, verification is skipped and the honeypot is the
+# only bot gate (the Worker logs this once per isolate).
+TURNSTILE_SECRET_KEY=
+
+# Random secret used to salt the SHA-256 hash of client IPs before storage.
+# Generate with: openssl rand -hex 32
+# When unset, a constant dev salt is used and a warning is logged once.
+IP_SALT=
+
+# Resend API key for notification emails to Nani. Optional. Notifications are
+# only sent when BOTH RESEND_API_KEY and NOTIFY_EMAIL are set.
+RESEND_API_KEY=
+
+# Inbox that receives new-submission notifications. Optional (see above).
+NOTIFY_EMAIL=
+
+# Optional sender address for notifications. Must be on a domain verified in
+# Resend. Defaults to "The StillHer Foundation <notifications@stillherfoundation.org>".
+NOTIFY_FROM=

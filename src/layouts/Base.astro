@@ -1,0 +1,136 @@
+---
+import '@/styles/tokens.css';
+import '@/styles/base.css';
+
+import TopBar from '@/components/TopBar.astro';
+import Rail from '@/components/Rail.astro';
+import Footer from '@/components/Footer.astro';
+import Unveiling from '@/components/Unveiling.astro';
+import { org, seo, mission } from '@/config/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Path to an OG image, relative to the site root. */
+  ogImage?: string;
+  /** Run the unveiling. Home only. */
+  unveil?: boolean;
+  /** Drop the left rail offset, for full bleed pages. */
+  bare?: boolean;
+}
+
+const {
+  title,
+  description = seo.defaultDescription,
+  ogImage = seo.ogImage,
+  unveil = false,
+  bare = false,
+} = Astro.props;
+
+const fullTitle = title === org.name ? title : `${title} | ${seo.titleSuffix}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://stillherfoundation.org');
+const ogUrl = new URL(ogImage, Astro.site ?? 'https://stillherfoundation.org');
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NGO',
+  name: org.name,
+  url: canonical.origin,
+  description: mission.statement,
+  email: org.email.value,
+  logo: new URL('/brand/emblem.svg', canonical.origin).toString(),
+  founder: {
+    '@type': 'Person',
+    name: 'Nani Rosen',
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.toString()} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#F7F2E9" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={org.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.toString()} />
+    <meta property="og:image" content={ogUrl.toString()} />
+    <meta property="og:locale" content={seo.locale} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl.toString()} />
+
+    <!-- Self hosted display face, preloaded because it paints the headline. -->
+    <link
+      rel="preload"
+      href="/fonts/BodoniModa-var-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="preload" href="/fonts/Jost-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    {
+      turnstileKey && (
+        <script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          async
+          defer
+          is:inline
+        />
+      )
+    }
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    {unveil && <Unveiling />}
+
+    <TopBar />
+    <Rail />
+
+    <div class:list={['shell', bare && 'shell--bare']}>
+      <main id="main" tabindex="-1">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    <script>
+      import '@/scripts/forms';
+    </script>
+
+    <style is:global>
+      /* The fixed rail claims its width back from the page on desktop. */
+      .shell {
+        min-height: 60vh;
+      }
+
+      @media (min-width: 64rem) {
+        .shell:not(.shell--bare) {
+          margin-left: var(--rail-w);
+        }
+      }
+
+      main:focus {
+        outline: none;
+      }
+    </style>
+  </body>
+</html>

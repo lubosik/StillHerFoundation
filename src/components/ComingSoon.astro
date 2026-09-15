@@ -1,0 +1,145 @@
+---
+/**
+ * "Coming soon, but beautiful."
+ *
+ * An editorial hero for a page whose event has not been announced yet.
+ * Big serif, a gold hairline, a framed image slot and generous air.
+ * It must read as a finished page, never a holding page: no countdown,
+ * no construction language. Page content flows in through the default slot.
+ *
+ * Named slot `seal`: optional artwork placed above the kicker (an event seal).
+ */
+interface Props {
+  /** Tracked uppercase kicker above the headline. */
+  kicker: string;
+  /** Full headline. `emphasis` must be a substring; it is set in italic. */
+  title: string;
+  emphasis: string;
+  /** One paragraph of body copy under the headline. */
+  body: string;
+  /** The timing line. Keep it to what has been confirmed. */
+  timing: string;
+  /** Short caption inside the image frame. */
+  framePrompt?: string;
+  /** CSS aspect ratio for the image frame, for example "4 / 5". */
+  frameRatio?: string;
+}
+
+const {
+  kicker,
+  title,
+  emphasis,
+  body,
+  timing,
+  framePrompt = 'Photography to follow',
+  frameRatio = '4 / 5',
+} = Astro.props;
+
+const hasEmphasis = title.includes(emphasis);
+const [before, after] = hasEmphasis ? title.split(emphasis) : [title, ''];
+const hasSeal = Astro.slots.has('seal');
+---
+
+<section class="coming">
+  <div class="wrap coming__grid">
+    <div class="coming__copy">
+      {
+        hasSeal && (
+          <div class="coming__seal">
+            <slot name="seal" />
+          </div>
+        )
+      }
+
+      <span class="label">{kicker}</span>
+
+      <h1 class="coming__title">
+        {
+          hasEmphasis ? (
+            <>
+              {before}
+              <span class="em">{emphasis}</span>
+              {after}
+            </>
+          ) : (
+            title
+          )
+        }
+      </h1>
+
+      <hr class="rule rule--short coming__rule" />
+
+      <p class="coming__body">{body}</p>
+
+      <p class="coming__timing">
+        <span class="visually-hidden">When: </span>
+        {timing}
+      </p>
+    </div>
+
+    <div class="coming__media">
+      <div class="ph-frame" style={`--ph-ratio: ${frameRatio}`}>{framePrompt}</div>
+    </div>
+  </div>
+</section>
+
+<slot />
+
+<style>
+  .coming {
+    padding-block: var(--space-2xl);
+  }
+
+  .coming__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .coming__grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .coming__seal {
+    width: clamp(6rem, 12vw, 8.5rem);
+    margin-bottom: var(--space-l);
+  }
+
+  .coming__seal :global(img),
+  .coming__seal :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+
+  .coming__title {
+    font-size: var(--step-5);
+    margin-bottom: var(--space-l);
+    max-width: 14ch;
+  }
+
+  .coming__rule {
+    margin-block: 0 var(--space-l);
+  }
+
+  .coming__body {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 46ch;
+  }
+
+  .coming__timing {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--gold-ink);
+    margin: var(--space-l) 0 0;
+  }
+
+  .coming__media .ph-frame {
+    width: 100%;
+  }
+</style>

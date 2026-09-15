@@ -1,0 +1,209 @@
+---
+/**
+ * Accessible tab set, WAI-ARIA Authoring Practices pattern.
+ *
+ * Roving tabindex across the tabs. Left and Right arrows move between them and
+ * wrap, Home and End jump to the first and last. Inactive panels carry the
+ * `hidden` attribute, which removes their content from the tab order.
+ *
+ * Panels are filled through named slots, one per tab id:
+ *
+ *   <Tabs id="rths" label="Partnership opportunities" tabs={[{ id: 'sponsorship', label: 'Sponsorship' }]}>
+ *     <div slot="sponsorship">...</div>
+ *   </Tabs>
+ *
+ * A link to `#<id>-panel-<tab>` or to any element inside a panel opens that
+ * tab on load and on hash change, so deep links into a hidden panel work.
+ */
+export interface Tab {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  /** Page unique prefix for every generated id. */
+  id: string;
+  tabs: Tab[];
+  /** Accessible name for the tab list. */
+  label: string;
+  class?: string;
+}
+
+const { id, tabs, label, class: className = '' } = Astro.props;
+---
+
+<div class:list={['tabs', className]} data-tabs>
+  <div class="tabs__list" role="tablist" aria-label={label}>
+    {
+      tabs.map((tab, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="tabs__tab"
+          id={`${id}-tab-${tab.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          aria-controls={`${id}-panel-${tab.id}`}
+          tabindex={i === 0 ? 0 : -1}
+          data-tab
+        >
+          {tab.label}
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    tabs.map((tab, i) => (
+      <div
+        role="tabpanel"
+        class="tabs__panel"
+        id={`${id}-panel-${tab.id}`}
+        aria-labelledby={`${id}-tab-${tab.id}`}
+        tabindex="0"
+        hidden={i !== 0}
+        data-tab-panel
+      >
+        <slot name={tab.id} />
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .tabs__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    border-bottom: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+    margin-bottom: var(--space-xl);
+  }
+
+  .tabs__tab {
+    position: relative;
+    background: none;
+    border: 0;
+    padding: var(--space-xs) var(--space-3xs) var(--space-s);
+    margin-bottom: -1px;
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease);
+  }
+
+  /* The gold hairline underline. Hidden until hover, solid when selected. */
+  .tabs__tab::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--gold);
+    opacity: 0;
+    transform: scaleX(0.4);
+    transform-origin: left;
+    transition:
+      opacity var(--dur-base) var(--ease),
+      transform var(--dur-base) var(--ease);
+  }
+
+  .tabs__tab:hover {
+    color: var(--ink);
+  }
+
+  .tabs__tab:hover::after {
+    opacity: 0.5;
+    transform: scaleX(1);
+  }
+
+  .tabs__tab[aria-selected='true'] {
+    color: var(--ink);
+  }
+
+  .tabs__tab[aria-selected='true']::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .tabs__tab:focus-visible {
+    outline-offset: 0;
+  }
+
+  .tabs__panel:focus-visible {
+    outline-offset: 6px;
+  }
+</style>
+
+<script>
+  function initTabs(root: HTMLElement) {
+    if (root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    // `:scope >` so a nested tab set never leaks into this one.
+    const tabs = Array.from(
+      root.querySelectorAll<HTMLButtonElement>(':scope > [role="tablist"] > [role="tab"]')
+    );
+    const panels = tabs.map((tab) =>
+      document.getElementById(tab.getAttribute('aria-controls') ?? '')
+    );
+
+    if (tabs.length === 0) return;
+
+    function activate(index: number, moveFocus: boolean) {
+      tabs.forEach((tab, i) => {
+        const on = i === index;
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.tabIndex = on ? 0 : -1;
+        const panel = panels[i];
+        if (panel) panel.hidden = !on;
+      });
+      if (moveFocus) tabs[index]?.focus();
+    }
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => activate(i, false));
+
+      tab.addEventListener('keydown', (e) => {
+        let target: number | null = null;
+        switch (e.key) {
+          case 'ArrowRight':
+            target = (i + 1) % tabs.length;
+            break;
+          case 'ArrowLeft':
+            target = (i - 1 + tabs.length) % tabs.length;
+            break;
+          case 'Home':
+            target = 0;
+            break;
+          case 'End':
+            target = tabs.length - 1;
+            break;
+        }
+        if (target !== null) {
+          e.preventDefault();
+          activate(target, true);
+        }
+      });
+    });
+
+    // Open the tab that contains the hash target, so deep links land somewhere visible.
+    function openFromHash() {
+      const hash = window.location.hash.slice(1);
+      if (!hash) return;
+      const el = document.getElementById(hash);
+      if (!el) return;
+      const index = panels.findIndex((panel) => panel && (panel === el || panel.contains(el)));
+      if (index < 0) return;
+      activate(index, false);
+      window.requestAnimationFrame(() => el.scrollIntoView({ block: 'start' }));
+    }
+
+    window.addEventListener('hashchange', openFromHash);
+    openFromHash();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach(initTabs);
+</script>

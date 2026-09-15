@@ -1,0 +1,384 @@
+---
+/**
+ * Rotating editorial slideshow, L'Echelon style.
+ *
+ * Auto advances, pauses on hover and on focus, has a visible pause control,
+ * is operable with the arrow keys, and does not auto advance under
+ * prefers-reduced-motion.
+ *
+ * Every slide must look finished even when its content is still pending,
+ * which is why a pending slide gets a designed frame rather than a gap.
+ */
+import Placeholder from './Placeholder.astro';
+import type { Pending } from '@/config/site';
+
+export interface Slide {
+  id: string;
+  label: string;
+  title: string;
+  /** One word inside `title` set in italic. */
+  emphasis?: string;
+  body: string;
+  image?: string;
+  imageAlt?: string;
+  /** Rendered as a designed empty frame when no image exists yet. */
+  framePrompt?: string;
+  ctas?: { label: string; href: string; style?: 'primary' | 'ghost' }[];
+  note?: Pending<string>;
+}
+
+interface Props {
+  slides: Slide[];
+  label?: string;
+}
+
+const { slides, label = 'Featured' } = Astro.props;
+---
+
+<section
+  class="slides"
+  aria-roledescription="carousel"
+  aria-label={label}
+  data-slideshow
+>
+  <div class="slides__viewport">
+    {
+      slides.map((slide, i) => (
+        <article
+          class="slides__slide"
+          id={`slide-${slide.id}`}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`${i + 1} of ${slides.length}: ${slide.title}`}
+          data-slide
+          data-active={i === 0 ? 'true' : undefined}
+          aria-hidden={i === 0 ? undefined : 'true'}
+        >
+          <div class="slides__media">
+            {slide.image ? (
+              <img
+                src={slide.image}
+                alt={slide.imageAlt ?? ''}
+                width="1280"
+                height="1600"
+                loading={i === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            ) : (
+              <div class="ph-frame" style="--ph-ratio: 4 / 5">
+                {slide.framePrompt ?? 'Imagery coming soon'}
+              </div>
+            )}
+          </div>
+
+          <div class="slides__copy">
+            <span class="label">{slide.label}</span>
+            <h3 class="slides__title">
+              {slide.emphasis && slide.title.includes(slide.emphasis) ? (
+                <>
+                  {slide.title.split(slide.emphasis)[0]}
+                  <span class="em">{slide.emphasis}</span>
+                  {slide.title.split(slide.emphasis)[1]}
+                </>
+              ) : (
+                slide.title
+              )}
+            </h3>
+            <p class="slides__body">{slide.body}</p>
+
+            {slide.note && (
+              <p class="slides__note">
+                <Placeholder field={slide.note} />
+              </p>
+            )}
+
+            {slide.ctas && slide.ctas.length > 0 && (
+              <div class="slides__ctas">
+                {slide.ctas.map((cta) => (
+                  <a
+                    href={cta.href}
+                    class:list={['btn', `btn--${cta.style ?? 'ghost'}`]}
+                    data-slide-link
+                  >
+                    {cta.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="slides__controls">
+    <button type="button" class="slides__arrow" data-slide-prev>
+      <span class="visually-hidden">Previous slide</span>
+      <span aria-hidden="true">&larr;</span>
+    </button>
+
+    <ul class="slides__dots" role="tablist" aria-label="Choose a slide">
+      {
+        slides.map((slide, i) => (
+          <li role="presentation">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-controls={`slide-${slide.id}`}
+              data-slide-dot={i}
+            >
+              <span class="visually-hidden">{slide.title}</span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+
+    <button type="button" class="slides__pause" data-slide-pause aria-pressed="false">
+      <span data-pause-label>Pause</span>
+    </button>
+
+    <button type="button" class="slides__arrow" data-slide-next>
+      <span class="visually-hidden">Next slide</span>
+      <span aria-hidden="true">&rarr;</span>
+    </button>
+  </div>
+</section>
+
+<style>
+  .slides {
+    position: relative;
+  }
+
+  .slides__viewport {
+    display: grid;
+  }
+
+  .slides__slide {
+    grid-area: 1 / 1;
+    display: grid;
+    gap: var(--space-l);
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--dur-slow) var(--ease),
+      visibility var(--dur-slow) var(--ease);
+    pointer-events: none;
+  }
+
+  .slides__slide[data-active='true'] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  @media (min-width: 48rem) {
+    .slides__slide {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .slides__media img,
+  .slides__media .ph-frame {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius-m);
+  }
+
+  .slides__title {
+    font-size: var(--step-4);
+    margin-bottom: var(--space-s);
+  }
+
+  .slides__body {
+    font-size: var(--step-0);
+  }
+
+  .slides__note {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .slides__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-top: var(--space-m);
+  }
+
+  .slides__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-m);
+    margin-top: var(--space-xl);
+  }
+
+  .slides__arrow,
+  .slides__pause {
+    background: none;
+    border: 0;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    padding: 0.5rem 0.65rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+
+  .slides__arrow:hover,
+  .slides__pause:hover {
+    border-bottom-color: var(--gold);
+  }
+
+  .slides__arrow span[aria-hidden] {
+    font-size: 1.1rem;
+  }
+
+  .slides__dots {
+    display: flex;
+    gap: var(--space-2xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .slides__dots button {
+    width: 2rem;
+    height: 2rem;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+
+  .slides__dots button::before {
+    content: '';
+    width: 100%;
+    height: 1px;
+    background: var(--sand);
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+
+  .slides__dots button[aria-selected='true']::before {
+    background: var(--teal-ink);
+    height: 2px;
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-slideshow]');
+
+  if (root) {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-slide-dot]'));
+    const prev = root.querySelector<HTMLButtonElement>('[data-slide-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-slide-next]');
+    const pauseBtn = root.querySelector<HTMLButtonElement>('[data-slide-pause]');
+    const pauseLabel = root.querySelector<HTMLElement>('[data-pause-label]');
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INTERVAL = 6500;
+
+    let index = 0;
+    let timer: number | undefined;
+    let paused = reduced;
+
+    function show(n: number) {
+      index = (n + slides.length) % slides.length;
+
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        if (active) slide.dataset.active = 'true';
+        else delete slide.dataset.active;
+        slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+
+        // Links on a hidden slide must leave the tab order.
+        slide.querySelectorAll<HTMLAnchorElement>('[data-slide-link]').forEach((a) => {
+          if (active) a.removeAttribute('tabindex');
+          else a.setAttribute('tabindex', '-1');
+        });
+      });
+
+      dots.forEach((dot, i) => dot.setAttribute('aria-selected', i === index ? 'true' : 'false'));
+    }
+
+    function start() {
+      if (paused || reduced) return;
+      stop();
+      timer = window.setInterval(() => show(index + 1), INTERVAL);
+    }
+
+    function stop() {
+      if (timer !== undefined) {
+        window.clearInterval(timer);
+        timer = undefined;
+      }
+    }
+
+    function setPaused(value: boolean) {
+      paused = value;
+      pauseBtn?.setAttribute('aria-pressed', String(value));
+      if (pauseLabel) pauseLabel.textContent = value ? 'Play' : 'Pause';
+      if (value) stop();
+      else start();
+    }
+
+    prev?.addEventListener('click', () => {
+      show(index - 1);
+      if (!paused) start();
+    });
+
+    next?.addEventListener('click', () => {
+      show(index + 1);
+      if (!paused) start();
+    });
+
+    dots.forEach((dot, i) =>
+      dot.addEventListener('click', () => {
+        show(i);
+        if (!paused) start();
+      })
+    );
+
+    pauseBtn?.addEventListener('click', () => setPaused(!paused));
+
+    // Pause while a visitor is reading or tabbing through.
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', () => !paused && start());
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains(e.relatedTarget as Node) && !paused) start();
+    });
+
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        show(index - 1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        show(index + 1);
+      }
+    });
+
+    // Do not burn cycles in a background tab.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else if (!paused) start();
+    });
+
+    show(0);
+    if (reduced) {
+      setPaused(true);
+    } else {
+      start();
+    }
+  }
+</script>

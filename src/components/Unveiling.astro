@@ -1,0 +1,170 @@
+---
+/**
+ * The unveiling.
+ *
+ * A light sweep across the emblem on a cream ground, then the page.
+ * Nani wanted an unveiling but explicitly did not want the darkness of her
+ * Rosen Relations site, so this is light, not a black curtain.
+ *
+ * Plays once per session. Under 2.5 seconds. Skippable with a visible control
+ * and with Escape. Does not run at all under prefers-reduced-motion.
+ *
+ * The overlay is inert markup until the script decides to show it, so a visitor
+ * with JavaScript disabled never sees a stuck curtain.
+ */
+---
+
+<div class="unveil" data-unveil hidden>
+  <div class="unveil__stage">
+    <img class="unveil__emblem" src="/brand/emblem.svg" alt="" width="180" height="180" />
+    <span class="unveil__sweep" aria-hidden="true"></span>
+  </div>
+  <button type="button" class="unveil__skip" data-unveil-skip>Skip</button>
+</div>
+
+<style>
+  .unveil {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: grid;
+    place-items: center;
+    background: var(--cream);
+  }
+
+  .unveil[data-done='true'] {
+    animation: unveil-out 520ms var(--ease) forwards;
+  }
+
+  .unveil__stage {
+    position: relative;
+    overflow: hidden;
+    padding: var(--space-m);
+  }
+
+  .unveil__emblem {
+    width: clamp(7rem, 18vw, 11rem);
+    height: auto;
+    opacity: 0;
+    animation: unveil-emblem 1500ms var(--ease) forwards;
+  }
+
+  /* The sweep: a soft champagne band that crosses the emblem once. */
+  .unveil__sweep {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 38%,
+      color-mix(in srgb, var(--gold) 55%, transparent) 50%,
+      transparent 62%
+    );
+    transform: translateX(-120%);
+    animation: unveil-sweep 1400ms var(--ease) 250ms forwards;
+  }
+
+  .unveil__skip {
+    position: absolute;
+    bottom: var(--space-xl);
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--gold);
+    padding: 0.35em 0.1em;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--ink);
+  }
+
+  @keyframes unveil-emblem {
+    0% {
+      opacity: 0;
+      transform: scale(0.965);
+    }
+    45% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes unveil-sweep {
+    to {
+      transform: translateX(120%);
+    }
+  }
+
+  @keyframes unveil-out {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  /* Belt and braces. The script already skips, this guarantees it. */
+  @media (prefers-reduced-motion: reduce) {
+    .unveil {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  const KEY = 'shf-unveiled';
+  const overlay = document.querySelector<HTMLElement>('[data-unveil]');
+
+  if (overlay) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem(KEY) === '1';
+    } catch {
+      // Private mode or blocked storage. Treat as not seen, it is only cosmetic.
+      seen = false;
+    }
+
+    if (reduced || seen) {
+      overlay.remove();
+    } else {
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+
+      const skipBtn = overlay.querySelector<HTMLButtonElement>('[data-unveil-skip]');
+      let finished = false;
+
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        try {
+          sessionStorage.setItem(KEY, '1');
+        } catch {
+          /* nothing to do */
+        }
+        overlay.dataset.done = 'true';
+        document.body.style.overflow = '';
+        window.setTimeout(() => overlay.remove(), 560);
+      };
+
+      skipBtn?.addEventListener('click', finish);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') finish();
+      });
+
+      // Total run stays under the 2.5s budget.
+      window.setTimeout(finish, 1900);
+
+      // If anything stalls, never trap the visitor.
+      window.setTimeout(() => {
+        document.body.style.overflow = '';
+        overlay.remove();
+      }, 4000);
+    }
+  }
+</script>

@@ -1,0 +1,369 @@
+---
+import Base from '@/layouts/Base.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import { org, mission } from '@/config/site';
+
+/**
+ * About the foundation.
+ *
+ * Every fact here comes from the transcript notes. No figures, no dates,
+ * no venues. The events exist to build sponsorship for the foundation.
+ * The Good Weekend Tournament funds the operational budget. Road to Her Smile
+ * is one of three initiatives and is self funded.
+ */
+
+const commitments = [
+  {
+    title: "Raising awareness of Graves' disease",
+    body:
+      "Graves' disease is a thyroid condition and an autoimmune disease. We talk about it plainly, in public, and we make room for the women who live with it.",
+  },
+  {
+    title: 'A safe space for women in business',
+    body:
+      'Resources, introductions and company. The foundation is a connector for women building something of their own, autoimmune or not.',
+  },
+  {
+    title: 'Protecting her ecosystem',
+    body:
+      "Taking care of ourselves is how we protect a woman's ecosystem. It is the initiative that ties the whole of our work together.",
+  },
+] as const;
+
+const events = [
+  {
+    season: 'Spring',
+    title: 'The Good Weekend',
+    emphasis: 'Good',
+    body:
+      'A three day golf weekend: a committee dinner, The Good Girls Tournament and The Good Guys Tournament. It fundraises the operational budget of the foundation.',
+    href: '/the-good-weekend',
+    cta: 'About the weekend',
+  },
+  {
+    season: 'Autumn',
+    title: 'Her Relief Retreat',
+    emphasis: 'Relief',
+    body:
+      "A sponsored retreat for women living with Graves' disease. Spa care, rest, community and a doctor speaking on managing the condition.",
+    href: '/her-relief-retreat',
+    cta: 'About the retreat',
+  },
+] as const;
+
+/** Nothing about the December dinner is confirmed beyond the month. */
+const holidayDinner = {
+  value: '',
+  pending: true,
+  fallback: 'Details of the holiday dinner will be announced here.',
+  note: 'Holiday dinner: format, whether it stands alone or funds the retreat, and any details to publish.',
+};
+---
+
+<Base
+  title="About Us"
+  description="The StillHer Foundation raises awareness of Graves' disease, creates a safe space for women in business, and protects her ecosystem."
+>
+  <!-- Who we are -->
+  <section class="section about-hero">
+    <div class="wrap about-hero__grid">
+      <div class="about-hero__copy">
+        <span class="label">About us</span>
+        <h1>A foundation built by a <span class="em">survivor</span></h1>
+        <p class="about-hero__mission">{mission.statement}</p>
+        <p class="about-hero__tagline">{mission.headline}</p>
+      </div>
+      <div class="about-hero__media">
+        <div class="ph-frame" style="--ph-ratio: 4 / 5">
+          Campaign photography<br />in production
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Three commitments -->
+  <section class="section section--white">
+    <div class="wrap">
+      <header class="section__head">
+        <span class="label">What we do</span>
+        <h2 class="section__title">Three <span class="em">commitments</span></h2>
+      </header>
+      <div class="grid grid--3">
+        {
+          commitments.map((item, i) => (
+            <article class="card commitment">
+              <span class="commitment__index" aria-hidden="true">
+                0{i + 1}
+              </span>
+              <h3 class="card__title">{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- A beacon -->
+  <section class="section section--sand">
+    <div class="wrap wrap--narrow beacon">
+      <span class="label">Who it is for</span>
+      <h2 class="section__title">A beacon for the modern, <span class="em">independent</span> woman</h2>
+      <p class="beacon__lede">
+        {org.shortName} is not a waiting room. It is a society of women who are building, leading
+        and recovering on their own terms, and who want the company of others doing the same.
+      </p>
+      <p>
+        Whether you live with an autoimmune condition or love someone who does, you are welcome
+        here. We speak in the language of campaigns, not clinics. Come as you are, and leave
+        feeling part of something.
+      </p>
+    </div>
+  </section>
+
+  <!-- Protecting Her Ecosystem -->
+  <section class="section section--white">
+    <div class="wrap ecosystem">
+      <div class="ecosystem__copy">
+        <span class="label">The initiative</span>
+        <h2 class="section__title">Protecting <span class="em">Her</span> Ecosystem</h2>
+        <p class="ecosystem__lede">
+          Taking care of ourselves is how we protect a woman's ecosystem. A woman's health, her
+          work, her voice and her plans for what comes next are one system, and the foundation
+          looks after all of it.
+        </p>
+        <p>
+          The initiative connects our documentaries, our speaking and our products into a single
+          piece of work. It also includes her future: planning for generational wealth so that
+          what she builds outlasts any diagnosis.
+        </p>
+        <p>
+          Road to Her Smile, our documentary, is the first project backed by the Protecting Her
+          Ecosystem initiative. It is one of three initiatives and stands on its own funding.
+        </p>
+        <div class="ecosystem__ctas">
+          <a href="/her-future" class="btn btn--primary">Her Future</a>
+          <a href="/road-to-her-smile" class="btn btn--ghost">Road to Her Smile</a>
+        </div>
+      </div>
+      <ul class="ecosystem__list" aria-label="What the initiative connects">
+        <li>Documentaries</li>
+        <li>Speaking</li>
+        <li>Products</li>
+        <li>Her Future</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Annual events -->
+  <section class="section">
+    <div class="wrap">
+      <header class="section__head">
+        <span class="label">The calendar</span>
+        <h2 class="section__title">Three <span class="em">annual</span> events</h2>
+        <p class="section__lede">
+          Each year the foundation hosts three flagship occasions. They exist to build
+          sponsorship for the foundation and to bring our community into one room.
+        </p>
+      </header>
+      <div class="grid grid--3">
+        {
+          events.map((item) => (
+            <article class="card event">
+              <span class="label label--gold">{item.season}</span>
+              <h3 class="card__title">
+                {item.title.split(item.emphasis)[0]}
+                <span class="em">{item.emphasis}</span>
+                {item.title.split(item.emphasis)[1]}
+              </h3>
+              <p>{item.body}</p>
+              <a href={item.href} class="event__link">
+                {item.cta}
+              </a>
+            </article>
+          ))
+        }
+        <article class="card event event--pending">
+          <span class="label label--gold">December</span>
+          <h3 class="card__title">A holiday <span class="em">dinner</span></h3>
+          <p>An evening in December that closes the year with the foundation's community.</p>
+          <p><Placeholder field={holidayDinner} /></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Close -->
+  <section class="section section--ink">
+    <div class="wrap wrap--narrow close">
+      <span class="label label--on-dark">Join us</span>
+      <h2 class="section__title">Be part of <span class="em">her</span> ecosystem</h2>
+      <p>
+        Support the work, partner with a flagship event, or simply keep in touch. Every road
+        into the foundation is open.
+      </p>
+      <div class="close__ctas">
+        <a href="/support" class="btn btn--on-dark">Support</a>
+        <a href="/partnerships" class="btn btn--on-dark">Partnerships &amp; Press</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about-hero__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .about-hero__grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .about-hero__mission {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 46ch;
+  }
+
+  .about-hero__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+    color: var(--teal-ink);
+    margin-top: var(--space-l);
+  }
+
+  .about-hero__media .ph-frame {
+    width: 100%;
+  }
+
+  .section__head {
+    margin-bottom: var(--space-xl);
+  }
+
+  .section__title {
+    font-size: var(--step-4);
+    margin: 0;
+  }
+
+  .section__lede {
+    margin-top: var(--space-m);
+    margin-bottom: 0;
+    color: var(--ink-soft);
+  }
+
+  .commitment {
+    position: relative;
+  }
+
+  .commitment__index {
+    display: block;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+    color: var(--gold-ink);
+    margin-bottom: var(--space-s);
+  }
+
+  .beacon__lede {
+    font-size: var(--step-1);
+    line-height: 1.55;
+    margin-top: var(--space-m);
+  }
+
+  .ecosystem {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 56rem) {
+    .ecosystem {
+      grid-template-columns: 1.4fr 0.6fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .ecosystem__lede {
+    font-size: var(--step-1);
+    line-height: 1.55;
+    margin-top: var(--space-m);
+  }
+
+  .ecosystem__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-top: var(--space-l);
+  }
+
+  .ecosystem__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--gold);
+  }
+
+  .ecosystem__list li {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    padding-block: var(--space-s);
+    border-bottom: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
+  }
+
+  .event {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .event .card__title {
+    margin-top: var(--space-2xs);
+  }
+
+  .event__link {
+    margin-top: auto;
+    padding-top: var(--space-m);
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    text-decoration: none;
+    color: var(--teal-ink);
+  }
+
+  .event__link:hover,
+  .event__link:focus-visible {
+    color: var(--ink);
+  }
+
+  .event--pending {
+    background: transparent;
+    border-style: dashed;
+  }
+
+  .close {
+    text-align: center;
+  }
+
+  .close .label {
+    text-align: center;
+  }
+
+  .close p {
+    margin-inline: auto;
+    margin-top: var(--space-m);
+  }
+
+  .close__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2xs);
+    margin-top: var(--space-l);
+  }
+</style>

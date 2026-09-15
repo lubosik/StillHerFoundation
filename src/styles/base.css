@@ -1,0 +1,483 @@
+/*
+  Base layer. Tokens come from tokens.css, owned by the brand agent.
+  This file is reset, typography defaults, layout primitives and shared patterns.
+*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-m);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--step-5);
+}
+h2 {
+  font-size: var(--step-4);
+}
+h3 {
+  font-size: var(--step-2);
+}
+h4 {
+  font-size: var(--step-1);
+}
+
+p {
+  margin: 0 0 var(--space-m);
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--teal-ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--ink);
+}
+
+/* Focus rings are gold, per the brand guide. */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                           */
+/* ------------------------------------------------------------------ */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -110%);
+  z-index: 200;
+  background: var(--teal-ink);
+  color: var(--white);
+  padding: var(--space-2xs) var(--space-m);
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.skip-link:focus-visible {
+  transform: translate(-50%, 0);
+  color: var(--white);
+}
+
+/* Tracked uppercase label. The L'Echelon signature. */
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--step--2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--track-widest);
+  color: var(--teal-ink);
+  margin: 0 0 var(--space-s);
+  display: block;
+}
+
+.label--gold {
+  color: var(--gold-ink);
+}
+
+.label--on-dark {
+  color: var(--gold);
+}
+
+/* Italic emphasis word inside a display headline. */
+.em {
+  font-style: italic;
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--gold);
+  opacity: 0.55;
+  margin: var(--space-xl) 0;
+}
+
+.rule--short {
+  width: 4rem;
+  margin-inline: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout primitives                                                   */
+/* ------------------------------------------------------------------ */
+
+.wrap {
+  width: min(100% - (var(--gutter) * 2), var(--measure-wide));
+  margin-inline: auto;
+}
+
+.wrap--narrow {
+  width: min(100% - (var(--gutter) * 2), var(--measure));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--space-2xl);
+}
+
+.section--tight {
+  padding-block: var(--space-xl);
+}
+
+.section--white {
+  background: var(--white);
+}
+
+.section--sand {
+  background: var(--sand-tint);
+}
+
+.section--teal {
+  background: var(--teal);
+  color: var(--ink);
+}
+
+.section--ink {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.section--ink h1,
+.section--ink h2,
+.section--ink h3 {
+  color: var(--cream);
+}
+
+.section--ink a {
+  color: var(--gold);
+}
+
+.stack > * + * {
+  margin-top: var(--space-m);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-l);
+}
+
+@media (min-width: 48rem) {
+  .grid--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 64rem) {
+  .grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.85em 1.9em;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+  font-size: var(--step--1);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  text-decoration: none;
+  line-height: 1;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn--primary {
+  background: var(--teal-ink);
+  color: var(--white);
+}
+
+.btn--primary:hover {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.btn--ghost {
+  border-color: var(--teal-ink);
+  color: var(--teal-ink);
+  background: transparent;
+}
+
+.btn--ghost:hover {
+  background: var(--teal-ink);
+  color: var(--white);
+}
+
+.btn--gold {
+  border-color: var(--gold);
+  color: var(--gold-ink);
+  background: transparent;
+}
+
+.btn--gold:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.btn--on-dark {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn--on-dark:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.btn[disabled],
+.btn[aria-disabled='true'] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Cards                                                               */
+/* ------------------------------------------------------------------ */
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--sand);
+  border-radius: var(--radius-m);
+  padding: var(--space-l);
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  margin: 0 0 var(--space-xs);
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Forms                                                               */
+/* ------------------------------------------------------------------ */
+
+.field {
+  display: block;
+  margin-bottom: var(--space-m);
+}
+
+.field__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: var(--step--2);
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--ink);
+  margin-bottom: var(--space-3xs);
+}
+
+.field__hint {
+  display: block;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  margin-top: var(--space-3xs);
+}
+
+.field input[type='text'],
+.field input[type='email'],
+.field input[type='tel'],
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.75em 0.9em;
+  background: var(--white);
+  border: 1px solid var(--sand);
+  border-radius: var(--radius-s);
+  font-size: var(--step-0);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--teal-ink);
+}
+
+.field textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+/* Honeypot. Hidden from people, reachable by bots. */
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form__status {
+  font-size: var(--step--1);
+  margin-top: var(--space-s);
+  min-height: 1.5em;
+}
+
+.form__status[data-state='error'] {
+  color: var(--error);
+}
+
+.form__status[data-state='ok'] {
+  color: var(--teal-ink);
+}
+
+/* ------------------------------------------------------------------ */
+/* Placeholder styling                                                 */
+/* ------------------------------------------------------------------ */
+
+.ph {
+  display: inline-block;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* In dev, placeholders get a gold dashed outline so they are obvious. */
+.ph[data-dev='true'] {
+  outline: 1px dashed var(--gold);
+  outline-offset: 2px;
+  padding-inline: 0.25em;
+}
+
+/* A framed slot waiting on a real image. */
+.ph-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(135deg, var(--cream) 0%, var(--sand-tint) 100%);
+  border: 1px solid var(--sand);
+  border-radius: var(--radius-m);
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: var(--step--2);
+  text-transform: uppercase;
+  letter-spacing: var(--track-widest);
+  text-align: center;
+  padding: var(--space-l);
+  overflow: hidden;
+  aspect-ratio: var(--ph-ratio, 4 / 5);
+}
+
+/* A fine gold inner rule, so an empty frame still reads as designed. */
+.ph-frame::after {
+  content: '';
+  position: absolute;
+  inset: var(--space-xs);
+  border: 1px solid var(--gold);
+  opacity: 0.4;
+  border-radius: calc(var(--radius-m) - 4px);
+  pointer-events: none;
+}
