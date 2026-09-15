@@ -1,0 +1,143 @@
+---
+/**
+ * Terms of use. Plain and honest. Entity details, address and effective date
+ * come from site.ts as placeholders. No jurisdiction, company number or entity
+ * type is stated because none has been confirmed.
+ */
+import Base from '@/layouts/Base.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import { org, type Pending } from '@/config/site';
+
+/* Effective date is not yet in site.ts. Move this there once confirmed. */
+const effectiveDate: Pending<string> = {
+  value: '',
+  pending: true,
+  fallback: 'Effective date to be confirmed',
+  note: 'Effective date for the privacy policy and terms.',
+};
+---
+
+<Base
+  title="Terms"
+  description="The terms on which The StillHer Foundation website is offered, including the newsletter, inquiry forms and the Her Future discovery call."
+>
+  <section class="section">
+    <div class="wrap--narrow legal">
+      <span class="label">Legal</span>
+      <h1>Terms of <span class="em">use</span></h1>
+      <p class="legal__meta">
+        <Placeholder field={effectiveDate} />
+      </p>
+
+      <p>
+        These terms cover your use of this website, which is published by
+        <Placeholder field={org.legalName} />, referred to here as "the foundation", "we" and "us".
+        By using the site you agree to them. If you do not, please do not use the site.
+      </p>
+
+      <h2>Who we are</h2>
+      <p>
+        Registered address: <Placeholder field={org.address} fallback="to be confirmed" />.
+        Email: <a href={`mailto:${org.email.value}`}>{org.email.value}</a>.
+      </p>
+
+      <h2>What the site is for</h2>
+      <p>
+        The site describes the foundation's work, lets you sign up for the newsletter, lets you
+        contact us about partnerships, press, speaking and events, and lets you book a discovery call
+        through Her Future. It is provided for information and to help you reach us.
+      </p>
+
+      <h2>Information, not advice</h2>
+      <p>
+        Nothing on this site is medical advice. The foundation raises awareness of Graves' disease
+        and supports women living with it; it does not diagnose or treat. Please speak with a
+        qualified clinician about your own health.
+      </p>
+      <p>
+        Nothing on the Her Future page is financial, tax or legal advice, and nothing there is an
+        offer to sell or a solicitation to buy any product. The discovery call is a conversation.
+        Any decision you make afterwards is yours, and should be made with a licensed professional
+        who knows your circumstances.
+      </p>
+
+      <h2>Using the forms</h2>
+      <p>
+        When you use a form on the site you agree to give accurate information, to use the forms
+        only for their stated purpose, and not to submit anything unlawful, abusive or automated.
+        The Her Future form does not accept information about income, assets, net worth or account
+        balances, and you agree not to include it.
+      </p>
+      <p>
+        Submitting a form does not create any obligation on the foundation to reply, to enter into a
+        partnership, or to hold a call, although we will do our best to respond.
+      </p>
+
+      <h2>The discovery call</h2>
+      <p>
+        A Her Future discovery call is 20 minutes long. If you are more than 5 minutes late the call
+        will be cancelled and you will be invited to rebook.
+      </p>
+
+      <h2>Giving</h2>
+      <p>
+        Gifts made through the methods listed on the Support page go to the foundation's work. Card
+        donations are processed on a separate page with its own terms. Cryptocurrency transfers are
+        final once sent; please check the address and network before sending, because a transfer on
+        the wrong network cannot be recovered.
+      </p>
+
+      <h2>Content and trademarks</h2>
+      <p>
+        The text, design, emblem and imagery on this site belong to the foundation or are used with
+        permission. You may share links to the site freely. Please do not copy or reproduce the
+        content for commercial purposes without asking us first.
+      </p>
+
+      <h2>Links to other sites</h2>
+      <p>
+        The site links to other websites, including a donation page and a booking calendar. We do
+        not control those sites and are not responsible for their content or their handling of your
+        information.
+      </p>
+
+      <h2>Availability</h2>
+      <p>
+        We aim to keep the site available and accurate, but we make no promise that it will be free
+        of errors or interruptions. We may change or remove any part of it at any time.
+      </p>
+
+      <h2>Liability</h2>
+      <p>
+        To the extent permitted by law, the foundation is not liable for any loss arising from your
+        use of the site or your reliance on anything published on it. Nothing in these terms limits
+        any liability that cannot be limited by law.
+      </p>
+
+      <h2>Privacy</h2>
+      <p>
+        How we handle your information is explained in the <a href="/privacy">privacy policy</a>,
+        which forms part of these terms.
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        If these terms change, the new version will be published here with a new effective date.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal h2 {
+    font-size: var(--step-2);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-s);
+  }
+
+  .legal__meta {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-bottom: var(--space-l);
+  }
+</style>

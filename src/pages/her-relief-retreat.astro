@@ -1,0 +1,162 @@
+---
+import Base from '@/layouts/Base.astro';
+import ComingSoon from '@/components/ComingSoon.astro';
+import InterestForm from '@/components/InterestForm.astro';
+
+/**
+ * Her Relief Retreat. Coming soon, but beautiful.
+ *
+ * Naming note: Nani has not settled between "Her Relief Retreat" and
+ * "Her Release Retreat". This build uses Relief throughout, matching
+ * site.ts and the rail navigation. Rename in one pass once she decides.
+ *
+ * No location, no date and no doctor's name appear on this page. None has
+ * been confirmed.
+ */
+
+const pillars = [
+  {
+    title: 'Spa care',
+    body: 'Treatments and stillness for bodies that carry more than most people can see.',
+  },
+  {
+    title: 'Rest',
+    body: 'Time with nothing asked of you. Sleep, quiet and a slower clock.',
+  },
+  {
+    title: 'Community',
+    body: "The company of women who understand Graves' disease without needing it explained.",
+  },
+  {
+    title: 'Understanding',
+    body: 'A doctor joins the retreat to speak on managing the condition day to day.',
+  },
+] as const;
+---
+
+<Base
+  title="Her Relief Retreat"
+  description="A sponsored retreat for women living with Graves' disease: spa care, rest, community and a doctor speaking on managing the condition."
+>
+  <ComingSoon
+    kicker="Coming soon"
+    title="Her Relief Retreat"
+    emphasis="Relief"
+    body="A retreat for women living with Graves' disease. Spa care, rest and the company of women who understand, with a doctor speaking on how to manage the condition."
+    timing="Details to be announced."
+    framePrompt="Retreat photography to follow"
+    frameRatio="4 / 5"
+  >
+    <!-- What the retreat holds -->
+    <section class="section section--white">
+      <div class="wrap">
+        <header class="section__head">
+          <span class="label">The retreat</span>
+          <h2 class="section__title">Four kinds of <span class="em">care</span></h2>
+        </header>
+        <div class="grid grid--4">
+          {
+            pillars.map((item) => (
+              <article class="pillar">
+                <h3 class="pillar__title">{item.title}</h3>
+                <p class="pillar__body">{item.body}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Sponsored -->
+    <section class="section section--sand">
+      <div class="wrap sponsored">
+        <div class="sponsored__media">
+          <div class="ph-frame" style="--ph-ratio: 4 / 5">
+            Spa and stillness<br />photography to follow
+          </div>
+        </div>
+        <div class="sponsored__copy">
+          <span class="label">How it works</span>
+          <h2 class="section__title">A gift, not a <span class="em">ticket</span></h2>
+          <p class="sponsored__lede">
+            Her Relief Retreat is sponsored. The women invited attend as guests of the foundation
+            and its partners, so that rest is not one more thing they have to pay for.
+          </p>
+          <p>
+            If you would like to sponsor the retreat, or a place at it, we would love to hear
+            from you.
+          </p>
+          <a href="/partnerships" class="btn btn--ghost">Partnership opportunities</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interest -->
+    <section class="section">
+      <div class="wrap">
+        <InterestForm
+          event="retreat"
+          heading="Hold a place in your calendar"
+          blurb="Leave your name and we will write to you first when the retreat is announced."
+        />
+      </div>
+    </section>
+  </ComingSoon>
+</Base>
+
+<style>
+  .section__head {
+    margin-bottom: var(--space-xl);
+  }
+
+  .section__title {
+    font-size: var(--step-4);
+    margin: 0;
+  }
+
+  .pillar {
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--gold);
+  }
+
+  .pillar__title {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-xs);
+  }
+
+  .pillar__body {
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .sponsored {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .sponsored {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .sponsored__media .ph-frame {
+    width: 100%;
+  }
+
+  /* Single column: keep the frame a portrait, not a wall. */
+  @media (max-width: 55.999rem) {
+    .sponsored__media .ph-frame {
+      max-width: 28rem;
+      margin-inline: auto;
+    }
+  }
+
+  .sponsored__lede {
+    font-size: var(--step-1);
+    line-height: 1.55;
+    margin-top: var(--space-m);
+  }
+</style>

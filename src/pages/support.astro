@@ -1,0 +1,210 @@
+---
+/**
+ * Support. Every way to give, driven entirely by the `giving` array in
+ * site.ts. Nothing here is hardcoded: add or change an entry there and this
+ * page follows.
+ */
+import Base from '@/layouts/Base.astro';
+import GivingCard from '@/components/GivingCard.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import Newsletter from '@/components/Newsletter.astro';
+import { giving, org } from '@/config/site';
+
+const cardMethods = giving.filter((g) => g.kind === 'link');
+const handleMethods = giving.filter((g) => g.kind === 'handle');
+const walletMethods = giving.filter((g) => g.kind === 'wallet');
+
+const otherWays = [
+  {
+    title: 'Sponsor',
+    body: 'Put your name beside The Good Weekend, Road to Her Smile or Her Relief Retreat.',
+    href: '/partnerships',
+    cta: 'Sponsorship',
+  },
+  {
+    title: 'Partner',
+    body: 'Brands, clinics and organisations who want to stand with women living with Graves’ disease.',
+    href: '/partnerships',
+    cta: 'Partnerships',
+  },
+  {
+    title: 'Volunteer',
+    body: 'Give your time at an event or behind the scenes. Tell us what you are good at.',
+    href: `mailto:${org.email.value}`,
+    cta: 'Email us',
+  },
+  {
+    title: 'Share',
+    body: 'Tell one woman about the foundation. Awareness is the work, and it starts with a conversation.',
+    href: '/road-to-her-smile',
+    cta: 'Road to Her Smile',
+  },
+];
+---
+
+<Base
+  title="Support"
+  description="Give to The StillHer Foundation by card, Venmo, PayPal, Cash App, Zelle, Bitcoin or XRP, or help by sponsoring, partnering, volunteering and sharing."
+>
+  <!-- Hero -->
+  <section class="section sp-hero">
+    <div class="wrap--narrow">
+      <span class="label">Support</span>
+      <h1>Give to the <span class="em">work</span>.</h1>
+      <p class="sp-hero__lede">
+        Your gift supports the foundation's initiatives: Road to Her Smile, The Good Weekend and Her
+        Relief Retreat. Choose whichever way suits you best.
+      </p>
+      <p class="sp-hero__tax">
+        <Placeholder field={org.taxStatus} />
+      </p>
+    </div>
+  </section>
+
+  <!-- Card -->
+  <section class="section section--white section--tight" aria-labelledby="card-heading">
+    <div class="wrap">
+      <div class="sp-card-band">
+        <div class="sp-card-band__copy">
+          <span class="label">The simplest way</span>
+          <h2 id="card-heading" class="sp-card-band__title">By <span class="em">card</span></h2>
+          <p>A one time gift by debit or credit card, in a few taps.</p>
+        </div>
+        <div class="sp-card-band__cards">
+          {cardMethods.map((method) => <GivingCard method={method} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Handles -->
+  <section class="section" aria-labelledby="handles-heading">
+    <div class="wrap">
+      <span class="label">Apps and transfers</span>
+      <h2 id="handles-heading">Send it <span class="em">directly</span></h2>
+      <p class="sp-lede">Copy the handle into the app you already use.</p>
+
+      <div class="grid grid--2 sp-grid">
+        {handleMethods.map((method) => <GivingCard method={method} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Wallets -->
+  <section class="section section--sand" aria-labelledby="crypto-heading">
+    <div class="wrap">
+      <span class="label">Crypto</span>
+      <h2 id="crypto-heading">Bitcoin and <span class="em">XRP</span></h2>
+      <p class="sp-lede">
+        Check the network label before you send. Transfers on the wrong network cannot be recovered.
+      </p>
+
+      <div class="grid grid--2 sp-grid">
+        {walletMethods.map((method) => <GivingCard method={method} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Other ways to help -->
+  <section class="section section--white" aria-labelledby="other-heading">
+    <div class="wrap">
+      <span class="label">Other ways to help</span>
+      <h2 id="other-heading">Not every gift is <span class="em">money</span></h2>
+
+      <div class="grid grid--4 sp-other">
+        {
+          otherWays.map((way) => (
+            <article class="card sp-other__card">
+              <h3 class="card__title">{way.title}</h3>
+              <p>{way.body}</p>
+              <a href={way.href} class="sp-other__link">
+                {way.cta} <span aria-hidden="true">&rarr;</span>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="section section--tight">
+    <div class="wrap--narrow">
+      <Newsletter
+        source="support"
+        heading="Keep up with the foundation"
+        blurb="News from the campaigns, the tournament and the retreat, in your inbox."
+      />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .sp-hero__lede {
+    font-size: var(--step-1);
+  }
+
+  .sp-hero__tax {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .sp-lede {
+    margin-bottom: var(--space-l);
+  }
+
+  .sp-card-band {
+    display: grid;
+    gap: var(--space-l);
+    align-items: center;
+  }
+
+  @media (min-width: 48rem) {
+    .sp-card-band {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .sp-card-band__title {
+    margin-bottom: var(--space-xs);
+  }
+
+  .sp-card-band__copy p {
+    margin-bottom: 0;
+  }
+
+  .sp-grid {
+    align-items: start;
+  }
+
+  .sp-other__card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2xs);
+    background: var(--cream);
+  }
+
+  .sp-other__card p {
+    font-size: var(--step--1);
+    margin-bottom: var(--space-s);
+  }
+
+  .sp-other__link {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    text-decoration: none;
+    color: var(--teal-ink);
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 0.2em;
+    justify-self: start;
+  }
+
+  .sp-other__link:hover {
+    color: var(--ink);
+  }
+</style>

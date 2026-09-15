@@ -1,0 +1,136 @@
+---
+/**
+ * Short inquiry form. Posts `{ type, name, email, org, message }` to /api/inquiry.
+ *
+ * The shared handler in src/scripts/forms.ts binds to `data-form` and owns the
+ * submit, status and reset behaviour. This component only renders markup.
+ *
+ * `type` is what the Worker uses to route the message, so it is the only
+ * required content decision a page makes when it drops one of these in.
+ */
+export type InquiryType = 'press_photo' | 'press_video' | 'press_news' | 'partnership' | 'speaker';
+
+interface Props {
+  type: InquiryType;
+  heading: string;
+  blurb?: string;
+  /** Match the level to where the form sits in the page outline. */
+  headingLevel?: 'h2' | 'h3' | 'h4';
+  /** Override when the same `type` appears twice on one page. */
+  id?: string;
+  /** Label for the message field, so a press form can ask for the outlet. */
+  messageLabel?: string;
+  submitLabel?: string;
+}
+
+const {
+  type,
+  heading,
+  blurb,
+  headingLevel = 'h3',
+  id = `inq-${type.replace(/_/g, '-')}`,
+  messageLabel = 'Message',
+  submitLabel = 'Send inquiry',
+} = Astro.props;
+
+const Heading = headingLevel;
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<section class="inquiry" aria-labelledby={`${id}-heading`}>
+  <Heading id={`${id}-heading`} class="inquiry__heading">{heading}</Heading>
+  {blurb && <p class="inquiry__blurb">{blurb}</p>}
+
+  <form
+    class="inquiry__form"
+    data-form
+    data-endpoint="/api/inquiry"
+    data-success="Thank you. We will be in touch."
+    novalidate
+  >
+    <input type="hidden" name="type" value={type} />
+
+    <div class="hp" aria-hidden="true">
+      <label for={`${id}-website`}>Leave this field empty</label>
+      <input type="text" id={`${id}-website`} name="website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="inquiry__row">
+      <label class="field" for={`${id}-name`}>
+        <span class="field__label">Name</span>
+        <input
+          type="text"
+          id={`${id}-name`}
+          name="name"
+          required
+          maxlength="120"
+          autocomplete="name"
+        />
+      </label>
+
+      <label class="field" for={`${id}-email`}>
+        <span class="field__label">Email</span>
+        <input
+          type="email"
+          id={`${id}-email`}
+          name="email"
+          required
+          maxlength="254"
+          autocomplete="email"
+        />
+      </label>
+    </div>
+
+    <label class="field" for={`${id}-org`}>
+      <span class="field__label">Organization</span>
+      <input
+        type="text"
+        id={`${id}-org`}
+        name="org"
+        maxlength="160"
+        autocomplete="organization"
+      />
+      <span class="field__hint">Optional.</span>
+    </label>
+
+    <label class="field" for={`${id}-message`}>
+      <span class="field__label">{messageLabel}</span>
+      <textarea id={`${id}-message`} name="message" required maxlength="2000" rows="5"></textarea>
+    </label>
+
+    {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey} data-size="flexible"></div>}
+
+    <button type="submit" class="btn btn--primary">{submitLabel}</button>
+    <p class="form__status" data-status role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<style>
+  .inquiry__heading {
+    margin-bottom: var(--space-xs);
+  }
+
+  .inquiry__blurb {
+    color: var(--ink-soft);
+    margin-bottom: var(--space-l);
+  }
+
+  .inquiry__form {
+    max-width: 44rem;
+  }
+
+  .inquiry__row {
+    display: grid;
+    gap: 0 var(--space-m);
+  }
+
+  @media (min-width: 40rem) {
+    .inquiry__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .cf-turnstile {
+    margin-bottom: var(--space-m);
+  }
+</style>

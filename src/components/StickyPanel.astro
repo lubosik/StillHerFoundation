@@ -1,0 +1,96 @@
+---
+/**
+ * A white panel that sticks beside scrolling content on desktop and sits in
+ * the normal flow on mobile.
+ *
+ * Place it as the second column of a grid. It sets `align-self: start` so the
+ * grid does not stretch it, which is what makes `position: sticky` work.
+ *
+ * Its height is capped to the viewport below the 4.5rem top bar, and it
+ * scrolls internally past that, so it never traps or overlaps content on a
+ * short screen.
+ */
+interface Props {
+  heading: string;
+  kicker?: string;
+  body?: string;
+  ctaLabel: string;
+  ctaHref: string;
+  headingLevel?: 'h2' | 'h3';
+  class?: string;
+}
+
+const {
+  heading,
+  kicker,
+  body,
+  ctaLabel,
+  ctaHref,
+  headingLevel = 'h2',
+  class: className = '',
+} = Astro.props;
+
+const Heading = headingLevel;
+const id = `sticky-${heading.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+---
+
+<aside class:list={['sticky-panel', className]} aria-labelledby={id}>
+  {kicker && <span class="label label--gold">{kicker}</span>}
+  <Heading id={id} class="sticky-panel__heading">{heading}</Heading>
+  {body && <p class="sticky-panel__body">{body}</p>}
+  <slot />
+  <a href={ctaHref} class="btn btn--primary sticky-panel__cta">{ctaLabel}</a>
+</aside>
+
+<style>
+  .sticky-panel {
+    align-self: start;
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-soft);
+    padding: var(--space-l);
+  }
+
+  /* A fine gold inner rule, matching .ph-frame and the card language. */
+  .sticky-panel {
+    position: relative;
+  }
+
+  .sticky-panel::before {
+    content: '';
+    position: absolute;
+    inset: var(--space-xs);
+    border: 1px solid var(--gold);
+    opacity: 0.35;
+    border-radius: calc(var(--radius-m) - 4px);
+    pointer-events: none;
+  }
+
+  .sticky-panel__heading {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-xs);
+  }
+
+  .sticky-panel__body {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-bottom: var(--space-m);
+  }
+
+  .sticky-panel__cta {
+    width: 100%;
+  }
+
+  @media (min-width: 64rem) {
+    .sticky-panel {
+      --bar: 4.5rem;
+      --gap: var(--space-l);
+      position: sticky;
+      top: calc(var(--bar) + var(--gap));
+      max-height: calc(100dvh - var(--bar) - (var(--gap) * 2));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+  }
+</style>

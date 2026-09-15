@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="The StillHer Foundation">
+  <title>The StillHer Foundation</title>
+  <!--
+    SHF monogram in a ring.
+
+    Construction follows Nani's sketch:
+    the S sits above an H and F that share strokes. One horizontal serves as
+    both the H crossbar and the F top arm. One vertical serves as the H right
+    stem and the F stem, and runs up through the S, which is what gives the
+    dollar sign read she liked. The vertical stops inside the S rather than
+    above it, so the mark reads as a monogram first and a dollar sign second.
+
+    Teal with a champagne gold inner sliver.
+    Monoline strokes so the mark survives small sizes and embroiders cleanly.
+  -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Outer ring -->
+    <circle cx="100" cy="100" r="91" stroke="#5BBCC9" stroke-width="3.5"/>
+    <!-- Gold inner sliver -->
+    <circle cx="100" cy="100" r="83" stroke="#C9A961" stroke-width="1.1"/>
+
+    <g stroke="#5BBCC9" stroke-width="6">
+      <!-- The S -->
+      <path d="M124 60
+               C124 50 114 44 103 44
+               C91 44 82 51 82 61
+               C82 71 91 76 102 80
+               C113 84 122 89 122 99
+               C122 109 113 116 101 116
+               C89 116 79 110 77 100"/>
+
+      <!-- The shared vertical: rises into the S, drops to become the H right
+           stem and then the F stem -->
+      <path d="M100 58 L100 160"/>
+
+      <!-- H left stem -->
+      <path d="M62 110 L62 160"/>
+
+      <!-- Shared horizontal: H crossbar from 62 to 100, F top arm from 100 to 138 -->
+      <path d="M62 131 L138 131"/>
+
+      <!-- F middle arm -->
+      <path d="M100 147 L128 147"/>
+    </g>
+  </g>
+</svg>

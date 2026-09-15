@@ -1,0 +1,594 @@
+---
+import Base from '@/layouts/Base.astro';
+import Tabs from '@/components/Tabs.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import StickyPanel from '@/components/StickyPanel.astro';
+import Newsletter from '@/components/Newsletter.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import { giving, partnerships, sponsors, isPlaceholder } from '@/config/site';
+
+/**
+ * Road to Her Smile. The campaign page.
+ *
+ * Every line of story copy comes from reference/MIGRATION.md, the verbatim
+ * record of the current live site. Nothing here is invented.
+ */
+
+const card = giving.find((method) => method.id === 'card');
+const cardHref = card?.detail.value ?? '';
+
+/** Roles as credited on the existing campaign page. Names come from site.ts. */
+const sponsorRoles: Record<(typeof sponsors)[number], string> = {
+  'John Victoria': 'Sponsor',
+  Juliana: 'Sponsor',
+  Pollyanna: 'In-Kind Support',
+  'Your Name Here': 'Become a Sponsor',
+};
+
+const initials = (name: string) =>
+  name === 'Your Name Here'
+    ? '+'
+    : name
+        .split(/\s+/)
+        .map((part) => part[0])
+        .join('')
+        .toUpperCase();
+
+const chapters = [
+  {
+    kicker: 'Chapter one',
+    title: 'The Tragedy',
+    href: '/road-to-her-smile/the-tragedy',
+    body: 'What was done to Lia Spriggs. Thirteen teeth. One doctor. No answers.',
+    cta: 'Read the full story',
+  },
+  {
+    kicker: 'Chapter two',
+    title: 'Her Road',
+    href: '/road-to-her-smile/her-road',
+    body: 'The road ahead to restoration. Every step matters.',
+    cta: 'Follow her road',
+  },
+  {
+    kicker: 'Chapter three',
+    title: 'Who is Lia?',
+    href: '/road-to-her-smile/who-is-lia',
+    body: 'Getting to know the woman at the heart of this story.',
+    cta: 'Meet Lia',
+  },
+];
+
+const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
+---
+
+<Base
+  title="Road to Her Smile"
+  description="Road to Her Smile is a documentary about Lia Spriggs, an Italian immigrant failed by a husband, a doctor, and a trusted community. A StillHer Foundation film."
+>
+  <!-- Hero -->
+  <section class="section hero">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <span class="label">A StillHer Foundation documentary</span>
+        <h1>Road to <span class="em">Her</span> Smile</h1>
+        <p class="hero__announce">
+          We are proud to announce our first project backed by the Protecting Her Ecosystem
+          initiative.
+        </p>
+        <p class="hero__synopsis">
+          She was left to fight for her life.<br />And still, she remained standing.
+        </p>
+        <div class="hero__ctas">
+          <a href="#donate" class="btn btn--primary">Donate</a>
+          <a href="#partnerships" class="btn btn--ghost">Partner with us</a>
+        </div>
+      </div>
+      <div class="hero__media">
+        <div class="ph-frame" style="--ph-ratio: 4 / 5">
+          Portrait of Lia<br />photograph to follow
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Campaign body with the sticky partnership panel beside it -->
+  <section class="section section--white">
+    <div class="wrap campaign">
+      <div class="campaign__main">
+        <!-- What it is -->
+        <div class="block">
+          <span class="label">The film</span>
+          <h2>A <span class="em">documentary</span></h2>
+          <p class="lede">
+            Road to Her Smile gives the road to redemption back to a woman who had it stolen from
+            her.
+          </p>
+          <p>
+            Lia Spriggs was a model in Verona, Italy, a woman whose natural presence and elegance
+            carried her through the fashion world of northern Italy before she followed a man she
+            loved to America, where over twelve years of marriage she discovered a betrayal so
+            sustained that it left her a single immigrant mother with no safety net in a country
+            that was not her own.
+          </p>
+          <p>
+            A trusted community referred her to a doctor who extracted thirteen of her teeth in a
+            single procedure and then vanished without explanation, leaving behind no implants, no
+            follow-up, and no answers, while her body developed Hashimoto's disease and
+            fibromyalgia in the years that followed.
+          </p>
+          <p>
+            This documentary names what happened to Lia Spriggs, demands accountability from the
+            systems and individuals that failed her, and begins the long road to restoring the
+            dignity and the smile that were taken from her. It is not just one woman's story. It
+            is the story of every woman abandoned by the systems meant to protect her.
+          </p>
+
+          <ul class="pillars">
+            <li class="pillars__item">
+              <h3 class="pillars__title">Dignity</h3>
+              <p>
+                This is about more than teeth. When systems strip a woman of her ability to eat,
+                to speak, to smile, they strip her identity. This documentary names that.
+              </p>
+            </li>
+            <li class="pillars__item">
+              <h3 class="pillars__title">Accountability</h3>
+              <p>
+                A doctor disappeared. A community stayed silent. This film documents what happened
+                and demands the accountability that every vulnerable person deserves.
+              </p>
+            </li>
+            <li class="pillars__item">
+              <h3 class="pillars__title">Restoration</h3>
+              <p>
+                Road to Her Smile is Lia's road back. And with your support, she will not have to
+                walk it alone. Every gift brings her closer to her smile.
+              </p>
+            </li>
+          </ul>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- The story -->
+        <div class="block">
+          <span class="label">The story</span>
+          <h2>Her story, in <span class="em">three</span> chapters</h2>
+          <ul class="chapters">
+            {
+              chapters.map((chapter) => (
+                <li class="chapters__item">
+                  <span class="label label--gold">{chapter.kicker}</span>
+                  <h3 class="chapters__title">
+                    <a href={chapter.href}>{chapter.title}</a>
+                  </h3>
+                  <p class="chapters__body">{chapter.body}</p>
+                  <a href={chapter.href} class="chapters__cta">
+                    {chapter.cta} <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- Sponsors -->
+        <div class="block" id="sponsors">
+          <span class="label">Our sponsors</span>
+          <h2>The people standing <span class="em">behind</span> her.</h2>
+          <p>Their belief in this project makes every frame possible.</p>
+          <ul class="sponsors">
+            {
+              sponsors.map((name) => {
+                const open = name === 'Your Name Here';
+                return (
+                  <li class:list={['sponsors__item', open && 'sponsors__item--open']}>
+                    <span class="sponsors__badge" aria-hidden="true">
+                      {initials(name)}
+                    </span>
+                    <span class="sponsors__name">
+                      {open ? <a href="#partnerships">{name}</a> : name}
+                    </span>
+                    <span class="sponsors__role">{sponsorRoles[name]}</span>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- Donate by card -->
+        <div class="block donate" id="donate">
+          <span class="label">Support the documentary</span>
+          <h2>Donate by <span class="em">card</span></h2>
+          <p>
+            Every contribution funds production, legal advocacy, and Lia's medical restoration.
+            This is how we make sure her voice is finally heard.
+          </p>
+          <div class="donate__ctas">
+            {
+              cardHref ? (
+                <a href={cardHref} class="btn btn--primary" target="_blank" rel="noopener">
+                  Donate to Road to Her Smile
+                </a>
+              ) : (
+                <span class="btn btn--primary" aria-disabled="true">
+                  Donate to Road to Her Smile
+                </span>
+              )
+            }
+            <a href="/support" class="btn btn--ghost">Other ways to give</a>
+          </div>
+          {card?.hint && <p class="donate__hint">{card.hint} Opens our secure donation page.</p>}
+        </div>
+      </div>
+
+      <StickyPanel
+        kicker="Road to Her Smile"
+        heading="Partnership Opportunities"
+        body="Sponsor the film, or cover it. Every partner is credited on screen."
+        ctaLabel="Sponsor Now"
+        ctaHref="#partnerships"
+      />
+    </div>
+  </section>
+
+  <!-- Partnership Opportunities -->
+  <section class="section section--sand" id="partnerships">
+    <div class="wrap">
+      <header class="section__head">
+        <span class="label">Partner with the film</span>
+        <h2>Partnership <span class="em">Opportunities</span></h2>
+        <p class="lede">
+          Two ways to be part of Road to Her Smile: back the production as a sponsor, or bring
+          the story to your audience as press.
+        </p>
+      </header>
+
+      <Tabs
+        id="rths-partnerships"
+        label="Partnership opportunities"
+        tabs={[
+          { id: 'sponsorship', label: 'Sponsorship' },
+          { id: 'press', label: 'Press' },
+        ]}
+      >
+        <div slot="sponsorship" class="panel">
+          <h3>Sponsorship</h3>
+          <p>
+            The sponsorship deck covers the vision, the team, the budget, and how your
+            contribution will be used. Every contribution funds production, post-production,
+            legal advocacy, and distribution. Every dollar brings Lia closer to her smile.
+          </p>
+          <div class="deck">
+            {
+              deckPending ? (
+                <>
+                  <span class="btn btn--gold" aria-disabled="true">
+                    Download the Sponsorship Deck (PDF)
+                  </span>
+                  <p class="deck__note">
+                    <Placeholder
+                      field={partnerships.sponsorshipDeck}
+                      fallback="The deck is being finalised. Request it using the form below and we will send it when it is ready."
+                    />
+                  </p>
+                </>
+              ) : (
+                <a
+                  href={partnerships.sponsorshipDeck.value}
+                  class="btn btn--gold"
+                  download
+                  type="application/pdf"
+                >
+                  Download the Sponsorship Deck (PDF)
+                </a>
+              )
+            }
+          </div>
+
+          <hr class="rule" />
+
+          <InquiryForm
+            type="partnership"
+            headingLevel="h4"
+            heading="Become a sponsor"
+            blurb="Tell us about you or your organization and we will come back with the deck and next steps."
+            messageLabel="How would you like to be involved?"
+            submitLabel="Send"
+          />
+        </div>
+
+        <div slot="press" class="panel">
+          <h3>Press</h3>
+          <p>
+            Road to Her Smile offers multiple entry points for coverage. We welcome interview
+            requests, features, and collaborative storytelling.
+          </p>
+
+          <div class="press">
+            <InquiryForm
+              type="press_photo"
+              headingLevel="h4"
+              heading="Photography"
+              blurb="Stills, portrait sessions and behind the scenes access."
+              messageLabel="What are you looking to shoot?"
+            />
+
+            <hr class="rule" />
+
+            <InquiryForm
+              type="press_video"
+              headingLevel="h4"
+              heading="Videography"
+              blurb="Broadcast, documentary crews and video features."
+              messageLabel="What are you looking to film?"
+            />
+
+            <hr class="rule" />
+
+            <InquiryForm
+              type="press_news"
+              headingLevel="h4"
+              heading="News Outlet"
+              blurb="Podcast, interview, editorial and other press."
+              messageLabel="Tell us about your outlet and the story"
+            />
+          </div>
+        </div>
+      </Tabs>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <Newsletter source="rths" heading="Be the first to know when Road to Her Smile premieres." />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------------- Hero ---------------- */
+  .hero__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 52rem) {
+    .hero__grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .hero__announce {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--teal-ink);
+    max-width: 40ch;
+    line-height: 1.7;
+  }
+
+  .hero__synopsis {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-style: italic;
+    line-height: 1.3;
+    max-width: 30ch;
+  }
+
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-top: var(--space-l);
+  }
+
+  .hero__media .ph-frame {
+    width: 100%;
+  }
+
+  /* ---------------- Campaign body + sticky aside ---------------- */
+  .campaign {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  @media (min-width: 64rem) {
+    .campaign {
+      grid-template-columns: minmax(0, 1fr) 19rem;
+      align-items: start;
+    }
+  }
+
+  .campaign__main {
+    min-width: 0;
+  }
+
+  .lede {
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  /* ---------------- Pillars ---------------- */
+  .pillars {
+    list-style: none;
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 48rem) {
+    .pillars {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .pillars__item {
+    border-top: 1px solid var(--gold);
+    padding-top: var(--space-m);
+  }
+
+  .pillars__title {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-xs);
+  }
+
+  .pillars__item p {
+    font-size: var(--step--1);
+    margin: 0;
+  }
+
+  /* ---------------- Chapters ---------------- */
+  .chapters {
+    list-style: none;
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 48rem) {
+    .chapters {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .chapters__item {
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    padding: var(--space-l);
+  }
+
+  .chapters__title {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-xs);
+  }
+
+  .chapters__title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .chapters__title a:hover {
+    color: var(--teal-ink);
+  }
+
+  .chapters__body {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    flex: 1;
+  }
+
+  .chapters__cta {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+    align-self: flex-start;
+    padding-bottom: 0.2em;
+  }
+
+  /* ---------------- Sponsors ---------------- */
+  .sponsors {
+    list-style: none;
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 48rem) {
+    .sponsors {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .sponsors__item {
+    text-align: center;
+  }
+
+  .sponsors__badge {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin: 0 auto var(--space-s);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--ink);
+  }
+
+  .sponsors__item--open .sponsors__badge {
+    border-style: dashed;
+    color: var(--gold-ink);
+  }
+
+  .sponsors__name {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .sponsors__role {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink-soft);
+    margin-top: var(--space-3xs);
+  }
+
+  /* ---------------- Donate ---------------- */
+  .donate__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .donate__hint {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin: var(--space-s) 0 0;
+  }
+
+  /* ---------------- Partnerships ---------------- */
+  .section__head {
+    margin-bottom: var(--space-xl);
+  }
+
+  .panel h3 {
+    margin-bottom: var(--space-xs);
+  }
+
+  .deck {
+    margin-top: var(--space-m);
+  }
+
+  .deck__note {
+    font-size: var(--step--1);
+    margin: var(--space-s) 0 0;
+  }
+
+  .press > .rule {
+    margin: var(--space-xl) 0;
+  }
+</style>

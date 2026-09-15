@@ -195,6 +195,14 @@ const instagramPending = isPlaceholder(social.naniInstagram);
     width: 100%;
   }
 
+  /* Single column: keep the frame a portrait, not a wall. */
+  @media (max-width: 55.999rem) {
+    .founder-hero__media .ph-frame {
+      max-width: 28rem;
+      margin-inline: auto;
+    }
+  }
+
   .founder-hero__lede {
     font-size: var(--step-1);
     line-height: 1.5;
@@ -255,6 +263,14 @@ const instagramPending = isPlaceholder(social.naniInstagram);
 
   .award__media .ph-frame {
     width: 100%;
+  }
+
+  /* Single column: keep the frame a portrait, not a wall. */
+  @media (max-width: 55.999rem) {
+    .award__media .ph-frame {
+      max-width: 28rem;
+      margin-inline: auto;
+    }
   }
 
   .award__lede {

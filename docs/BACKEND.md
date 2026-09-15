@@ -140,11 +140,7 @@ Request:
 {
   "pillar": "iul",
   "answers": {
-    "age_range": "40s",
-    "has_dependents": "yes",
-    "has_life_cover": "not_sure",
-    "goal": "protect_family",
-    "timeline": "exploring"
+    "has_iul_policy": "no"
   },
   "notes": "Prefer afternoons.",
   "name": "Jane Doe",
@@ -168,63 +164,61 @@ Request:
 - `disclaimerAccepted` must be boolean `true` (the string `"true"` is
   rejected).
 
-Answer schemas per pillar. The frontend must render exactly these options
-with exactly these values.
+Answer schemas per pillar. These are deliberately minimal: the funnel books a
+discovery call, it does not profile the visitor. The frontend must render
+exactly these questions with exactly these values, and nothing else. Adding a
+question requires sign-off from the foundation.
 
-Shared option sets:
+| Pillar               | Key                      | Options      | Question on the form                          |
+| -------------------- | ------------------------ | ------------ | --------------------------------------------- |
+| `iul`                | `has_iul_policy`         | `yes`, `no`  | "Do you currently have an IUL policy?"        |
+| `business_insurance` | `has_business_insurance` | `yes`, `no`  | "Do you currently have business insurance?"   |
+|                      | `happy_with_it`          | `yes`, `no`  | "Are you happy with it?" Only shown, and only accepted, when `has_business_insurance` is `yes`. If it arrives alongside `has_business_insurance: no` the request is rejected with 400. |
+| `annuities`          | (none)                   |              | No questions. `answers` must be `{}`.         |
+| `retirement`         | (none)                   |              | No questions. `answers` must be `{}`.         |
 
-- `AGE`: `under_30`, `30s`, `40s`, `50s`, `60_plus`
-- `YES_NO`: `yes`, `no`
-- `YES_NO_UNSURE`: `yes`, `no`, `not_sure`
-- `TIMELINE`: `now`, `within_6_months`, `exploring`
-- `HORIZON`: `under_5_years`, `5_to_10_years`, `10_to_20_years`, `20_plus_years`
+Examples of valid `answers`:
 
-| Pillar               | Key                    | Options                                                                                        |
-| -------------------- | ---------------------- | ---------------------------------------------------------------------------------------------- |
-| `iul`                | `age_range`            | AGE                                                                                            |
-|                      | `has_dependents`       | YES_NO                                                                                         |
-|                      | `has_life_cover`       | YES_NO_UNSURE                                                                                  |
-|                      | `goal`                 | `protect_family`, `long_term_savings`, `tax_advantaged_retirement`, `leave_a_legacy`, `not_sure` |
-|                      | `timeline`             | TIMELINE                                                                                       |
-| `business_insurance` | `business_stage`       | `idea`, `under_2_years`, `2_to_5_years`, `5_plus_years`                                        |
-|                      | `has_partners`         | YES_NO                                                                                         |
-|                      | `has_employees`        | YES_NO                                                                                         |
-|                      | `coverage_interest`    | `key_person`, `buy_sell`, `business_continuity`, `not_sure`                                    |
-|                      | `timeline`             | TIMELINE                                                                                       |
-| `annuities`          | `age_range`            | AGE                                                                                            |
-|                      | `retirement_horizon`   | HORIZON                                                                                        |
-|                      | `priority`             | `guaranteed_income`, `growth`, `protecting_principal`, `not_sure`                              |
-|                      | `has_existing_annuity` | YES_NO_UNSURE                                                                                  |
-|                      | `timeline`             | TIMELINE                                                                                       |
-| `retirement`         | `age_range`            | AGE                                                                                            |
-|                      | `retirement_horizon`   | HORIZON                                                                                        |
-|                      | `has_employer_plan`    | YES_NO_UNSURE                                                                                  |
-|                      | `top_concern`          | `outliving_savings`, `market_loss`, `healthcare_costs`, `taxes`, `not_sure`                    |
-|                      | `timeline`             | TIMELINE                                                                                       |
+```json
+{ "has_iul_policy": "yes" }
+{ "has_business_insurance": "no" }
+{ "has_business_insurance": "yes", "happy_with_it": "no" }
+{}
+```
 
-#### No money information. Ever.
+#### The foundation never asks about money
 
 The Her Future funnel is a discovery call booking form, not a financial
-questionnaire. The Worker enforces this in three layers, all before any write:
+questionnaire. The rule is that WE never ASK about income, assets, net worth,
+salary or account balances. The Worker enforces that in two layers, both
+before any write:
 
-1. **Enum-only answers.** `answers` values must match the option lists above.
-   There is nowhere inside `answers` to type a number or a sentence.
-2. **Whole-payload money scan.** Every key and every string value in the
-   request body (including `notes`, `name`, and any unexpected field) is
-   checked against a term list (`income`, `salary`, `wage`, `earn`, `net
-   worth`, `asset`, `balance`, `revenue`, `401k`, `account number`, `routing`,
-   `iban`, `ssn`, and similar) and a currency-amount pattern (`$250,000`,
-   `50k`, `1.2 million`, `USD 20000`, `20,000 dollars`, and similar). Any
-   numeric value of 1000 or more anywhere in the payload is also rejected.
-3. **Strict key allow-list.** Any key in `answers` that is not in the pillar's
-   schema is rejected, whether or not it looks like money.
+1. **Money-shaped keys are rejected, everywhere in the payload.** Every key
+   at every depth of the request body is checked against a term list
+   (`income`, `salary`, `wage`, `earning`, `net_worth`, `asset`, `balance`,
+   `revenue`, `401k`, `account_number`, `routing`, `iban`, `ssn`, and
+   similar). A key like `salary` or `net_worth` means a form, or a tampered
+   request, is asking a money question. That is the thing we must never do,
+   so it is rejected with `400` and nothing is stored.
+2. **`answers` values are strict enums.** Every key in `answers` must be in
+   the pillar's schema, every value must be one of the listed options, and
+   conditional keys must be absent when their condition does not hold.
+   Anything unexpected there is a tampering signal and is rejected.
 
-A rejected payload returns `400` with the message "Please do not include
-income, assets or account information. We only need the answers on the form."
-Nothing is stored and nothing about the content is logged.
+What the guard deliberately does NOT do: it does not scan `notes` (or any
+other free-text value) for money words or currency amounts. `notes` is a box
+we invited the visitor to write in. "I was diagnosed in 2019 and I want to
+protect my family's assets" is an honest sentence and is stored as written,
+subject only to the 2000 character cap and the control-character rules. An
+earlier version of this guard rejected years, the word "assets" and the word
+"earning" in notes, which turned real visitors into silent 400s. That was a
+bug. The guard exists to stop the foundation from collecting financial data,
+not to police what a visitor chooses to tell us. Do not tighten it back into
+a value scan.
 
 If the frontend ever needs a new question, add it to `HER_FUTURE_SCHEMAS` in
-`worker.js` as an enum. Do not add free-text or numeric fields.
+`worker.js` as an enum with foundation sign-off. Do not add free-text or
+numeric answer fields.
 
 ### `POST /api/inquiry`
 
@@ -422,8 +416,9 @@ non-interactive shell it auto-answers yes.
   its message, never a stack trace or the request.
 - **Responses.** Error messages are generic and safe to show. No SQL, stack
   or internal detail is returned.
-- **Her Future.** No money information is ever accepted, stored or logged.
-  See the section above.
+- **Her Future.** The form never asks about money, and any request shaped
+  like a money question is rejected before storage. Free-text notes are
+  stored as the visitor wrote them. See the section above.
 - **Notification emails** carry the submitter's details to Nani's inbox. That
   is their purpose. They go over TLS to Resend and are not logged.
 - **Retention.** Nothing in the Worker deletes submission rows. `rate_limits`
@@ -441,3 +436,19 @@ and two `429`s with `Retry-After`, and the D1 counter stopped at 5 (the
 memory gate absorbed requests 6 and 7). All seven legacy paths returned `301`
 with the correct `Location`. The dev log contained zero emails, IPs, or
 names; both once-per-isolate warnings appeared exactly once.
+
+Second pass after the Her Future schema and money-guard corrections: 21
+`/api/her-future` cases. Valid `iul`, both `business_insurance` shapes,
+`annuities` and `retirement` with `{}` all returned `200` and stored the
+expected `answers` JSON. `happy_with_it` alongside `has_business_insurance:
+no`, an unexpected answers key, a stray key on a no-question pillar, a
+missing or non-enum answer, and money-shaped keys at the top level, inside
+`answers` and nested three levels deep all returned `400` with nothing
+stored. Notes containing "diagnosed in 2019", "my family's assets", "my
+income dropped", "$40,000" and "250000" all returned `200` and were stored
+verbatim. The null-byte and 2000-character rules on `notes` still return
+`400`. Log: zero emails, IPs or visitor text, zero `500`s.
+
+Gotcha for local dev: wrangler keys the local D1 file by `database_id`. If
+`database_id` changes, run `npm run db:local` again or every request will
+`500` with `no such table: rate_limits`.

@@ -242,6 +242,14 @@ const holidayDinner = {
     width: 100%;
   }
 
+  /* Single column: keep the frame a portrait, not a wall. */
+  @media (max-width: 55.999rem) {
+    .about-hero__media .ph-frame {
+      max-width: 28rem;
+      margin-inline: auto;
+    }
+  }
+
   .section__head {
     margin-bottom: var(--space-xl);
   }

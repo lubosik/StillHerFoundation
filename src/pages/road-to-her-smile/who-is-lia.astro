@@ -1,0 +1,227 @@
+---
+import Base from '@/layouts/Base.astro';
+import { giving } from '@/config/site';
+
+/**
+ * Who is Lia? Chapter three of Road to Her Smile.
+ *
+ * A four part portrait. Copy is the verbatim record of the live campaign page
+ * in reference/MIGRATION.md, section 2.4, with the spaced hyphens the old page
+ * used as dashes resolved into sentences.
+ */
+const card = giving.find((method) => method.id === 'card');
+const cardHref = card?.detail.value ?? '';
+---
+
+<Base
+  title="Who is Lia?"
+  description="Getting to know Lia Spriggs, the woman at the heart of the Road to Her Smile documentary. Chapter three of a StillHer Foundation film."
+>
+  <!-- Hero -->
+  <section class="section hero">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <span class="label">Road to Her Smile. Chapter three</span>
+        <h1>Who is <span class="em">Lia</span>?</h1>
+        <p class="hero__sub">Getting to know the woman at the heart of this story.</p>
+      </div>
+      <div class="hero__media">
+        <div class="ph-frame" style="--ph-ratio: 4 / 5">
+          Lia in her modeling years<br />photograph pending confirmation
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Born in Verona -->
+  <section class="section section--white">
+    <div class="wrap wrap--narrow">
+      <span class="label">Born in Verona</span>
+      <h2>A world of sun-warmed <span class="em">stone</span></h2>
+      <p>
+        Lia Spriggs was born in Verona, Italy, into a world of sun-warmed stone, ancient bridges,
+        and a culture that valued beauty not as a commodity but as a way of life. She grew up
+        surrounded by the kind of effortless Italian elegance that the fashion industry spends
+        billions trying to replicate, and from a young age it was clear that she carried
+        something rare: a presence that could hold a room still, a quiet confidence that had
+        nothing to do with performance and everything to do with who she naturally was.
+      </p>
+    </div>
+  </section>
+
+  <!-- The Model -->
+  <section class="section section--sand">
+    <div class="wrap wrap--narrow">
+      <span class="label">The model</span>
+      <h2>Presence was the only <span class="em">currency</span> that mattered</h2>
+      <p>
+        She moved through the fashion world of northern Italy as someone who belonged there
+        without trying. She modelled. She stood in front of cameras and in rooms where presence
+        was the only currency that mattered, and she did it with the kind of grace that made
+        other people believe that the future was genuinely expansive, that doors would keep
+        opening, that the world she had been born into would continue to hold her.
+      </p>
+
+      <blockquote class="pull">
+        <p>
+          She carried something rare: a quiet confidence that had nothing to do with performance
+          and everything to do with who she naturally was.
+        </p>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- A Mother -->
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <span class="label">A mother</span>
+      <h2>She built a life from <span class="em">nothing</span></h2>
+      <p>
+        When she crossed the ocean and arrived in America, she carried with her every ounce of
+        that strength and poured it into raising two children in a country that was not her own,
+        without family nearby, without the safety net she had left behind in Italy. She built a
+        life from nothing, held her family together through betrayal and heartbreak, and never
+        once stopped being the pillar her children needed her to be.
+      </p>
+    </div>
+  </section>
+
+  <!-- A Pillar of Community -->
+  <section class="section section--white">
+    <div class="wrap wrap--narrow">
+      <span class="label">A pillar of community</span>
+      <h2>She is still standing. She is <span class="em">still</span> her.</h2>
+      <p>
+        Everything was taken from her: her marriage, her teeth, her health, her trust. Even after
+        all of it, Lia remained a presence in her community, someone people turned to, someone
+        who showed up for others even when the systems meant to show up for her had failed
+        completely. She is still standing. She is still her.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTAs and chapter navigation -->
+  <section class="section section--sand">
+    <div class="wrap wrap--narrow">
+      <span class="label">Her road back</span>
+      <h2>Walk it <span class="em">with</span> her</h2>
+      <p>
+        Every contribution funds production, legal advocacy, and Lia's medical restoration. This
+        is how we make sure her voice is finally heard.
+      </p>
+      <div class="ctas">
+        {
+          cardHref ? (
+            <a href={cardHref} class="btn btn--primary" target="_blank" rel="noopener">
+              Support Lia's Restoration
+            </a>
+          ) : (
+            <span class="btn btn--primary" aria-disabled="true">
+              Support Lia's Restoration
+            </span>
+          )
+        }
+        <a href="/road-to-her-smile/the-tragedy" class="btn btn--ghost">Read What Happened</a>
+      </div>
+
+      <hr class="rule" />
+
+      <nav class="chapter-nav" aria-label="Road to Her Smile chapters">
+        <a class="chapter-nav__link" href="/road-to-her-smile/her-road">
+          <span class="chapter-nav__kicker">Previous chapter</span>
+          <span class="chapter-nav__title"><span aria-hidden="true">&larr;</span> Her Road</span>
+        </a>
+        <a class="chapter-nav__link chapter-nav__link--next" href="/road-to-her-smile">
+          <span class="chapter-nav__kicker">Back to</span>
+          <span class="chapter-nav__title">Road to Her Smile <span aria-hidden="true">&rarr;</span></span>
+        </a>
+      </nav>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 52rem) {
+    .hero__grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .hero__sub {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-style: italic;
+    line-height: 1.3;
+    max-width: 32ch;
+  }
+
+  .hero__media .ph-frame {
+    width: 100%;
+  }
+
+  .pull {
+    margin: var(--space-xl) 0 0;
+    padding-left: var(--space-m);
+    border-left: 1px solid var(--gold);
+  }
+
+  .pull p {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-style: italic;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .chapter-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-m);
+  }
+
+  .chapter-nav__link {
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .chapter-nav__link--next {
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .chapter-nav__kicker {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--gold-ink);
+    margin-bottom: var(--space-3xs);
+  }
+
+  .chapter-nav__title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+
+  .chapter-nav__link:hover .chapter-nav__title {
+    border-bottom-color: var(--gold);
+  }
+</style>

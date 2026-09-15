@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="shf-t">
+  <title id="shf-t">The Still Her Foundation emblem, direction C</title>
+  <desc>An S, H and F monogram in a heavy banded ring with a gold sliver, drawn for embroidery.</desc>
+  <rect width="200" height="200" fill="#F7F2E9"/>
+  <circle cx="100" cy="100" r="87" fill="none" stroke="#5BBCC9" stroke-width="6.4"/>
+  <circle cx="100" cy="100" r="79.5" fill="none" stroke="#C9A961" stroke-width="2"/>
+  <circle cx="100" cy="100" r="74.8" fill="none" stroke="#5BBCC9" stroke-width="2.4"/>
+  <path d="M100 14.1Q101.19 18.26 103.4 20.5Q101.19 22.74 100 26.9Q98.81 22.74 96.6 20.5Q98.81 18.26 100 14.1Z" fill="#C9A961"/>
+  <path d="M100 173.1Q101.19 177.26 103.4 179.5Q101.19 181.74 100 185.9Q98.81 181.74 96.6 179.5Q98.81 177.26 100 173.1Z" fill="#C9A961"/>
+  <g transform="translate(35.854 38.096) scale(0.6692)">
+    <path d="M139 39.8C137.5 38.2 134.17 32.77 130 30.2C125.83 27.63 119.67 25.43 114 24.4C108.33 23.37 102.17 23.48 96 24C89.83 24.52 82.67 25.45 77 27.5C71.33 29.55 65.5 32.92 62 36.3C58.5 39.68 56.33 44.28 56 47.8C55.67 51.32 57.33 54.77 60 57.4C62.67 60.03 67.5 61.9 72 63.6C76.5 65.3 81.83 66.35 87 67.6C92.17 68.85 97.67 69.87 103 71.1C108.33 72.33 113.83 73.43 119 75C124.17 76.57 130 78.17 134 80.5C138 82.83 141.67 86 143 89C144.33 92 143.67 95.67 142 98.5C140.33 101.33 137.17 103.92 133 106C128.83 108.08 122.67 110.08 117 111C111.33 111.92 104.67 112.08 99 111.5C93.33 110.92 87.5 109.58 83 107.5C78.5 105.42 73.83 100.42 72 99" fill="none" stroke="#5BBCC9" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M101 19C101 25.17 101 43.67 101 56C101 68.33 101 80.67 101 93C101 105.33 101 117.83 101 130C101 142.17 101 160 101 166" fill="none" stroke="#5BBCC9" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M53 96C53 99 53 108.33 53 114C53 119.67 52.93 124.5 53 130C53.07 135.5 53.73 142.33 53.4 147C53.07 151.67 52.4 155 51 158C49.6 161 46 163.83 45 165" fill="none" stroke="#5BBCC9" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M48.7 123C52.58 123 63.28 123 72 123C80.72 123 92.67 123 101 123C109.33 123 115.5 123 122 123C128.5 123 137 123 140 123" fill="none" stroke="#5BBCC9" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M98 142C100 142 106 142 110 142C114 142 118.67 142 122 142C125.33 142 128.67 142 130 142" fill="none" stroke="#5BBCC9" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

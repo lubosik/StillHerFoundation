@@ -1,0 +1,350 @@
+---
+/**
+ * One way to give, driven entirely by a `giving` entry in site.ts.
+ *
+ * - handle: the handle with a copy button.
+ * - wallet: the address, a copy button, a network label and a QR code.
+ * - link:   a button to an external donation page.
+ *
+ * A pending value renders through Placeholder and disables the copy button,
+ * so the card still looks finished while Nani's details are on their way.
+ */
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import Placeholder from './Placeholder.astro';
+import { isPlaceholder, type GivingMethod } from '@/config/site';
+
+interface Props {
+  method: GivingMethod;
+}
+
+const { method } = Astro.props;
+const { id, label, kind, detail, network, qr, hint } = method;
+
+const pending = isPlaceholder(detail);
+const value = pending ? '' : detail.value;
+
+/* The QR is only offered when the address is real and the SVG has been built. */
+const qrPath = `/brand/qr/${id}.svg`;
+const qrFile = fileURLToPath(new URL(`../../public${qrPath}`, import.meta.url));
+const showQr = qr && !pending && existsSync(qrFile);
+
+const copyLabel = `Copy ${label} ${kind === 'wallet' ? 'address' : 'handle'}`;
+const linkHref = kind === 'link' && detail.value ? detail.value : '';
+---
+
+<article class:list={['give', `give--${kind}`]} data-giving={id}>
+  <header class="give__head">
+    <h3 class="give__title">{label}</h3>
+    {network && <span class="give__network">{network}</span>}
+  </header>
+
+  {hint && <p class="give__hint">{hint}</p>}
+
+  {
+    kind === 'link' ? (
+      <div class="give__action">
+        <a
+          href={linkHref || undefined}
+          class="btn btn--primary"
+          aria-disabled={linkHref ? undefined : 'true'}
+          rel="noopener"
+          target="_blank"
+        >
+          Donate by card
+        </a>
+        {!linkHref && (
+          <p class="give__note">
+            <Placeholder field={detail} fallback="Card giving opens shortly." />
+          </p>
+        )}
+      </div>
+    ) : (
+      <>
+        <div class="give__value-row">
+          <p class="give__value" id={`give-${id}-value`}>
+            {pending ? <Placeholder field={detail} /> : <span class="give__code">{value}</span>}
+          </p>
+
+          <button
+            type="button"
+            class="give__copy"
+            data-copy={value || undefined}
+            aria-disabled={pending ? 'true' : undefined}
+            aria-describedby={`give-${id}-status`}
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+              <rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+            <span data-copy-label>Copy</span>
+            <span class="visually-hidden">{copyLabel}</span>
+          </button>
+        </div>
+
+        <p class="give__status" id={`give-${id}-status`} data-copy-status role="status" aria-live="polite"></p>
+
+        {qr && (
+          <div class="give__qr">
+            {showQr ? (
+              <img
+                src={qrPath}
+                width="160"
+                height="160"
+                alt={`QR code for the ${label} address`}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <div class="ph-frame give__qr-frame" style="--ph-ratio: 1 / 1">
+                QR code
+              </div>
+            )}
+          </div>
+        )}
+      </>
+    )
+  }
+</article>
+
+<style>
+  .give {
+    display: grid;
+    align-content: start;
+    gap: var(--space-s);
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    padding: var(--space-l);
+    transition: box-shadow var(--dur-base) var(--ease);
+  }
+
+  .give:hover {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .give__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-s);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--gold);
+  }
+
+  .give__title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    margin: 0;
+  }
+
+  .give__network {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--gold-ink);
+  }
+
+  .give__hint {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .give__value-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    min-width: 0;
+  }
+
+  .give__value {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0.7em 0.9em;
+    background: var(--cream);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-s);
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+
+  .give__code {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.95em;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+  }
+
+  .give__copy {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.65em 1em;
+    border: 1px solid var(--teal-ink);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--teal-ink);
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    line-height: 1;
+    transition:
+      background-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+  }
+
+  .give__copy:hover {
+    background: var(--teal-ink);
+    color: var(--white);
+  }
+
+  .give__copy[aria-disabled='true'] {
+    border-color: var(--sand);
+    color: var(--ink-soft);
+    cursor: not-allowed;
+  }
+
+  .give__copy[aria-disabled='true']:hover {
+    background: transparent;
+    color: var(--ink-soft);
+  }
+
+  .give__copy[data-copied='true'] {
+    background: var(--teal-ink);
+    color: var(--white);
+  }
+
+  .give__status {
+    font-size: var(--step--1);
+    color: var(--teal-ink);
+    margin: 0;
+    min-height: 1.5em;
+  }
+
+  .give__status[data-state='error'] {
+    color: var(--error);
+  }
+
+  .give__qr {
+    width: 10rem;
+    max-width: 100%;
+  }
+
+  .give__qr img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-s);
+    padding: var(--space-2xs);
+    background: var(--white);
+  }
+
+  .give__qr-frame {
+    padding: var(--space-s);
+  }
+
+  .give__action {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+  }
+
+  .give__note {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin: 0;
+  }
+</style>
+
+<script>
+  /*
+   * Copy to clipboard, one handler for every giving card on the page.
+   * Confirms in the card's live region, reverts after two seconds, and
+   * falls back gracefully when the Clipboard API is unavailable or blocked.
+   */
+  const REVERT_MS = 2000;
+
+  function fallbackCopy(text: string): boolean {
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.top = '0';
+    area.style.left = '-9999px';
+    document.body.appendChild(area);
+    area.select();
+
+    let ok = false;
+    try {
+      ok = document.execCommand('copy');
+    } catch {
+      ok = false;
+    }
+    document.body.removeChild(area);
+    return ok;
+  }
+
+  async function copyText(text: string): Promise<boolean> {
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        // Permission denied or blocked. Try the legacy path.
+      }
+    }
+    return fallbackCopy(text);
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
+    const card = button.closest<HTMLElement>('[data-giving]');
+    const status = card?.querySelector<HTMLElement>('[data-copy-status]') ?? null;
+    const label = button.querySelector<HTMLElement>('[data-copy-label]');
+    let timer: number | undefined;
+
+    const setStatus = (text: string, state: 'ok' | 'error' | '') => {
+      if (!status) return;
+      status.textContent = text;
+      if (state) status.dataset.state = state;
+      else delete status.dataset.state;
+    };
+
+    button.addEventListener('click', async () => {
+      if (button.getAttribute('aria-disabled') === 'true') return;
+
+      const text = button.dataset.copy;
+      if (!text) return;
+
+      const ok = await copyText(text);
+
+      if (ok) {
+        button.dataset.copied = 'true';
+        if (label) label.textContent = 'Copied';
+        setStatus('Copied', 'ok');
+      } else {
+        setStatus('Copy is not available here. Please select the text and copy it.', 'error');
+      }
+
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        delete button.dataset.copied;
+        if (label) label.textContent = 'Copy';
+        setStatus('', '');
+      }, REVERT_MS);
+    });
+  });
+
+  // Buttons with nothing to copy stay visible but inert.
+  document.querySelectorAll<HTMLButtonElement>('button[aria-disabled="true"]:not([data-copy])').forEach(
+    (button) => {
+      button.addEventListener('click', (e) => e.preventDefault());
+    }
+  );
+</script>

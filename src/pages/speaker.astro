@@ -1,0 +1,295 @@
+---
+import Base from '@/layouts/Base.astro';
+
+/**
+ * Nani Rosen as a speaker.
+ *
+ * A videographer will be following her, so there is no footage yet. The
+ * video grid is framed placeholders. The copy speaks from lived experience
+ * and does not overclaim a keynote career. The booking form posts to
+ * /api/inquiry with type "speaker" and is built inline to the PATTERNS.md
+ * form pattern.
+ */
+
+const topics = [
+  {
+    title: "Graves' disease",
+    body: 'Living with a thyroid condition and an autoimmune disease, said plainly and without the clinical distance.',
+  },
+  {
+    title: 'Resilience',
+    body: 'What it takes to refuse the box a diagnosis builds for you, and to keep building anyway.',
+  },
+  {
+    title: 'Women in business',
+    body: 'Founding, leading and connecting as a woman, and the ecosystem that has to hold when she does.',
+  },
+] as const;
+
+const videoSlots = [
+  'Speaking footage in production',
+  'Interview footage to follow',
+  'Event coverage to follow',
+  'Campaign film in production',
+] as const;
+
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const id = 'speaker';
+---
+
+<Base
+  title="Speaker"
+  description="Book Nani Rosen to speak on Graves' disease, resilience and women in business."
+>
+  <!-- Hero -->
+  <section class="section speaker-hero">
+    <div class="wrap speaker-hero__grid">
+      <div class="speaker-hero__copy">
+        <span class="label">Speaker</span>
+        <h1>Nani Rosen, <span class="em">speaking</span></h1>
+        <hr class="rule rule--short speaker-hero__rule" />
+        <p class="speaker-hero__lede">
+          Nani speaks from lived experience on Graves' disease, resilience and women in business.
+          Survivor first, activist always, and entirely herself on stage.
+        </p>
+        <p>
+          A videographer is following her through the season ahead. Footage will be published
+          here as it is captured.
+        </p>
+        <a href="#book" class="btn btn--primary">Enquire about a booking</a>
+      </div>
+      <div class="speaker-hero__media">
+        <div class="ph-frame" style="--ph-ratio: 4 / 5">
+          Nani on stage<br />photography to follow
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Topics -->
+  <section class="section section--white">
+    <div class="wrap">
+      <header class="section__head">
+        <span class="label">What she speaks on</span>
+        <h2 class="section__title">Three <span class="em">subjects</span></h2>
+      </header>
+      <div class="grid grid--3">
+        {
+          topics.map((topic) => (
+            <article class="card">
+              <h3 class="card__title">{topic.title}</h3>
+              <p>{topic.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Video grid -->
+  <section class="section section--sand">
+    <div class="wrap">
+      <header class="section__head">
+        <span class="label">On film</span>
+        <h2 class="section__title">Nani, <span class="em">recorded</span></h2>
+        <p class="section__lede">
+          The camera is with her now. This is where the footage will live.
+        </p>
+      </header>
+      <ul class="videos" aria-label="Speaking footage, in production">
+        {
+          videoSlots.map((caption) => (
+            <li class="videos__item">
+              <div class="ph-frame" style="--ph-ratio: 16 / 9">
+                {caption}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Booking inquiry -->
+  <section class="section" id="book">
+    <div class="wrap booking">
+      <div class="booking__intro">
+        <span class="label label--gold">Bookings</span>
+        <h2 class="section__title">Invite Nani to <span class="em">speak</span></h2>
+        <p class="booking__blurb">
+          Tell us about your event, your audience and your dates, and we will come back to you.
+        </p>
+      </div>
+
+      <form
+        class="booking__form"
+        data-form
+        data-endpoint="/api/inquiry"
+        data-success="Thank you. Your enquiry has been received and we will be in touch."
+        novalidate
+      >
+        <input type="hidden" name="type" value="speaker" />
+
+        <div class="hp" aria-hidden="true">
+          <label for={`${id}-website`}>Leave this field empty</label>
+          <input type="text" id={`${id}-website`} name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="booking__row">
+          <label class="field" for={`${id}-name`}>
+            <span class="field__label">Name</span>
+            <input type="text" id={`${id}-name`} name="name" required maxlength="120" autocomplete="name" />
+          </label>
+
+          <label class="field" for={`${id}-email`}>
+            <span class="field__label">Email address</span>
+            <input type="email" id={`${id}-email`} name="email" required maxlength="254" autocomplete="email" />
+          </label>
+        </div>
+
+        <label class="field" for={`${id}-org`}>
+          <span class="field__label">Organisation</span>
+          <input type="text" id={`${id}-org`} name="org" maxlength="160" autocomplete="organization" />
+          <span class="field__hint">Optional.</span>
+        </label>
+
+        <label class="field" for={`${id}-message`}>
+          <span class="field__label">About the event</span>
+          <textarea id={`${id}-message`} name="message" maxlength="4000" rows="5"></textarea>
+          <span class="field__hint">The occasion, the audience, the subject and any dates you have in mind.</span>
+        </label>
+
+        {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey} data-size="flexible"></div>}
+
+        <button type="submit" class="btn btn--primary">Send enquiry</button>
+        <p class="form__status" data-status role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .speaker-hero__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .speaker-hero__grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .speaker-hero__rule {
+    margin-block: 0 var(--space-l);
+  }
+
+  .speaker-hero__lede {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 46ch;
+  }
+
+  .speaker-hero__copy .btn {
+    margin-top: var(--space-s);
+  }
+
+  .speaker-hero__media .ph-frame {
+    width: 100%;
+  }
+
+  /* Single column: keep the frame a portrait, not a wall. */
+  @media (max-width: 55.999rem) {
+    .speaker-hero__media .ph-frame {
+      max-width: 28rem;
+      margin-inline: auto;
+    }
+  }
+
+  .section__head {
+    margin-bottom: var(--space-xl);
+  }
+
+  .section__title {
+    font-size: var(--step-4);
+    margin: 0;
+  }
+
+  .section__lede {
+    margin-top: var(--space-m);
+    margin-bottom: 0;
+    color: var(--ink-soft);
+  }
+
+  .videos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 48rem) {
+    .videos {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .videos__item .ph-frame {
+    width: 100%;
+  }
+
+  .booking {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 56rem) {
+    .booking {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .booking__blurb {
+    color: var(--ink-soft);
+    margin-top: var(--space-m);
+    margin-bottom: 0;
+  }
+
+  .booking__form {
+    position: relative;
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    padding: var(--space-l);
+  }
+
+  .booking__form::before {
+    content: '';
+    position: absolute;
+    inset: var(--space-xs);
+    border: 1px solid var(--gold);
+    opacity: 0.4;
+    border-radius: calc(var(--radius-m) - 4px);
+    pointer-events: none;
+  }
+
+  .booking__row {
+    display: grid;
+    gap: 0 var(--space-m);
+  }
+
+  @media (min-width: 40rem) {
+    .booking__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .cf-turnstile {
+    margin-bottom: var(--space-m);
+  }
+</style>

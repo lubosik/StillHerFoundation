@@ -1,0 +1,98 @@
+---
+/**
+ * The wordmark, set in live text rather than as an SVG image.
+ *
+ * "The", "Still" and "Foundation" in the display serif, "Her" in the script.
+ * Nani's words on Sep 13: "Her is written fancy".
+ *
+ * Live text is used deliberately. An SVG image cannot load the self hosted
+ * fonts when it is referenced through an img tag, so a text based SVG would
+ * fall back to a system serif. This renders correctly everywhere, scales
+ * cleanly, and stays selectable and readable to a screen reader.
+ *
+ * The vector wordmark in public/brand is for print and embroidery.
+ */
+interface Props {
+  /** Stacked puts "Foundation" on its own line. */
+  layout?: 'inline' | 'stacked';
+  /** Inherit the parent colour instead of the default ink. */
+  tone?: 'ink' | 'cream' | 'inherit';
+  class?: string;
+}
+
+const { layout = 'stacked', tone = 'inherit', class: className = '' } = Astro.props;
+---
+
+<span
+  class:list={['wordmark', `wordmark--${layout}`, `wordmark--${tone}`, className]}
+  role="img"
+  aria-label="The StillHer Foundation"
+>
+  <span class="wordmark__line" aria-hidden="true">
+    <span class="wordmark__the">The</span>
+    <span class="wordmark__still">Still</span><span class="wordmark__her">Her</span>
+  </span>
+  <span class="wordmark__foundation" aria-hidden="true">Foundation</span>
+</span>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
+
+  .wordmark--inline {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+
+  .wordmark--ink {
+    color: var(--ink);
+  }
+
+  .wordmark--cream {
+    color: var(--cream);
+  }
+
+  .wordmark__line {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.22em;
+  }
+
+  .wordmark__the {
+    font-size: 0.44em;
+    font-style: italic;
+    letter-spacing: 0.04em;
+  }
+
+  .wordmark__still {
+    font-size: 1em;
+  }
+
+  /* The script sits slightly lower and larger, the way a signature would. */
+  .wordmark__her {
+    font-family: var(--font-script);
+    font-size: 1.28em;
+    line-height: 0.8;
+    margin-left: -0.04em;
+    transform: translateY(0.06em);
+  }
+
+  .wordmark__foundation {
+    font-size: 0.4em;
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    font-family: var(--font-sans);
+    margin-top: 0.7em;
+  }
+
+  .wordmark--inline .wordmark__foundation {
+    margin-top: 0;
+  }
+</style>

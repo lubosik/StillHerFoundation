@@ -2,6 +2,7 @@
 import { org, railNav, topNav, social } from '@/config/site';
 import Placeholder from './Placeholder.astro';
 import Newsletter from './Newsletter.astro';
+import Wordmark from './Wordmark.astro';
 
 const year = new Date().getFullYear();
 const links = railNav.filter((i) => !('divider' in i)) as { label: string; href: string }[];
@@ -11,7 +12,8 @@ const links = railNav.filter((i) => !('divider' in i)) as { label: string; href:
   <div class="wrap">
     <div class="footer__top">
       <div class="footer__brand">
-        <img src="/brand/lockup-stacked.svg" alt={org.name} width="200" height="160" />
+        <img src="/brand/emblem.svg" alt="" width="84" height="84" class="footer__emblem" />
+        <Wordmark layout="stacked" tone="cream" />
       </div>
 
       <nav class="footer__nav" aria-label="Footer">
@@ -89,9 +91,20 @@ const links = railNav.filter((i) => !('divider' in i)) as { label: string; href:
     }
   }
 
-  .footer__brand img {
-    width: clamp(9rem, 14vw, 12rem);
+  .footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-m);
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  }
+
+  .footer__emblem {
+    width: clamp(4rem, 7vw, 5.5rem);
     height: auto;
+    /* The emblem is teal on cream, so it needs the white treatment on ink. */
+    filter: brightness(0) invert(1);
+    opacity: 0.92;
   }
 
   .footer__nav ul,

@@ -1,0 +1,178 @@
+---
+import Base from '@/layouts/Base.astro';
+import ComingSoon from '@/components/ComingSoon.astro';
+import InterestForm from '@/components/InterestForm.astro';
+
+/**
+ * The Good Weekend Tournament. Coming soon, but beautiful.
+ *
+ * Only the timing line "Spring 2027, dates to be announced" may be published.
+ * No calendar dates and no venue or city appear on this page. Both are
+ * unconfirmed and pending.
+ */
+
+const days = [
+  {
+    day: 'Friday',
+    title: 'The committee dinner',
+    body: 'An evening for the men and women of the tournament committee, the night before play begins.',
+  },
+  {
+    day: 'Saturday',
+    title: 'The Good Girls Tournament',
+    body: 'The women take the course. A full day of golf, company and competition.',
+  },
+  {
+    day: 'Sunday',
+    title: 'The Good Guys Tournament',
+    body: 'The men take the course to close the weekend.',
+  },
+] as const;
+---
+
+<Base
+  title="The Good Weekend"
+  description="The Good Weekend Tournament: three days of golf and company that fund the work of The StillHer Foundation. Spring 2027, dates to be announced."
+>
+  <ComingSoon
+    kicker="Coming soon"
+    title="The Good Weekend Tournament"
+    emphasis="Good"
+    body="Three days of sport and company. A committee dinner on Friday, The Good Girls Tournament on Saturday and The Good Guys Tournament on Sunday. It funds the work of the foundation."
+    timing="Spring 2027, dates to be announced."
+    framePrompt="Tournament photography to follow"
+    frameRatio="4 / 5"
+  >
+    <img slot="seal" src="/brand/good-weekend-seal.svg" alt="The Good Weekend Tournament seal" width="136" height="136" />
+
+    <!-- The three days -->
+    <section class="section section--white">
+      <div class="wrap">
+        <header class="section__head">
+          <span class="label">The weekend</span>
+          <h2 class="section__title">Three <span class="em">days</span></h2>
+        </header>
+        <ol class="days">
+          {
+            days.map((item) => (
+              <li class="days__item">
+                <span class="label label--gold">{item.day}</span>
+                <h3 class="days__title">{item.title}</h3>
+                <p class="days__body">{item.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <!-- The setting -->
+    <section class="section section--sand">
+      <div class="wrap setting">
+        <div class="setting__copy">
+          <span class="label">The setting</span>
+          <h2 class="section__title">In the <span class="em">tradition</span> of the club</h2>
+          <p class="setting__lede">
+            The Good Weekend carries the manners of the country club
+            and the polo ground. An annual occasion, dressed and photographed like one.
+          </p>
+          <p>
+            Professional photography and videography run through all three days, so the weekend
+            lives on long after the last round.
+          </p>
+          <p>
+            The tournament is the foundation's principal fundraiser. It raises the operational
+            budget that keeps the work of The StillHer Foundation going all year.
+          </p>
+        </div>
+        <div class="setting__media">
+          <div class="ph-frame" style="--ph-ratio: 4 / 5">
+            Course and clubhouse<br />photography to follow
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interest -->
+    <section class="section">
+      <div class="wrap">
+        <InterestForm
+          event="good_weekend"
+          heading="Play, sponsor or join us as a guest"
+          blurb="Tell us how you would like to be part of the weekend and we will write to you first when dates are announced."
+        />
+      </div>
+    </section>
+  </ComingSoon>
+</Base>
+
+<style>
+  .section__head {
+    margin-bottom: var(--space-xl);
+  }
+
+  .section__title {
+    font-size: var(--step-4);
+    margin: 0;
+  }
+
+  .days {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 48rem) {
+    .days {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .days__item {
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--gold);
+  }
+
+  .days__title {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-xs);
+  }
+
+  .days__body {
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .setting {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .setting {
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .setting__lede {
+    font-size: var(--step-1);
+    line-height: 1.55;
+    margin-top: var(--space-m);
+  }
+
+  .setting__media .ph-frame {
+    width: 100%;
+  }
+
+  /* Single column: keep the frame a portrait, not a wall. */
+  @media (max-width: 55.999rem) {
+    .setting__media .ph-frame {
+      max-width: 28rem;
+      margin-inline: auto;
+    }
+  }
+</style>

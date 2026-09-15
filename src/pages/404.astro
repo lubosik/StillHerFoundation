@@ -1,0 +1,58 @@
+---
+/**
+ * Not found. Calm and editorial. The emblem, one line, and three ways back.
+ * Cloudflare serves dist/404.html with a 404 status for any unknown path.
+ */
+import Base from '@/layouts/Base.astro';
+---
+
+<Base title="Page not found" description="That page is not here. Find your way back to The StillHer Foundation.">
+  <section class="section nf">
+    <div class="wrap--narrow nf__inner">
+      <img class="nf__emblem" src="/brand/emblem.svg" alt="" width="96" height="96" decoding="async" />
+      <span class="label">404</span>
+      <h1>This page is not <span class="em">here</span>.</h1>
+      <p class="nf__line">
+        The link may have moved, or it may never have existed. Everything that does is a step away.
+      </p>
+
+      <nav class="nf__links" aria-label="Find your way back">
+        <a href="/" class="btn btn--primary">Home</a>
+        <a href="/road-to-her-smile" class="btn btn--ghost">Road to Her Smile</a>
+        <a href="/support" class="btn btn--ghost">Support</a>
+      </nav>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    min-height: 60vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+
+  .nf__inner {
+    display: grid;
+    justify-items: center;
+  }
+
+  .nf__emblem {
+    width: clamp(4rem, 8vw, 6rem);
+    height: auto;
+    margin-bottom: var(--space-l);
+  }
+
+  .nf__line {
+    margin-inline: auto;
+    margin-bottom: var(--space-l);
+  }
+
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2xs);
+  }
+</style>

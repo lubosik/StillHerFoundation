@@ -1,0 +1,1102 @@
+---
+/**
+ * Her Future discovery call funnel.
+ *
+ * An inline stepped panel, not a dialog, so the booking calendar can sit in
+ * the page on every screen size. One form holds every step; steps are shown
+ * and hidden in place, so going back never loses an answer.
+ *
+ * Steps:
+ *   1. pillar       choose one of four pillars
+ *   2. question     one or two yes/no questions, only for IUL and Business Insurance
+ *   3. details      optional notes, then name, email, phone
+ *   4. disclaimer   the 20 minute commitment, must be ticked
+ *   then the calendar, shown only after /api/her-future accepts the details.
+ *
+ * Annuities and Retirement skip step 2, so their flow is three steps and the
+ * progress indicator says so.
+ *
+ * Contract for /api/her-future, every answer is an enum:
+ *   iul                -> answers: { has_iul_policy: "yes" | "no" }
+ *   business_insurance -> answers: { has_business_insurance: "yes" | "no",
+ *                                    happy_with_it: "yes" | "no" (only when the first is "yes") }
+ *   annuities          -> answers: {}
+ *   retirement         -> answers: {}
+ *
+ * This is a discovery call, never a qualification form. Nothing here asks
+ * the visitor about money and nothing here should be added that does.
+ */
+import { herFuture } from '@/config/site';
+
+interface Props {
+  /** Unique per page, used to build element ids. */
+  id?: string;
+}
+
+const { id = 'hf' } = Astro.props;
+
+const pillars = [
+  {
+    id: 'iul',
+    label: 'Indexed Universal Life (IUL)',
+    blurb: 'Protection for the people who depend on you.',
+  },
+  {
+    id: 'business_insurance',
+    label: 'Business Insurance',
+    blurb: 'Cover for the business you have built.',
+  },
+  {
+    id: 'annuities',
+    label: 'Annuities',
+    blurb: 'Steady income for later in life.',
+  },
+  {
+    id: 'retirement',
+    label: 'Retirement & Generational Wealth',
+    blurb: 'Retirement, asset protection and what you leave behind.',
+  },
+] as const;
+
+const yesNo = [
+  { value: 'yes', label: 'Yes' },
+  { value: 'no', label: 'No' },
+] as const;
+
+const bookingUrl =
+  herFuture.bookingUrl.pending || !herFuture.bookingUrl.value ? '' : herFuture.bookingUrl.value;
+
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<section class="funnel section" id="book" data-funnel data-booking-url={bookingUrl}>
+  <div class="wrap--narrow">
+    <span class="label">Book a call</span>
+    <h2 class="funnel__title">Twenty minutes, <span class="em">yours</span>.</h2>
+    <p class="funnel__lede">
+      Tell us which pillar you would like to talk about, leave your details, and choose a time. A few
+      short steps and nothing you would not say over coffee.
+    </p>
+
+    <div class="funnel__panel">
+      <div class="funnel__progress" data-progress-wrap>
+        <p class="funnel__count" data-progress aria-live="polite">Step 1 of 4</p>
+        <div class="funnel__bar" aria-hidden="true">
+          <span class="funnel__bar-fill" data-progress-bar style="width: 25%"></span>
+        </div>
+      </div>
+
+      <form class="funnel__form" novalidate data-funnel-form>
+        <div class="hp" aria-hidden="true">
+          <label for={`${id}-website`}>Leave this field empty</label>
+          <input type="text" id={`${id}-website`} name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <!-- Step: pillar -->
+        <div class="funnel__step" data-step="pillar">
+          <h3 class="funnel__heading" id={`${id}-h-pillar`} tabindex="-1" data-step-heading>
+            What would you like to talk about?
+          </h3>
+
+          <fieldset class="funnel__fieldset" aria-describedby={`${id}-err-pillar`}>
+            <legend class="funnel__legend">Choose one pillar</legend>
+            <div class="funnel__choices">
+              {
+                pillars.map((pillar) => (
+                  <label class="choice">
+                    <input type="radio" name="pillar" value={pillar.id} />
+                    <span class="choice__body">
+                      <span class="choice__title">{pillar.label}</span>
+                      <span class="choice__blurb">{pillar.blurb}</span>
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+          <p class="funnel__error" id={`${id}-err-pillar`} data-error="pillar"></p>
+
+          <div class="funnel__actions">
+            <button type="button" class="btn btn--primary" data-next>Continue</button>
+          </div>
+        </div>
+
+        <!-- Step: question (IUL and Business Insurance only) -->
+        <div class="funnel__step" data-step="question" hidden>
+          <h3 class="funnel__heading" id={`${id}-h-question`} tabindex="-1" data-step-heading>
+            One quick question
+          </h3>
+
+          <fieldset
+            class="funnel__fieldset"
+            data-branch="iul"
+            aria-describedby={`${id}-err-has_iul_policy`}
+            hidden
+          >
+            <legend class="funnel__legend funnel__legend--question">
+              Do you currently have an IUL policy?
+            </legend>
+            <div class="funnel__choices funnel__choices--row">
+              {
+                yesNo.map((opt) => (
+                  <label class="choice choice--compact">
+                    <input type="radio" name="has_iul_policy" value={opt.value} />
+                    <span class="choice__body">
+                      <span class="choice__title">{opt.label}</span>
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+          <p class="funnel__error" id={`${id}-err-has_iul_policy`} data-error="has_iul_policy"></p>
+
+          <fieldset
+            class="funnel__fieldset"
+            data-branch="business_insurance"
+            aria-describedby={`${id}-err-has_business_insurance`}
+            hidden
+          >
+            <legend class="funnel__legend funnel__legend--question">
+              Do you currently have business insurance?
+            </legend>
+            <div class="funnel__choices funnel__choices--row">
+              {
+                yesNo.map((opt) => (
+                  <label class="choice choice--compact">
+                    <input type="radio" name="has_business_insurance" value={opt.value} />
+                    <span class="choice__body">
+                      <span class="choice__title">{opt.label}</span>
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+          <p
+            class="funnel__error"
+            id={`${id}-err-has_business_insurance`}
+            data-error="has_business_insurance"
+          >
+          </p>
+
+          <fieldset
+            class="funnel__fieldset"
+            data-branch="business_insurance"
+            data-when="has_business_insurance=yes"
+            aria-describedby={`${id}-err-happy_with_it`}
+            hidden
+          >
+            <legend class="funnel__legend funnel__legend--question">Are you happy with it?</legend>
+            <div class="funnel__choices funnel__choices--row">
+              {
+                yesNo.map((opt) => (
+                  <label class="choice choice--compact">
+                    <input type="radio" name="happy_with_it" value={opt.value} />
+                    <span class="choice__body">
+                      <span class="choice__title">{opt.label}</span>
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+          <p class="funnel__error" id={`${id}-err-happy_with_it`} data-error="happy_with_it"></p>
+
+          <div class="funnel__actions">
+            <button type="button" class="btn btn--ghost" data-back>Back</button>
+            <button type="button" class="btn btn--primary" data-next>Continue</button>
+          </div>
+        </div>
+
+        <!-- Step: details -->
+        <div class="funnel__step" data-step="details" hidden>
+          <h3 class="funnel__heading" id={`${id}-h-details`} tabindex="-1" data-step-heading>
+            Your details
+          </h3>
+
+          <div class="field">
+            <label class="field__label" for={`${id}-notes`}>
+              Is there anything you'd like us to know or keep in mind for this call?
+            </label>
+            <textarea
+              id={`${id}-notes`}
+              name="notes"
+              maxlength="2000"
+              rows="4"
+              aria-describedby={`${id}-hint-notes ${id}-err-notes`}></textarea>
+            <span class="field__hint" id={`${id}-hint-notes`}>Optional.</span>
+            <p class="funnel__error" id={`${id}-err-notes`} data-error="notes"></p>
+          </div>
+
+          <div class="funnel__contact">
+            <div class="field">
+              <label class="field__label" for={`${id}-name`}>Name</label>
+              <input
+                type="text"
+                id={`${id}-name`}
+                name="name"
+                required
+                maxlength="120"
+                autocomplete="name"
+                aria-describedby={`${id}-err-name`}
+              />
+              <p class="funnel__error" id={`${id}-err-name`} data-error="name"></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for={`${id}-email`}>Email</label>
+              <input
+                type="email"
+                id={`${id}-email`}
+                name="email"
+                required
+                maxlength="254"
+                autocomplete="email"
+                inputmode="email"
+                aria-describedby={`${id}-err-email`}
+              />
+              <p class="funnel__error" id={`${id}-err-email`} data-error="email"></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for={`${id}-phone`}>Phone</label>
+              <input
+                type="tel"
+                id={`${id}-phone`}
+                name="phone"
+                maxlength="32"
+                autocomplete="tel"
+                inputmode="tel"
+                aria-describedby={`${id}-hint-phone ${id}-err-phone`}
+              />
+              <span class="field__hint" id={`${id}-hint-phone`}>Optional. Include your country code.</span>
+              <p class="funnel__error" id={`${id}-err-phone`} data-error="phone"></p>
+            </div>
+          </div>
+
+          <div class="funnel__actions">
+            <button type="button" class="btn btn--ghost" data-back>Back</button>
+            <button type="button" class="btn btn--primary" data-next>Continue</button>
+          </div>
+        </div>
+
+        <!-- Step: disclaimer -->
+        <div class="funnel__step" data-step="disclaimer" hidden>
+          <h3 class="funnel__heading" id={`${id}-h-disclaimer`} tabindex="-1" data-step-heading>
+            Before you book
+          </h3>
+
+          <p class="funnel__disclaimer">{herFuture.disclaimer}</p>
+
+          <div class="check">
+            <input
+              type="checkbox"
+              id={`${id}-accept`}
+              name="disclaimerAccepted"
+              value="true"
+              aria-describedby={`${id}-err-disclaimerAccepted`}
+            />
+            <label for={`${id}-accept`}>I understand, and I will set aside 20 uninterrupted minutes.</label>
+          </div>
+          <p
+            class="funnel__error"
+            id={`${id}-err-disclaimerAccepted`}
+            data-error="disclaimerAccepted"
+          >
+          </p>
+
+          {
+            turnstileKey && (
+              <div class="funnel__turnstile" data-turnstile data-sitekey={turnstileKey} />
+            )
+          }
+
+          <div class="funnel__actions">
+            <button type="button" class="btn btn--ghost" data-back>Back</button>
+            <button type="submit" class="btn btn--primary">Continue to booking</button>
+          </div>
+          <p class="form__status" data-status role="status" aria-live="polite"></p>
+        </div>
+
+        <!-- Calendar, only after the API has accepted the details -->
+        <div class="funnel__step" data-step="calendar" hidden>
+          <h3 class="funnel__heading" id={`${id}-h-calendar`} tabindex="-1" data-step-heading>
+            Choose your time
+          </h3>
+
+          {
+            bookingUrl ? (
+              <>
+                <p>
+                  Thank you, <span data-thanks-name>there</span>. Pick a slot that suits you below.
+                </p>
+                <div class="funnel__calendar" data-calendar-mount />
+                <p class="funnel__fallback">
+                  If the calendar does not load,
+                  <a href={bookingUrl} target="_blank" rel="noopener" data-calendar-link>
+                    open it in a new tab
+                  </a>.
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  Thank you, <span data-thanks-name>there</span>. We have your details and will be in touch
+                  to arrange your call.
+                </p>
+                <div class="funnel__pending ph-frame" style="--ph-ratio: 16 / 9">
+                  <span class="funnel__pending-inner">
+                    <span class="funnel__pending-kicker">Booking calendar</span>
+                    <span class="funnel__pending-title">Opens shortly</span>
+                  </span>
+                </div>
+              </>
+            )
+          }
+        </div>
+      </form>
+    </div>
+
+    <p class="funnel__quiet">
+      This is a conversation, not an application. You will never be asked to share figures with us here.
+    </p>
+  </div>
+</section>
+
+<style>
+  .funnel__title {
+    margin-bottom: var(--space-s);
+  }
+
+  .funnel__lede {
+    margin-bottom: var(--space-l);
+  }
+
+  .funnel__panel {
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    padding: clamp(var(--space-m), 2vw + 1rem, var(--space-xl));
+    box-shadow: var(--shadow-soft);
+  }
+
+  .funnel__progress {
+    margin-bottom: var(--space-l);
+  }
+
+  .funnel__count {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--teal-ink);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .funnel__bar {
+    height: 2px;
+    background: var(--sand-tint);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+
+  .funnel__bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--gold);
+    transition: width var(--dur-base) var(--ease);
+  }
+
+  .funnel__heading {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-m);
+    scroll-margin-top: 6rem;
+  }
+
+  .funnel__heading:focus {
+    outline: none;
+  }
+
+  .funnel__fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0 0 var(--space-2xs);
+    min-width: 0;
+  }
+
+  .funnel__fieldset[hidden] {
+    display: none;
+  }
+
+  .funnel__legend {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink);
+    padding: 0;
+    margin-bottom: var(--space-s);
+  }
+
+  .funnel__legend--question {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    text-transform: none;
+    letter-spacing: -0.01em;
+  }
+
+  .funnel__choices {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  @media (min-width: 40rem) {
+    .funnel__choices {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .funnel__choices--row {
+    grid-template-columns: repeat(2, minmax(0, 10rem));
+    margin-bottom: var(--space-m);
+  }
+
+  .choice {
+    position: relative;
+    display: flex;
+    gap: var(--space-s);
+    align-items: flex-start;
+    padding: var(--space-s) var(--space-m);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    background: var(--cream);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease),
+      background-color var(--dur-fast) var(--ease);
+  }
+
+  .choice:hover {
+    border-color: var(--teal-ink);
+  }
+
+  .choice input {
+    flex: 0 0 auto;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0.25rem 0 0;
+    accent-color: var(--teal-ink);
+  }
+
+  .choice:has(input:checked) {
+    border-color: var(--teal-ink);
+    background: var(--white);
+    box-shadow: inset 0 0 0 1px var(--teal-ink);
+  }
+
+  .choice:has(input:focus-visible) {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  .choice__body {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .choice__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.2;
+  }
+
+  .choice__blurb {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .choice--compact {
+    padding: var(--space-xs) var(--space-m);
+    align-items: center;
+  }
+
+  .choice--compact input {
+    margin-top: 0;
+  }
+
+  .choice--compact .choice__title {
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+  }
+
+  .funnel__error {
+    font-size: var(--step--1);
+    color: var(--error);
+    margin: 0;
+    min-height: 0;
+  }
+
+  .funnel__error:not(:empty) {
+    margin-top: var(--space-2xs);
+    margin-bottom: var(--space-s);
+  }
+
+  .field .funnel__error:not(:empty) {
+    margin-bottom: 0;
+  }
+
+  .funnel__contact {
+    margin-top: var(--space-m);
+  }
+
+  @media (min-width: 40rem) {
+    .funnel__contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 var(--space-m);
+    }
+
+    .funnel__contact .field:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .field input[aria-invalid='true'],
+  .field textarea[aria-invalid='true'] {
+    border-color: var(--error);
+  }
+
+  .funnel__disclaimer {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    padding-left: var(--space-m);
+    border-left: 1px solid var(--gold);
+  }
+
+  .check {
+    display: flex;
+    gap: var(--space-s);
+    align-items: flex-start;
+    margin-top: var(--space-m);
+  }
+
+  .check input {
+    flex: 0 0 auto;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0.3rem 0 0;
+    accent-color: var(--teal-ink);
+  }
+
+  .check label {
+    cursor: pointer;
+  }
+
+  .funnel__turnstile {
+    margin-top: var(--space-m);
+  }
+
+  .funnel__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    justify-content: flex-end;
+    margin-top: var(--space-l);
+  }
+
+  .funnel__calendar {
+    margin-top: var(--space-m);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    min-height: 40rem;
+  }
+
+  .funnel__calendar iframe {
+    display: block;
+    width: 100%;
+    height: 44rem;
+    border: 0;
+  }
+
+  .funnel__fallback {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-top: var(--space-s);
+  }
+
+  .funnel__pending {
+    margin-top: var(--space-m);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .funnel__pending-inner {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .funnel__pending-kicker {
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--gold-ink);
+  }
+
+  .funnel__pending-title {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    color: var(--ink);
+  }
+
+  .funnel__quiet {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-top: var(--space-m);
+  }
+</style>
+
+<script>
+  /*
+   * Custom submit logic. This form posts a nested payload, so it deliberately
+   * does not use the shared data-form handler. It follows the same status
+   * conventions: a [data-status] live region, a disabled button while
+   * sending, and friendly errors that never expose internals.
+   */
+
+  type StepName = 'pillar' | 'question' | 'details' | 'disclaimer' | 'calendar';
+
+  interface TurnstileApi {
+    render: (el: HTMLElement, opts: { sitekey: string; size?: string }) => string;
+  }
+
+  const MESSAGES = {
+    sending: 'Sending your details.',
+    failed: 'Something went wrong. Please try again, or email us directly.',
+    rateLimited: 'That is a few too many tries. Please wait a moment and try again.',
+    choosePillar: 'Please choose one pillar to continue.',
+    answer: 'Please choose an answer to continue.',
+    name: 'Please tell us your name.',
+    nameLong: 'Please keep your name under 120 characters.',
+    email: 'Please enter a valid email address.',
+    phone: 'Please use digits, spaces and + ( ) - . only, up to 32 characters.',
+    notesLong: 'Please keep your notes under 2000 characters.',
+    accept: 'Please tick the box to confirm you have read this.',
+  };
+
+  const FORM_STEPS: StepName[] = ['pillar', 'question', 'details', 'disclaimer'];
+  const PILLARS_WITH_QUESTION = new Set(['iul', 'business_insurance']);
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const PHONE_PATTERN = /^[0-9+()\-.\s]{1,32}$/;
+
+  const root = document.querySelector<HTMLElement>('[data-funnel]');
+
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('[data-funnel-form]');
+    const steps = Array.from(root.querySelectorAll<HTMLElement>('[data-step]'));
+    const progressWrap = root.querySelector<HTMLElement>('[data-progress-wrap]');
+    const progress = root.querySelector<HTMLElement>('[data-progress]');
+    const progressBar = root.querySelector<HTMLElement>('[data-progress-bar]');
+    const status = root.querySelector<HTMLElement>('[data-status]');
+    const submitBtn = root.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const turnstileEl = root.querySelector<HTMLElement>('[data-turnstile]');
+    const bookingUrl = root.dataset.bookingUrl || '';
+
+    let current: StepName = 'pillar';
+    let turnstileRendered = false;
+
+    if (form) {
+      const stepEl = (name: StepName) => steps.find((s) => s.dataset.step === name) ?? null;
+
+      const radioValue = (name: string): string =>
+        form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value ?? '';
+
+      const field = <T extends HTMLElement>(name: string) =>
+        form.querySelector<T>(`[name="${name}"]`);
+
+      const pillar = () => radioValue('pillar');
+
+      const activeSteps = (): StepName[] =>
+        PILLARS_WITH_QUESTION.has(pillar())
+          ? FORM_STEPS
+          : FORM_STEPS.filter((s) => s !== 'question');
+
+      /* ---------------- Status and errors ---------------- */
+
+      function setStatus(text: string, state: 'ok' | 'error' | '') {
+        if (!status) return;
+        status.textContent = text;
+        if (state) status.dataset.state = state;
+        else delete status.dataset.state;
+      }
+
+      function setError(name: string, message: string) {
+        const el = root!.querySelector<HTMLElement>(`[data-error="${name}"]`);
+        if (el) el.textContent = message;
+
+        const inputs = form!.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+          `[name="${name}"]`
+        );
+        inputs.forEach((input) => {
+          if (message) input.setAttribute('aria-invalid', 'true');
+          else input.removeAttribute('aria-invalid');
+        });
+      }
+
+      function clearErrors(scope: HTMLElement) {
+        scope.querySelectorAll<HTMLElement>('[data-error]').forEach((el) => {
+          el.textContent = '';
+        });
+        scope.querySelectorAll<HTMLElement>('[aria-invalid]').forEach((el) => {
+          el.removeAttribute('aria-invalid');
+        });
+      }
+
+      function focusFirst(name: string) {
+        field<HTMLElement>(name)?.focus();
+      }
+
+      /* ---------------- Branch visibility ---------------- */
+
+      function syncBranches() {
+        const p = pillar();
+        root!.querySelectorAll<HTMLElement>('[data-branch]').forEach((group) => {
+          let show = group.dataset.branch === p;
+
+          const when = group.dataset.when;
+          if (show && when) {
+            const [name, expected] = when.split('=');
+            show = radioValue(name) === expected;
+          }
+
+          group.hidden = !show;
+        });
+      }
+
+      /* ---------------- Step display ---------------- */
+
+      function updateProgress() {
+        if (!progressWrap) return;
+
+        if (current === 'calendar') {
+          progressWrap.hidden = true;
+          return;
+        }
+
+        progressWrap.hidden = false;
+        const list = activeSteps();
+        const index = list.indexOf(current);
+        const n = index + 1;
+        const total = list.length;
+
+        if (progress) progress.textContent = `Step ${n} of ${total}`;
+        if (progressBar) progressBar.style.width = `${Math.round((n / total) * 100)}%`;
+      }
+
+      function show(name: StepName) {
+        current = name;
+        steps.forEach((s) => {
+          s.hidden = s.dataset.step !== name;
+        });
+
+        syncBranches();
+        updateProgress();
+
+        if (name === 'disclaimer') mountTurnstile();
+
+        const heading = stepEl(name)?.querySelector<HTMLElement>('[data-step-heading]');
+        heading?.focus();
+      }
+
+      function neighbour(direction: 1 | -1): StepName | null {
+        const list = activeSteps();
+        const index = list.indexOf(current);
+        const target = list[index + direction];
+        return target ?? null;
+      }
+
+      /* ---------------- Validation ---------------- */
+
+      function validate(name: StepName): boolean {
+        const scope = stepEl(name);
+        if (!scope) return true;
+        clearErrors(scope);
+
+        const p = pillar();
+
+        if (name === 'pillar') {
+          if (!p) {
+            setError('pillar', MESSAGES.choosePillar);
+            focusFirst('pillar');
+            return false;
+          }
+          return true;
+        }
+
+        if (name === 'question') {
+          if (p === 'iul' && !radioValue('has_iul_policy')) {
+            setError('has_iul_policy', MESSAGES.answer);
+            focusFirst('has_iul_policy');
+            return false;
+          }
+          if (p === 'business_insurance') {
+            const has = radioValue('has_business_insurance');
+            if (!has) {
+              setError('has_business_insurance', MESSAGES.answer);
+              focusFirst('has_business_insurance');
+              return false;
+            }
+            if (has === 'yes' && !radioValue('happy_with_it')) {
+              setError('happy_with_it', MESSAGES.answer);
+              focusFirst('happy_with_it');
+              return false;
+            }
+          }
+          return true;
+        }
+
+        if (name === 'details') {
+          const notes = field<HTMLTextAreaElement>('notes')?.value ?? '';
+          const nameVal = (field<HTMLInputElement>('name')?.value ?? '').trim();
+          const email = (field<HTMLInputElement>('email')?.value ?? '').trim();
+          const phone = (field<HTMLInputElement>('phone')?.value ?? '').trim();
+
+          let firstBad = '';
+
+          if (notes.length > 2000) {
+            setError('notes', MESSAGES.notesLong);
+            firstBad = firstBad || 'notes';
+          }
+          if (!nameVal) {
+            setError('name', MESSAGES.name);
+            firstBad = firstBad || 'name';
+          } else if (nameVal.length > 120) {
+            setError('name', MESSAGES.nameLong);
+            firstBad = firstBad || 'name';
+          }
+          if (!EMAIL_PATTERN.test(email) || email.length > 254) {
+            setError('email', MESSAGES.email);
+            firstBad = firstBad || 'email';
+          }
+          if (phone && !PHONE_PATTERN.test(phone)) {
+            setError('phone', MESSAGES.phone);
+            firstBad = firstBad || 'phone';
+          }
+
+          if (firstBad) {
+            focusFirst(firstBad);
+            return false;
+          }
+          return true;
+        }
+
+        if (name === 'disclaimer') {
+          const accepted = field<HTMLInputElement>('disclaimerAccepted')?.checked ?? false;
+          if (!accepted) {
+            setError('disclaimerAccepted', MESSAGES.accept);
+            focusFirst('disclaimerAccepted');
+            return false;
+          }
+          return true;
+        }
+
+        return true;
+      }
+
+      /* ---------------- Turnstile (only when a site key is set) ---------------- */
+
+      function mountTurnstile() {
+        if (!turnstileEl || turnstileRendered) return;
+        const sitekey = turnstileEl.dataset.sitekey;
+        if (!sitekey) return;
+
+        const api = (window as unknown as { turnstile?: TurnstileApi }).turnstile;
+        if (!api) {
+          // The Turnstile script is async. Try again once it has loaded.
+          window.addEventListener('load', mountTurnstile, { once: true });
+          return;
+        }
+
+        api.render(turnstileEl, { sitekey, size: 'flexible' });
+        turnstileRendered = true;
+      }
+
+      /* ---------------- Payload ---------------- */
+
+      function buildPayload() {
+        const p = pillar();
+        const answers: Record<string, string> = {};
+
+        if (p === 'iul') {
+          answers.has_iul_policy = radioValue('has_iul_policy');
+        } else if (p === 'business_insurance') {
+          const has = radioValue('has_business_insurance');
+          answers.has_business_insurance = has;
+          if (has === 'yes') answers.happy_with_it = radioValue('happy_with_it');
+        }
+
+        const payload: Record<string, unknown> = {
+          pillar: p,
+          answers,
+          notes: (field<HTMLTextAreaElement>('notes')?.value ?? '').trim(),
+          name: (field<HTMLInputElement>('name')?.value ?? '').trim(),
+          email: (field<HTMLInputElement>('email')?.value ?? '').trim(),
+          phone: (field<HTMLInputElement>('phone')?.value ?? '').trim(),
+          disclaimerAccepted: field<HTMLInputElement>('disclaimerAccepted')?.checked === true,
+          website: field<HTMLInputElement>('website')?.value ?? '',
+        };
+
+        const token = new FormData(form!).get('cf-turnstile-response');
+        if (typeof token === 'string' && token) payload.turnstileToken = token;
+
+        return payload;
+      }
+
+      /* ---------------- Calendar ---------------- */
+
+      function showCalendar(name: string, email: string) {
+        const thanks = root!.querySelectorAll<HTMLElement>('[data-thanks-name]');
+        const firstName = name.split(/\s+/)[0] || 'there';
+        thanks.forEach((el) => {
+          el.textContent = firstName;
+        });
+
+        if (bookingUrl) {
+          let href = bookingUrl;
+          try {
+            const url = new URL(bookingUrl, window.location.href);
+            url.searchParams.set('name', name);
+            url.searchParams.set('email', email);
+            href = url.toString();
+          } catch {
+            // Leave the URL untouched if it cannot be parsed.
+          }
+
+          const link = root!.querySelector<HTMLAnchorElement>('[data-calendar-link]');
+          if (link) link.href = href;
+
+          const mount = root!.querySelector<HTMLElement>('[data-calendar-mount]');
+          if (mount && !mount.querySelector('iframe')) {
+            const frame = document.createElement('iframe');
+            frame.src = href;
+            frame.title = 'Book your discovery call';
+            frame.loading = 'lazy';
+            frame.referrerPolicy = 'strict-origin-when-cross-origin';
+            mount.appendChild(frame);
+          }
+        }
+
+        show('calendar');
+      }
+
+      /* ---------------- Submit ---------------- */
+
+      async function submit() {
+        if (!validate('disclaimer')) return;
+
+        const payload = buildPayload();
+
+        submitBtn?.setAttribute('disabled', '');
+        setStatus(MESSAGES.sending, '');
+
+        try {
+          const res = await fetch('/api/her-future', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          if (res.ok) {
+            setStatus('', '');
+            showCalendar(String(payload.name), String(payload.email));
+            return;
+          }
+
+          if (res.status === 429) {
+            setStatus(MESSAGES.rateLimited, 'error');
+            return;
+          }
+
+          // Validation messages from the API are written for visitors. Anything
+          // else, or anything unexpected in shape, falls back to the generic line.
+          let message = MESSAGES.failed;
+          if (res.status === 400) {
+            try {
+              const body = (await res.json()) as { error?: unknown };
+              if (typeof body.error === 'string' && body.error.length > 0 && body.error.length <= 200) {
+                message = body.error;
+              }
+            } catch {
+              // Unreadable body. Keep the generic message.
+            }
+          }
+          setStatus(message, 'error');
+        } catch {
+          setStatus(MESSAGES.failed, 'error');
+        } finally {
+          submitBtn?.removeAttribute('disabled');
+        }
+      }
+
+      /* ---------------- Wiring ---------------- */
+
+      function advance() {
+        if (!validate(current)) return;
+        const next = neighbour(1);
+        if (next) show(next);
+      }
+
+      form.querySelectorAll<HTMLButtonElement>('[data-next]').forEach((btn) =>
+        btn.addEventListener('click', advance)
+      );
+
+      form.querySelectorAll<HTMLButtonElement>('[data-back]').forEach((btn) =>
+        btn.addEventListener('click', () => {
+          const prev = neighbour(-1);
+          if (prev) show(prev);
+        })
+      );
+
+      // Reveal or hide the follow up question as soon as the first is answered.
+      form.querySelectorAll<HTMLInputElement>('input[name="has_business_insurance"]').forEach((r) =>
+        r.addEventListener('change', () => {
+          syncBranches();
+          setError('has_business_insurance', '');
+        })
+      );
+
+      // Clear an inline error the moment the visitor fixes it.
+      form.addEventListener('input', (e) => {
+        const target = e.target as HTMLInputElement | HTMLTextAreaElement | null;
+        if (target?.name) setError(target.name, '');
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Enter inside an earlier step advances rather than submitting.
+        if (current !== 'disclaimer') {
+          if (current !== 'calendar') advance();
+          return;
+        }
+        void submit();
+      });
+
+      // If the page CTA points here, land the visitor on the first heading.
+      document.querySelectorAll<HTMLAnchorElement>('a[href="#book"]').forEach((a) =>
+        a.addEventListener('click', () => {
+          if (current === 'pillar') {
+            requestAnimationFrame(() => {
+              stepEl('pillar')?.querySelector<HTMLElement>('[data-step-heading]')?.focus();
+            });
+          }
+        })
+      );
+
+      syncBranches();
+      updateProgress();
+    }
+  }
+</script>

@@ -1,0 +1,158 @@
+---
+/**
+ * Privacy. A plain, honest description of what this site actually does with
+ * information. Entity details, address and effective date come from site.ts
+ * and render as placeholders until Nani confirms them. No jurisdiction,
+ * company number or entity type is stated because none has been confirmed.
+ */
+import Base from '@/layouts/Base.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import { org, type Pending } from '@/config/site';
+
+/* Effective date is not yet in site.ts. Move this there once confirmed. */
+const effectiveDate: Pending<string> = {
+  value: '',
+  pending: true,
+  fallback: 'Effective date to be confirmed',
+  note: 'Effective date for the privacy policy and terms.',
+};
+---
+
+<Base
+  title="Privacy"
+  description="How The StillHer Foundation website handles the information you share through its newsletter, inquiry forms and the Her Future discovery call form."
+>
+  <section class="section">
+    <div class="wrap--narrow legal">
+      <span class="label">Legal</span>
+      <h1>Privacy <span class="em">policy</span></h1>
+      <p class="legal__meta">
+        <Placeholder field={effectiveDate} />
+      </p>
+
+      <p>
+        This policy explains what information the <Placeholder field={org.legalName} /> website
+        collects, why, and what happens to it. We have kept it short because the site does very
+        little with your information, and we would like that to be clear.
+      </p>
+
+      <h2>Who we are</h2>
+      <p>
+        <Placeholder field={org.legalName} />, referred to here as "the foundation", "we" and "us".
+      </p>
+      <p>
+        Registered address: <Placeholder field={org.address} fallback="to be confirmed" />.
+      </p>
+      <p>
+        Email: <a href={`mailto:${org.email.value}`}>{org.email.value}</a>
+      </p>
+
+      <h2>What we collect, and why</h2>
+      <p>The site has three kinds of form. Each collects only what it needs.</p>
+
+      <h3>Newsletter signup</h3>
+      <p>
+        Your email address and a label for where on the site you signed up. We use it to send you
+        the foundation's newsletter and nothing else. You can ask to be removed at any time by
+        emailing us.
+      </p>
+
+      <h3>Inquiry and interest forms</h3>
+      <p>
+        Your name, email address, and where you choose to give it, an organisation name, a message,
+        and the event or role you are interested in. We use it to reply to you and to plan the event
+        or partnership you asked about.
+      </p>
+
+      <h3>Her Future discovery call form</h3>
+      <p>
+        The pillar you would like to talk about, one or two yes or no answers about whether you
+        already hold a policy, an optional note, and your name, email address and phone number. We
+        use it to prepare for and arrange your 20 minute discovery call.
+      </p>
+      <p>
+        We never ask for, accept or store information about your income, assets, net worth or account
+        balances through this form. Submissions that contain that kind of information are rejected
+        and not saved.
+      </p>
+
+      <h2>Where it is stored</h2>
+      <p>
+        Form submissions are stored in a Cloudflare D1 database operated for the foundation. Access
+        is limited to the people who run the foundation and the site. When a notification email is
+        sent to the foundation about a new submission, it is sent over an encrypted connection.
+      </p>
+
+      <h2>Your IP address</h2>
+      <p>
+        To limit spam and abuse, the site keeps a count of how many times a form is submitted from
+        the same connection in a short window. To do that without keeping your IP address, we store
+        a salted hash of it. The raw IP address is never written to the database and never written to
+        our logs. The hash cannot be reversed into your address.
+      </p>
+
+      <h2>Spam protection</h2>
+      <p>
+        Forms are protected by Cloudflare Turnstile, which checks that a submission comes from a
+        person rather than an automated script. When it is active, Cloudflare processes the check
+        under its own privacy policy. We also use a hidden form field that people never see; if it is
+        filled in, the submission is discarded.
+      </p>
+
+      <h2>Cookies and tracking</h2>
+      <p>
+        The site does not set advertising or analytics cookies. A single value is kept in your
+        browser's session storage so that the opening animation on the home page plays once per
+        visit rather than on every page. It is not sent anywhere and it is cleared when you close the
+        browser.
+      </p>
+
+      <h2>Third parties</h2>
+      <p>
+        The site is served by Cloudflare. Spam checks use Cloudflare Turnstile. Card donations are
+        handled by a separate donation page which has its own privacy terms. If a booking calendar
+        is embedded on the Her Future page, the calendar provider processes the time you choose
+        under its own terms.
+      </p>
+
+      <h2>How long we keep it</h2>
+      <p>
+        Newsletter addresses are kept until you ask to be removed. Form submissions are kept for as
+        long as they are needed to respond to you and to run the foundation's work. Rate limiting
+        records are deleted after about an hour.
+      </p>
+
+      <h2>Your choices</h2>
+      <p>
+        You can ask us to correct or delete anything you have sent us, or to unsubscribe you, by
+        emailing <a href={`mailto:${org.email.value}`}>{org.email.value}</a>. We will act on it as
+        soon as we reasonably can.
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        If this policy changes, the new version will be published here with a new effective date.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal h2 {
+    font-size: var(--step-2);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-s);
+  }
+
+  .legal h3 {
+    font-size: var(--step-1);
+    margin-top: var(--space-m);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .legal__meta {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-bottom: var(--space-l);
+  }
+</style>
