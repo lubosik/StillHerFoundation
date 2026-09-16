@@ -763,3 +763,52 @@ to the five and exact for the sixth, so no layout instability is introduced by t
 3. The machine was down to 104MB of free disk during this run, which is why candidate PNGs were
    converted to inspection JPEGs and deleted rather than held. Worth clearing before the next
    image session, because a full batch of twelve 2k PNGs is about 110MB on its own.
+
+## Hero reshoot, 16 September
+
+The first hero did not hold Nani's likeness. Side by side against her own
+reference the generated face was rounder, the cheeks fuller, the nose
+different, and the fringe blunter and sitting higher. The client flagged it.
+
+**Root cause.** The first pass described her appearance in the prompt while
+also passing a reference. The Higgsfield Soul guidance is explicit that this
+is the wrong move: the reference already carries identity, and re-describing
+it creates conflict and drift. The first pass also used `nano_banana_2`,
+which is the fast model, rather than the photorealism one.
+
+**What changed.**
+- Model: `nano_banana_pro` at 2k, the model the Soul guidance names for
+  maximum photorealistic sharpness.
+- Two references instead of none conditioning the face: a 4x upscaled head
+  and shoulders crop from her own studio photograph, plus the full studio
+  photograph for build and tattoo placement.
+- The prompt stopped describing her features and instead instructed the model
+  to match the reference exactly, then spent its words on scene, wardrobe,
+  pose and light. Identity comes from the reference, everything else from the
+  prompt.
+- Added an explicit photorealism instruction: visible pores, natural skin
+  texture, no smoothing, no beautification.
+
+**Licensing note.** Two reference photographs were supplied. Only the clean
+studio photograph was sent to the model. The second is a watermarked Getty
+press image, and the watermark is a copyright signal on the photograph, so it
+was used on screen for likeness checking only and never uploaded.
+
+| | |
+|---|---|
+| Slot | `hero-nani` |
+| Model | `nano_banana_pro`, 2k, 16:9 |
+| Candidates | 4, one accepted |
+| Credits | 8 spent, balance 109.04 to 101.04 |
+| Master | `src/assets/images/_originals/hero-nani-v2.png`, 2752x1536 |
+| Renditions | WebP and AVIF at 1920, 1280, 640. Largest 1920 WebP 149KB, AVIF 74KB |
+
+Alt text: Nani Rosen seated on the arm of a cream sofa in a sunlit
+Mediterranean room, smiling toward the camera.
+
+**Checks run.** Face compared side by side against the reference at 2.4x.
+Both hands inspected at full resolution, five digits each, natural anatomy.
+No text, lettering or watermark in frame. The tattoo carries AI garbled
+letterforms at full resolution, illegible at display size, noted rather than
+hidden. Left third of the frame verified clear flat wall so the headline has
+a clean field.
