@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="shf-t">
-<title id="shf-t">The Still Her Foundation</title>
-<desc>S, H and F monogram in a ring, simplified for small sizes.</desc>
-<circle cx="100" cy="100" r="88" fill="none" stroke="#1F6670" stroke-width="9"/>
-<g transform="translate(31.5894 34.7631) scale(0.7053)">
-<path d="M139 39.8C137.5 38.2 134.17 32.77 130 30.2C125.83 27.63 119.67 25.43 114 24.4C108.33 23.37 102.17 23.48 96 24C89.83 24.52 82.67 25.45 77 27.5C71.33 29.55 65.5 32.92 62 36.3C58.5 39.68 56.33 44.28 56 47.8C55.67 51.32 57.33 54.77 60 57.4C62.67 60.03 67.5 61.9 72 63.6C76.5 65.3 81.83 66.35 87 67.6C92.17 68.85 97.67 69.87 103 71.1C108.33 72.33 113.83 73.43 119 75C124.17 76.57 130 78.17 134 80.5C138 82.83 141.67 86 143 89C144.33 92 143.67 95.67 142 98.5C140.33 101.33 137.17 103.92 133 106C128.83 108.08 122.67 110.08 117 111C111.33 111.92 104.67 112.08 99 111.5C93.33 110.92 87.5 109.58 83 107.5C78.5 105.42 73.83 100.42 72 99" fill="none" stroke="#1F6670" stroke-width="14.46" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M101 19C101 25.17 101 43.67 101 56C101 68.33 101 80.67 101 93C101 105.33 101 117.83 101 130C101 142.17 101 160 101 166" fill="none" stroke="#1F6670" stroke-width="14.46" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M53 96C53 100 53 111.67 53 120C53 128.33 53 139.33 53 146C53 152.67 53 157.67 53 160" fill="none" stroke="#1F6670" stroke-width="14.46" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M48.7 123C52.58 123 63.28 123 72 123C80.72 123 92.67 123 101 123C109.33 123 115.5 123 122 123C128.5 123 137 123 140 123" fill="none" stroke="#1F6670" stroke-width="14.46" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M98 150C100.67 150 109 150 114 150C119 150 125.67 150 128 150" fill="none" stroke="#1F6670" stroke-width="14.46" stroke-linecap="round" stroke-linejoin="round"/>
-</g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="f2t">
+  <title id="f2t">The Still Her Foundation</title>
+  <desc>The emblem simplified for 16px. The same butterfly, the same pearl and the same two teals, drawn larger and heavier. The letter counters close at this size, which is by design.</desc>
+  <g transform="translate(100 100) scale(1.14) translate(-100 -100)">
+  <path d="M 100 66 C 113 49 131 35 149 29 C 166 23 180 30 179 48 C 178 67 167 85 149 97 C 161 105 168 119 165 133 C 163 141 155 146 147 145 C 149 152 144 158 137 158 C 131 158 127 154 126 149 C 120 153 112 150 108 143 C 103 134 100 119 100 105 C 99 92 99 79 100 66 Z" fill="#5BBCC9"/>
+  <path d="M 100 66 C 87 49 69 35 51 29 C 34 23 20 30 21 48 C 22 67 33 85 51 97 C 39 105 32 119 35 133 C 37 141 45 146 53 145 C 51 152 56 158 63 158 C 69 158 73 154 74 149 C 80 153 88 150 92 143 C 97 134 100 119 100 105 C 101 92 101 79 100 66 Z" fill="#5BBCC9"/>
+  <path d="M 72.4 46.0 L 93.6 46.0 L 93.6 49.4 L 89.0 49.4 L 89.0 148.6 L 93.6 148.6 L 93.6 152.0 L 72.4 152.0 L 72.4 148.6 L 77.0 148.6 L 77.0 49.4 L 72.4 49.4 Z M 106.4 46.0 L 127.6 46.0 L 127.6 49.4 L 123.0 49.4 L 123.0 148.6 L 127.6 148.6 L 127.6 152.0 L 106.4 152.0 L 106.4 148.6 L 111.0 148.6 L 111.0 49.4 L 106.4 49.4 Z M 72.0 98.5 L 128.0 98.5 L 128.0 109.5 L 72.0 109.5 Z" fill="#1F6670"/>
+  <circle cx="100" cy="104" r="22" fill="#1F6670"/>
+  <circle cx="100" cy="104" r="11.5" fill="#FFFFFF"/>
+  </g>
+</svg>

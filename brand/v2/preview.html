@@ -16,7 +16,7 @@
   .wrap{max-width:1100px;margin:0 auto}
   h1{font:400 34px/1.15 "Bodoni Moda",Georgia,serif;margin:0 0 6px}
   h2{font:400 24px/1.2 "Bodoni Moda",Georgia,serif;margin:56px 0 4px}
-  p.note{color:var(--ink-soft);margin:0 0 24px;max-width:62ch}
+  p.note{color:var(--ink-soft);margin:0 0 24px;max-width:64ch}
   .eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-ink);margin:0 0 10px}
   table{border-collapse:collapse;width:100%;background:var(--white);
         border:1px solid var(--sand);border-radius:4px;overflow:hidden}
@@ -45,28 +45,117 @@
   <p class="eyebrow">Brand, round two</p>
   <h1>The Still Her Foundation, emblem v2</h1>
   <p class="note">
-    Five emblem concepts, each a separate proposition rather than a variation. No vertical stroke
-    passes through an S anywhere in this set. Every mark is hand built path geometry on a
-    200 by 200 grid, carries no type, and uses only the palette defined in
-    <code>src/styles/tokens.css</code>.
+    Eleven emblem concepts in two rounds. No vertical stroke passes through an S anywhere in this
+    set. Every mark is path geometry on a 200 by 200 grid, carries no live type, and uses only the
+    palette defined in <code>src/styles/tokens.css</code>. Rationales are in <code>CONCEPTS.md</code>.
   </p>
 
-  <h2>The five concepts</h2>
+  <h2>Round two, the SHF monograms</h2>
   <p class="note">
-    Shown at 256px, 64px, 32px and 16px, on cream and on ink. The small sizes are the test that
-    matters. Rationales are in <code>CONCEPTS.md</code>.
+    She asked for SHF explicitly, more than once. What she rejected in v1 was one stroke, not the
+    idea of a monogram. Concepts 6 and 7 are the direct attempt at making the letters <em>be</em>
+    the thyroid butterfly, and both of them fail at small size for a reason you can see in the 32
+    and 16 columns. Concept 8 is the resolution: the letters live in the counters of solid wings,
+    so the monogram closes up into a butterfly as it gets smaller instead of falling apart.
   </p>
-
   <table>
     <thead>
       <tr><th></th><th colspan="4">On cream</th><th colspan="4">On ink</th></tr>
       <tr><th></th><th>256</th><th>64</th><th>32</th><th>16</th><th>256</th><th>64</th><th>32</th><th>16</th></tr>
     </thead>
     <tbody>
+      <tr>
+        <th>6. Letters as wings
+          <small>S and its mirror splayed as four wings, H between them. Beautiful large, gone by 64px.</small></th>
+        <td class="on-cream"><img src="concept-6-shf-wings-a.svg" width="256" height="256" alt=""></td>
+        <td class="on-cream"><img src="concept-6-shf-wings-a.svg" width="64" height="64" alt=""></td>
+        <td class="on-cream"><img src="concept-6-shf-wings-a.svg" width="32" height="32" alt=""></td>
+        <td class="on-cream"><img src="concept-6-shf-wings-a.svg" width="16" height="16" alt=""></td>
+        <td class="on-ink"><img src="concept-6-shf-wings-a.svg" width="256" height="256" alt=""></td>
+        <td class="on-ink"><img src="concept-6-shf-wings-a.svg" width="64" height="64" alt=""></td>
+        <td class="on-ink"><img src="concept-6-shf-wings-a.svg" width="32" height="32" alt=""></td>
+        <td class="on-ink"><img src="concept-6-shf-wings-a.svg" width="16" height="16" alt=""></td>
+      </tr>
+      <tr>
+        <th>7. S wing, F wing
+          <small>The literal reading. Submitted as a documented failure: S and F are not mirror images.</small></th>
+        <td class="on-cream"><img src="concept-7-shf-wings-b.svg" width="256" height="256" alt=""></td>
+        <td class="on-cream"><img src="concept-7-shf-wings-b.svg" width="64" height="64" alt=""></td>
+        <td class="on-cream"><img src="concept-7-shf-wings-b.svg" width="32" height="32" alt=""></td>
+        <td class="on-cream"><img src="concept-7-shf-wings-b.svg" width="16" height="16" alt=""></td>
+        <td class="on-ink"><img src="concept-7-shf-wings-b.svg" width="256" height="256" alt=""></td>
+        <td class="on-ink"><img src="concept-7-shf-wings-b.svg" width="64" height="64" alt=""></td>
+        <td class="on-ink"><img src="concept-7-shf-wings-b.svg" width="32" height="32" alt=""></td>
+        <td class="on-ink"><img src="concept-7-shf-wings-b.svg" width="16" height="16" alt=""></td>
+      </tr>
       <tr class="pick">
-        <th>1. Her Brooch
-          <small>The thyroid butterfly, made couture. A pearl set where the isthmus sits.</small>
+        <th>8. SHF Butterfly
+          <small>S cut out of the left wing, F out of the right, H as the body with a pearl on the isthmus.</small>
           <span class="badge">Selected</span></th>
+        <td class="on-cream"><img src="concept-8-shf-butterfly.svg" width="256" height="256" alt=""></td>
+        <td class="on-cream"><img src="concept-8-shf-butterfly.svg" width="64" height="64" alt=""></td>
+        <td class="on-cream"><img src="concept-8-shf-butterfly.svg" width="32" height="32" alt=""></td>
+        <td class="on-cream"><img src="concept-8-shf-butterfly.svg" width="16" height="16" alt=""></td>
+        <td class="on-ink"><img src="concept-8-shf-butterfly.svg" width="256" height="256" alt=""></td>
+        <td class="on-ink"><img src="concept-8-shf-butterfly.svg" width="64" height="64" alt=""></td>
+        <td class="on-ink"><img src="concept-8-shf-butterfly.svg" width="32" height="32" alt=""></td>
+        <td class="on-ink"><img src="concept-8-shf-butterfly.svg" width="16" height="16" alt=""></td>
+      </tr>
+      <tr>
+        <th>9. SHF Inline
+          <small>One line. H and F share a stem, the S stands completely free.</small></th>
+        <td class="on-cream"><img src="concept-9-shf-inline.svg" width="256" height="256" alt=""></td>
+        <td class="on-cream"><img src="concept-9-shf-inline.svg" width="64" height="64" alt=""></td>
+        <td class="on-cream"><img src="concept-9-shf-inline.svg" width="32" height="32" alt=""></td>
+        <td class="on-cream"><img src="concept-9-shf-inline.svg" width="16" height="16" alt=""></td>
+        <td class="on-ink"><img src="concept-9-shf-inline.svg" width="256" height="256" alt=""></td>
+        <td class="on-ink"><img src="concept-9-shf-inline.svg" width="64" height="64" alt=""></td>
+        <td class="on-ink"><img src="concept-9-shf-inline.svg" width="32" height="32" alt=""></td>
+        <td class="on-ink"><img src="concept-9-shf-inline.svg" width="16" height="16" alt=""></td>
+      </tr>
+      <tr>
+        <th>10. SHF Stacked
+          <small>The v1 arrangement with the offending stroke simply deleted.</small></th>
+        <td class="on-cream"><img src="concept-10-shf-stacked.svg" width="256" height="256" alt=""></td>
+        <td class="on-cream"><img src="concept-10-shf-stacked.svg" width="64" height="64" alt=""></td>
+        <td class="on-cream"><img src="concept-10-shf-stacked.svg" width="32" height="32" alt=""></td>
+        <td class="on-cream"><img src="concept-10-shf-stacked.svg" width="16" height="16" alt=""></td>
+        <td class="on-ink"><img src="concept-10-shf-stacked.svg" width="256" height="256" alt=""></td>
+        <td class="on-ink"><img src="concept-10-shf-stacked.svg" width="64" height="64" alt=""></td>
+        <td class="on-ink"><img src="concept-10-shf-stacked.svg" width="32" height="32" alt=""></td>
+        <td class="on-ink"><img src="concept-10-shf-stacked.svg" width="16" height="16" alt=""></td>
+      </tr>
+      <tr>
+        <th>11. SHF Chanel
+          <small>The two C construction done with an S and its mirror, closing on an H and F ligature.</small></th>
+        <td class="on-cream"><img src="concept-11-shf-chanel.svg" width="256" height="256" alt=""></td>
+        <td class="on-cream"><img src="concept-11-shf-chanel.svg" width="64" height="64" alt=""></td>
+        <td class="on-cream"><img src="concept-11-shf-chanel.svg" width="32" height="32" alt=""></td>
+        <td class="on-cream"><img src="concept-11-shf-chanel.svg" width="16" height="16" alt=""></td>
+        <td class="on-ink"><img src="concept-11-shf-chanel.svg" width="256" height="256" alt=""></td>
+        <td class="on-ink"><img src="concept-11-shf-chanel.svg" width="64" height="64" alt=""></td>
+        <td class="on-ink"><img src="concept-11-shf-chanel.svg" width="32" height="32" alt=""></td>
+        <td class="on-ink"><img src="concept-11-shf-chanel.svg" width="16" height="16" alt=""></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <h2>Round one, the non monogram concepts</h2>
+  <p class="note">
+    Kept as submitted. Concept 1 remains the strongest mark in the set if she decides she does not
+    want letters after all, and its pearl is the device that concept 8 carries forward.
+  </p>
+  <table>
+    <thead>
+      <tr><th></th><th colspan="4">On cream</th><th colspan="4">On ink</th></tr>
+      <tr><th></th><th>256</th><th>64</th><th>32</th><th>16</th><th>256</th><th>64</th><th>32</th><th>16</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>1. Her Brooch
+          <small>The thyroid butterfly, made couture. A pearl set where the isthmus sits.</small></th>
         <td class="on-cream"><img src="concept-1-her-brooch.svg" width="256" height="256" alt=""></td>
         <td class="on-cream"><img src="concept-1-her-brooch.svg" width="64" height="64" alt=""></td>
         <td class="on-cream"><img src="concept-1-her-brooch.svg" width="32" height="32" alt=""></td>
@@ -131,7 +220,8 @@
 
   <h2>The selected mark, in production</h2>
   <p class="note">
-    Her Brooch, shipped as four files in <code>public/brand/</code>. The words in both lockups are
+    The SHF Butterfly, shipped as four files in <code>public/brand/</code>. The round lockup is the
+    thing she described: the SHF mark with the words set around it. The words in both lockups are
     outlines drawn from the project's own font files, so neither depends on a font being present.
   </p>
 
@@ -148,8 +238,9 @@
 
   <h2>Favicon, at the sizes it will actually be seen</h2>
   <p class="note">
-    Same butterfly, same two teals, drawn larger and heavier inside the box. The weight comes from
-    stroke and mass, never from swapping to the darker teal.
+    Same butterfly, same pearl, same two teals, drawn larger and heavier inside the box. The H
+    survives to 32px, the letter counters close below that, and the weight comes from mass and
+    stroke width, never from swapping to the darker teal.
   </p>
   <div class="strip">
     <figure><img src="../../public/brand/favicon-v2.svg" width="64" height="64" alt="favicon 64">
