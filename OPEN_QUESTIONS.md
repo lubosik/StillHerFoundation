@@ -95,7 +95,10 @@ Last updated: 16 September 2026
 21. **The Graves' disease resource page has no approved content.**
     She asked for it and then set the constraint herself: "we also have to make sure the information we're giving is right." So the page ships as a finished structure with every clinical block pending. Nothing medical is invented. She is working on partnering with other Graves' foundations, and until one is confirmed and a named medical source has reviewed the copy, this page should not go live with real claims in it.
 
-22. **Nani's description of a flare is the best content she has ever given us, and she has not approved it.**
+22. **RESOLVED. Nani's description of a flare is approved for publication.**
+    Bosi confirmed on 16 September. It is live on `/graves-disease`, set in quotation marks and attributed to her.
+
+    Original note kept for the record:
     During the call, while having a flare, she described it unprompted: processing problems, losing words, needing things repeated, closing her eyes, slowed speech, shortness of breath, asthma, tremors that do not show on camera, extreme fatigue, nausea, low blood pressure. She also said her disability claim was denied.
     It is on `/graves-disease` as her own first person account, attributed to her, clearly not presented as clinical information. **Confirm she is happy for it to be published** before launch. It is personal and she said it while unwell.
 
@@ -108,12 +111,25 @@ Last updated: 16 September 2026
 25. **Speaker section.**
     She asked "can you add on the website like a speaker panelist" and then said she would look again at the existing speaker page. Confirm whether the current `/speaker` page is what she meant.
 
-26. **She asked for a master spreadsheet of every login and password. It has not been built, deliberately.**
+26. **OUT OF SCOPE. Not this project's work.**
+    Bosi confirmed on 16 September that the credential spreadsheet and the Cal.com availability changes are not part of the foundation website build. The security concern below still stands and is worth raising with her separately, but nobody is acting on it here.
+
+    Original note kept for the record:
     Her reasoning was sound: continuity if something happens to either her or Bosi. The solution is not. A plaintext credential file, shared between two people in two countries, is the single worst place to keep them, and it would sit in a Downloads folder and a git repo. A shared password manager vault solves the exact problem she described without creating that risk. This needs raising with her rather than quietly ignoring.
 
-27. **Operational items from the call that are not website work.**
+27. **OUT OF SCOPE, same confirmation.** Operational items from the call that are not website work.
     Cal.com availability: Monday, Tuesday, Wednesday and Friday 2:30pm to 6:30pm, Thursday unavailable because her daughter has ballet, Saturday and Sunday 9am to 5pm. Luxury Lens at 350 dollars paid via Stripe before the booking confirms, with a line saying the appointment is not confirmed until the invoice is paid. An automated review request after each appointment. Donation agreement paperwork and an automatic 501(c)(3) receipt carrying the EIN.
     Note that Luxury Lens appears to be a Rosen Relations product rather than a foundation one, so confirm which site it belongs on before building anything.
 
 28. **Deadline.**
     She speaks on the 3rd. Flyers promoting The Still Her Foundation are already circulating and there is no live site. She called this priority one and asked for the site by the end of the week.
+
+
+## Changed on 16 September
+
+29. **The Graves' disease page is no longer a placeholder shell.**
+    The original build deliberately shipped every clinical block as pending, because Nani had set the constraint that the information must be right. Bosi has now asked for it to be properly researched and built as a real resource page with visuals between the sections.
+
+    How that is being handled: every factual claim on the page is sourced to a named authority (NHS, NIDDK, the American Thyroid Association, the British Thyroid Foundation, Mayo Clinic) and carries a visible citation and link. Nothing is written from memory. The page still carries the notice that it is general awareness information and not medical advice, it describes treatments neutrally without recommending any, and it does not invent a single number or phone line.
+
+    If a claim could not be traced to a named source, it is not on the page.

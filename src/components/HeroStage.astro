@@ -378,7 +378,9 @@ const { slides, footLabel } = Astro.props;
     const pauseLabel = stage.querySelector<HTMLElement>('[data-pause-label]');
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const INTERVAL = 7000;
+    // Client asked for a slightly quicker swipe. Still long enough to read
+    // the headline and the mission line before it moves.
+    const INTERVAL = 5000;
 
     let index = 0;
     let timer: number | undefined;
