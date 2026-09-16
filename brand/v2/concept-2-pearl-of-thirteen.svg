@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="t">
+  <title id="t">Pearl of Thirteen</title>
+  <desc>One pearl in a heavy setting, ringed by thirteen more. A pearl is what a living body makes around an irritant it cannot expel. Thirteen is the count of her mother's teeth.</desc>
+  <circle cx="100" cy="100" r="66" fill="none" stroke="#C9A961" stroke-width="1.4"/>
+  <circle cx="100.00" cy="34.00" r="11.5" fill="#5BBCC9"/>
+  <circle cx="100.00" cy="34.00" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="96.00" cy="29.60" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="130.67" cy="41.56" r="11.5" fill="#5BBCC9"/>
+  <circle cx="130.67" cy="41.56" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="126.67" cy="37.16" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="154.32" cy="62.51" r="11.5" fill="#5BBCC9"/>
+  <circle cx="154.32" cy="62.51" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="150.32" cy="58.11" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="165.52" cy="92.04" r="11.5" fill="#5BBCC9"/>
+  <circle cx="165.52" cy="92.04" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="161.52" cy="87.64" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="161.71" cy="123.40" r="11.5" fill="#5BBCC9"/>
+  <circle cx="161.71" cy="123.40" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="157.71" cy="119.00" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="143.77" cy="149.40" r="11.5" fill="#5BBCC9"/>
+  <circle cx="143.77" cy="149.40" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="139.77" cy="145.00" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="115.79" cy="164.08" r="11.5" fill="#5BBCC9"/>
+  <circle cx="115.79" cy="164.08" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="111.79" cy="159.68" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="84.21" cy="164.08" r="11.5" fill="#5BBCC9"/>
+  <circle cx="84.21" cy="164.08" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="80.21" cy="159.68" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="56.23" cy="149.40" r="11.5" fill="#5BBCC9"/>
+  <circle cx="56.23" cy="149.40" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="52.23" cy="145.00" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="38.29" cy="123.40" r="11.5" fill="#5BBCC9"/>
+  <circle cx="38.29" cy="123.40" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="34.29" cy="119.00" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="34.48" cy="92.04" r="11.5" fill="#5BBCC9"/>
+  <circle cx="34.48" cy="92.04" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="30.48" cy="87.64" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="45.68" cy="62.51" r="11.5" fill="#5BBCC9"/>
+  <circle cx="45.68" cy="62.51" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="41.68" cy="58.11" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="69.33" cy="41.56" r="11.5" fill="#5BBCC9"/>
+  <circle cx="69.33" cy="41.56" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
+  <circle cx="65.33" cy="37.16" r="3.1" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="100" cy="100" r="28" fill="#1F6670"/>
+  <circle cx="100" cy="100" r="21" fill="#FFFFFF"/>
+  <path d="M 120 106 C 117 117 106 123 95 120 C 106 121.5 117.5 115.7 120 106 Z" fill="#5BBCC9"/>
+  <circle cx="92" cy="92" r="5.4" fill="#5BBCC9" opacity="0.5"/>
+</svg>

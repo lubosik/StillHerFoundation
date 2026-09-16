@@ -1,0 +1,466 @@
+---
+/**
+ * The hero.
+ *
+ * Built on the L'Echelon pattern Nani asked for: the photograph IS the
+ * background, full bleed, the words sit on top of it, and the slides advance
+ * on their own.
+ *
+ * Two stacked layers cross fade, the same trick L'Echelon uses with video.
+ * A cream scrim sits between the image and the type so the headline stays
+ * readable over any part of any photograph. L'Echelon's scrim is near black
+ * because that site is dark; ours is cream, because Nani explicitly did not
+ * want the darkness of her Rosen Relations site.
+ *
+ * Three slides, per the 15 September meeting:
+ *   1. The tagline over her portrait
+ *   2. About us and what we do
+ *   3. Protecting Her Ecosystem
+ */
+import Picture from './Picture.astro';
+import type { Pending } from '@/config/site';
+
+export interface HeroSlide {
+  id: string;
+  /** Small tracked line above the headline. */
+  kicker: string;
+  /** The headline. One word may be wrapped in <em> for the italic. */
+  headline: string;
+  body?: string;
+  /** Generated imagery slot name. */
+  slot?: string;
+  focus?: string;
+  imageAlt?: string;
+  /** Shown when no slot image exists yet. */
+  framePrompt?: string;
+  cta?: { label: string; href: string };
+  secondary?: { label: string; href: string };
+  note?: Pending<string>;
+}
+
+interface Props {
+  slides: HeroSlide[];
+  /** Small line pinned to the bottom of the stage. */
+  footLabel?: string;
+}
+
+const { slides, footLabel } = Astro.props;
+---
+
+<section class="stage" aria-roledescription="carousel" aria-label="The foundation" data-stage>
+  <div class="stage__media">
+    {
+      slides.map((slide, i) => (
+        <div class="stage__layer" data-layer data-active={i === 0 ? 'true' : undefined} aria-hidden="true">
+          {slide.slot ? (
+            <Picture
+              slot={slide.slot}
+              alt=""
+              ratio="16 / 9"
+              focus={slide.focus ?? '50% 50%'}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              sizes="100vw"
+            />
+          ) : (
+            <div class="stage__empty">{slide.framePrompt ?? ''}</div>
+          )}
+        </div>
+      ))
+    }
+    <div class="stage__scrim" aria-hidden="true"></div>
+  </div>
+
+  <div class="stage__copy">
+    {
+      slides.map((slide, i) => (
+        <article
+          class="stage__panel"
+          id={`hero-${slide.id}`}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`${i + 1} of ${slides.length}`}
+          data-panel
+          data-active={i === 0 ? 'true' : undefined}
+          aria-hidden={i === 0 ? 'false' : 'true'}
+        >
+          <span class="stage__kicker">{slide.kicker}</span>
+          <h1 class="stage__headline" set:html={slide.headline} />
+          {slide.body && <p class="stage__body">{slide.body}</p>}
+
+          <div class="stage__ctas">
+            {slide.cta && (
+              <a href={slide.cta.href} class="btn btn--primary" data-panel-link>
+                {slide.cta.label}
+              </a>
+            )}
+            {slide.secondary && (
+              <a href={slide.secondary.href} class="btn btn--ghost" data-panel-link>
+                {slide.secondary.label}
+              </a>
+            )}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="stage__foot">
+    {footLabel && <span class="stage__footlabel">{footLabel}</span>}
+
+    <div class="stage__controls">
+      <ul class="stage__dots" role="tablist" aria-label="Choose a slide">
+        {
+          slides.map((slide, i) => (
+            <li role="presentation">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-controls={`hero-${slide.id}`}
+                data-dot={i}
+              >
+                <span class="visually-hidden">{slide.kicker}</span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+
+      <button type="button" class="stage__pause" data-pause>
+        <span data-pause-label>Pause</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stage {
+    position: relative;
+    min-height: min(92svh, 56rem);
+    display: grid;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--cream);
+  }
+
+  /* ---------------- Media ---------------- */
+  .stage__media {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+
+  .stage__layer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 900ms var(--ease);
+  }
+
+  .stage__layer[data-active='true'] {
+    opacity: 1;
+  }
+
+  .stage__layer :global(.pic),
+  .stage__layer :global(.pic img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .stage__layer :global(.pic img) {
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  .stage__empty {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, var(--cream) 0%, var(--sand-tint) 60%, var(--sand) 100%);
+  }
+
+  /*
+    The readability scrim. Strong on the left where the type sits, clearing to
+    nothing on the right so the photograph is still the photograph. A second
+    pass along the bottom carries the controls.
+  */
+  .stage__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--cream) 94%, transparent) 0%,
+        color-mix(in srgb, var(--cream) 82%, transparent) 34%,
+        color-mix(in srgb, var(--cream) 30%, transparent) 62%,
+        transparent 88%
+      ),
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--cream) 80%, transparent) 0%,
+        transparent 32%
+      );
+  }
+
+  /* ---------------- Copy ---------------- */
+  .stage__copy {
+    display: grid;
+    align-content: center;
+    width: min(100% - (var(--gutter) * 2), var(--measure-wide));
+    margin-inline: auto;
+    padding-block: var(--space-2xl) calc(var(--space-2xl) + 3rem);
+  }
+
+  .stage__panel {
+    grid-area: 1 / 1;
+    max-width: 34rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.75rem);
+    transition:
+      opacity 700ms var(--ease),
+      transform 700ms var(--ease),
+      visibility 700ms var(--ease);
+    pointer-events: none;
+  }
+
+  .stage__panel[data-active='true'] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .stage__kicker {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--teal-ink);
+    margin-bottom: var(--space-s);
+  }
+
+  .stage__headline {
+    font-size: var(--step-5);
+    line-height: 1.02;
+    margin-bottom: var(--space-m);
+    color: var(--ink);
+  }
+
+  .stage__headline :global(em) {
+    font-style: italic;
+  }
+
+  .stage__body {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 40ch;
+    color: var(--ink);
+  }
+
+  .stage__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-top: var(--space-l);
+  }
+
+  /* ---------------- Foot ---------------- */
+  .stage__foot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    width: min(100% - (var(--gutter) * 2), var(--measure-wide));
+    margin-inline: auto;
+    padding-bottom: var(--space-l);
+  }
+
+  .stage__footlabel {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--ink-soft);
+  }
+
+  .stage__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+  }
+
+  .stage__dots {
+    display: flex;
+    gap: var(--space-2xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .stage__dots button {
+    width: 2.25rem;
+    height: 2rem;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+
+  .stage__dots button::before {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: color-mix(in srgb, var(--ink-soft) 45%, transparent);
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+
+  .stage__dots button[aria-selected='true']::before {
+    background: var(--teal-ink);
+  }
+
+  .stage__pause {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    padding: 0.4rem 0.1rem;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink);
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+
+  .stage__pause:hover {
+    border-bottom-color: var(--gold-ink);
+  }
+
+  /* On a phone the scrim goes full width, because there is no side to clear. */
+  @media (max-width: 47.999rem) {
+    .stage__scrim {
+      background:
+        linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--cream) 55%, transparent) 0%,
+          color-mix(in srgb, var(--cream) 88%, transparent) 42%,
+          var(--cream) 78%
+        );
+    }
+
+    .stage__copy {
+      align-content: end;
+      padding-block: 14rem calc(var(--space-2xl) + 3.5rem);
+    }
+
+    .stage__panel {
+      max-width: none;
+    }
+  }
+</style>
+
+<script>
+  const stage = document.querySelector<HTMLElement>('[data-stage]');
+
+  if (stage) {
+    const layers = Array.from(stage.querySelectorAll<HTMLElement>('[data-layer]'));
+    const panels = Array.from(stage.querySelectorAll<HTMLElement>('[data-panel]'));
+    const dots = Array.from(stage.querySelectorAll<HTMLButtonElement>('[data-dot]'));
+    const pauseBtn = stage.querySelector<HTMLButtonElement>('[data-pause]');
+    const pauseLabel = stage.querySelector<HTMLElement>('[data-pause-label]');
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INTERVAL = 7000;
+
+    let index = 0;
+    let timer: number | undefined;
+    let paused = reduced;
+
+    function show(n: number) {
+      index = (n + panels.length) % panels.length;
+
+      layers.forEach((layer, i) => {
+        if (i === index) layer.dataset.active = 'true';
+        else delete layer.dataset.active;
+      });
+
+      panels.forEach((panel, i) => {
+        const active = i === index;
+        if (active) panel.dataset.active = 'true';
+        else delete panel.dataset.active;
+        panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+        // A link on a hidden panel must leave the tab order.
+        panel.querySelectorAll<HTMLAnchorElement>('[data-panel-link]').forEach((a) => {
+          if (active) a.removeAttribute('tabindex');
+          else a.setAttribute('tabindex', '-1');
+        });
+      });
+
+      dots.forEach((dot, i) => dot.setAttribute('aria-selected', i === index ? 'true' : 'false'));
+    }
+
+    function start() {
+      if (paused || reduced) return;
+      stop();
+      timer = window.setInterval(() => show(index + 1), INTERVAL);
+    }
+
+    function stop() {
+      if (timer !== undefined) {
+        window.clearInterval(timer);
+        timer = undefined;
+      }
+    }
+
+    function setPaused(value: boolean) {
+      paused = value;
+      if (pauseLabel) pauseLabel.textContent = value ? 'Play' : 'Pause';
+      if (value) stop();
+      else start();
+    }
+
+    dots.forEach((dot, i) =>
+      dot.addEventListener('click', () => {
+        show(i);
+        if (!paused) start();
+      })
+    );
+
+    pauseBtn?.addEventListener('click', () => setPaused(!paused));
+
+    // Pause while someone is reading or tabbing through.
+    stage.addEventListener('mouseenter', stop);
+    stage.addEventListener('mouseleave', () => !paused && start());
+    stage.addEventListener('focusin', stop);
+    stage.addEventListener('focusout', (e) => {
+      if (!stage.contains(e.relatedTarget as Node) && !paused) start();
+    });
+
+    stage.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        show(index - 1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        show(index + 1);
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else if (!paused) start();
+    });
+
+    show(0);
+    if (reduced) setPaused(true);
+    else start();
+  }
+</script>

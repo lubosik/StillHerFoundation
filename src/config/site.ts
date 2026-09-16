@@ -71,7 +71,12 @@ export const seo = {
 /* ------------------------------------------------------------------ */
 
 export const mission = {
-  headline: "I won't let Graves' disease put me in one.",
+  /**
+   * Verbatim, and the word "disease" is deliberately absent.
+   * Her instruction: "take away the word disease because it's supposed to be
+   * a wordplay." Graves, as in graves. Do not put it back.
+   */
+  headline: "I won't let Graves put me in one.",
   statement:
     "The StillHer Foundation raises awareness of Graves' disease, creates a safe space for women in business, and protects her ecosystem.",
   supporting: 'Founding leader of the Protecting Her Ecosystem initiative.',
@@ -221,12 +226,15 @@ export const topNav = [
   { label: 'About the Founder', href: '/founder' },
 ] as const;
 
-/** Left rail. Order is fixed. Road to Her Smile is always first. */
+/** Drawer navigation. Order is fixed. The Smile Project is always first. */
 export const railNav = [
-  { label: 'Road to Her Smile', href: '/road-to-her-smile' },
+  { label: 'The Road to Her Smile Project', href: '/road-to-her-smile' },
   { label: 'The Good Weekend', href: '/the-good-weekend' },
   { label: 'Her Relief Retreat', href: '/her-relief-retreat' },
   { label: 'Her Future', href: '/her-future' },
+  { divider: true },
+  { label: "Graves' Disease", href: '/graves-disease' },
+  { label: 'Protecting Her Ecosystem', href: '/her-ecosystem' },
   { divider: true },
   { label: 'Speaker', href: '/speaker' },
   { label: 'Support', href: '/support' },
@@ -243,11 +251,11 @@ export const initiatives = [
   {
     id: 'road-to-her-smile',
     label: 'Current Campaign',
-    title: 'Road to Her Smile',
+    title: 'The Road to Her Smile Project',
     emphasis: 'Her Smile',
-    descriptor: 'A documentary giving the road to redemption back to a woman who had it stolen.',
+    descriptor: 'Thirteen teeth taken on a promise that was never kept. A documentary about getting her smile back.',
     href: '/road-to-her-smile',
-    image: 'rths-road',
+    image: 'rths-project',
   },
   {
     id: 'the-good-weekend',

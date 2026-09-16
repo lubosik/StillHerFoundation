@@ -1,130 +1,64 @@
 ---
 import Base from '@/layouts/Base.astro';
-import Slideshow, { type Slide } from '@/components/Slideshow.astro';
+import HeroStage, { type HeroSlide } from '@/components/HeroStage.astro';
 import InitiativePanels from '@/components/InitiativePanels.astro';
 import Newsletter from '@/components/Newsletter.astro';
 import Placeholder from '@/components/Placeholder.astro';
-import Picture from '@/components/Picture.astro';
 import { org, mission, impactStats } from '@/config/site';
 
 /**
- * Five slides. The Dubai slide is deliberately thin: Nani asked for a slot
- * that holds space for the speech, and there is no speech text yet. It must
- * still read as finished, never as broken.
+ * Three slides, set on the 15 September call.
+ *
+ * 1. The tagline over her portrait
+ * 2. About us and what we do
+ * 3. Protecting Her Ecosystem
+ *
+ * The old "The work, right now" slideshow is gone. Her words: "just get rid
+ * of that, because it's repeating." The standalone Protecting Her Ecosystem
+ * section is gone too, because it is slide 3 now.
  */
-const slides: Slide[] = [
+const slides: HeroSlide[] = [
   {
-    id: 'rths',
-    label: 'Current Campaign',
-    title: 'Road to Her Smile',
-    emphasis: 'Her Smile',
-    body: 'A documentary that gives the road to redemption back to a woman who had it stolen from her. Our first project backed by the Protecting Her Ecosystem initiative.',
-    slot: 'rths-road',
-    focus: '50% 45%',
-    imageAlt: 'An open road at golden hour, stretching toward the horizon.',
-    ctas: [
-      { label: 'Donate', href: '/support', style: 'primary' },
-      { label: 'About the documentary', href: '/road-to-her-smile', style: 'ghost' },
-    ],
+    id: 'tagline',
+    kicker: org.name,
+    headline: "I won't let <em>Graves</em> put me in one.",
+    body: mission.statement,
+    slot: 'hero-nani',
+    focus: '70% 45%',
+    imageAlt:
+      'Nani Rosen seated in a sunlit Mediterranean room, smiling toward the camera.',
+    framePrompt: '',
+    cta: { label: 'Donate', href: '/support' },
+    secondary: { label: 'About the foundation', href: '/about' },
   },
   {
-    id: 'good-weekend',
-    label: 'Coming Soon',
-    title: 'The Good Weekend Tournament',
-    emphasis: 'Good',
-    body: 'Three days of sport and company. A committee dinner on Friday, The Good Girls Tournament on Saturday, The Good Guys Tournament on Sunday. It funds the work of the foundation.',
-    slot: 'good-weekend-terrace',
-    focus: '50% 55%',
-    imageAlt: 'A club terrace laid for dinner, white linen and gold cutlery in evening light.',
-    ctas: [{ label: 'Register interest', href: '/the-good-weekend', style: 'ghost' }],
+    id: 'what-we-do',
+    kicker: 'About us',
+    headline: 'What the foundation <em>does</em>.',
+    body: 'We raise awareness of Graves’ disease, we create a safe space for women in business, and we back the work that protects a woman’s ecosystem. Three commitments, one piece of work.',
+    slot: 'hero-backplate',
+    focus: '40% 50%',
+    imageAlt: 'Light falling across linen and teal silk.',
+    cta: { label: 'Read about us', href: '/about' },
+    secondary: { label: 'About the founder', href: '/founder' },
   },
   {
-    id: 'dubai',
-    label: 'Wisdom & Wealth Summit, Dubai',
-    title: 'Holding space for Dubai speech',
-    body: 'Nani Rosen received the Wisdom & Wealth award for her philanthropy and activism. The acceptance speech will be published here.',
-    framePrompt: 'Award photography to follow',
-    note: {
-      value: '',
-      pending: true,
-      fallback: 'Speech excerpt and award photography to follow.',
-      note: 'Dubai award photos and the acceptance speech text or video.',
-    },
-  },
-  {
-    id: 'interview',
-    label: 'The Interview',
-    title: 'In conversation',
-    body: 'Nani sat down for an interview at the Wisdom & Wealth Summit. The full conversation will be published here.',
-    framePrompt: 'Interview to follow',
-    note: {
-      value: '',
-      pending: true,
-      fallback: 'Interview footage to follow.',
-      note: 'Wisdom & Wealth Summit interview link or footage.',
-    },
-  },
-  {
-    id: 'editorial',
-    label: 'Editorial',
-    title: 'The campaign',
-    body: 'A new campaign shoot is in production. Activist, survivor, and entirely herself.',
+    id: 'her-ecosystem',
+    kicker: 'The initiative',
+    headline: 'Protecting <em>Her</em> Ecosystem.',
+    body: 'Taking care of ourselves is how we protect a woman’s ecosystem. It is the thinking that connects the documentary, the retreat, the speaking and the planning for her future.',
     slot: 'texture-teal-wash',
     focus: '50% 50%',
     imageAlt: 'A teal watercolour wash bleeding across cream paper.',
-    note: {
-      value: '',
-      pending: true,
-      fallback: 'Campaign photography in production.',
-      note: "Nani's new photoshoot imagery.",
-    },
+    cta: { label: 'Explore the initiative', href: '/her-ecosystem' },
   },
 ];
 ---
 
-<Base title={org.name} unveil>
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero__media">
-      <div class="hero__frame">
-        <Picture
-          slot="hero-backplate"
-          alt=""
-          ratio="3 / 4"
-          focus="62% 50%"
-          loading="eager"
-          sizes="(min-width: 52rem) 40vw, 100vw"
-          class="hero__backplate"
-        />
-        <p class="hero__await">Portrait of Nani Rosen<br />photoshoot in production</p>
-      </div>
-    </div>
+<Base title={org.name} unveil bare>
+  <HeroStage slides={slides} footLabel="Our initiative" />
 
-    <div class="hero__copy">
-      <span class="label">The StillHer Foundation</span>
-      <h1 class="hero__headline">{mission.headline}</h1>
-      <p class="hero__mission">{mission.statement}</p>
-      <p class="hero__supporting">{mission.supporting}</p>
-
-      <div class="hero__ctas">
-        <a href="/support" class="btn btn--primary">Donate</a>
-        <a href="/about" class="btn btn--ghost">About the foundation</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Slideshow -->
-  <section class="section section--cream">
-    <div class="wrap">
-      <header class="section__head">
-        <span class="label">From the foundation</span>
-        <h2 class="section__title">The work, <span class="em">right now</span></h2>
-      </header>
-      <Slideshow slides={slides} label="Foundation highlights" />
-    </div>
-  </section>
-
-  <!-- Initiative panels -->
+  <!-- Four ways we show up. Moved directly under the hero, per the meeting. -->
   <section class="section--panels">
     <div class="wrap">
       <header class="section__head section__head--centred">
@@ -135,32 +69,8 @@ const slides: Slide[] = [
     <InitiativePanels />
   </section>
 
-  <!-- Protecting Her Ecosystem -->
-  <section class="section section--sand">
-    <div class="wrap wrap--narrow ecosystem">
-      <span class="label">The initiative</span>
-      <h2 class="section__title">Protecting <span class="em">Her</span> Ecosystem</h2>
-      <p class="ecosystem__lede">
-        Taking care of ourselves is how we protect a woman's ecosystem. It connects the
-        documentaries, the speaking, the retreats and the planning for her future into one piece
-        of work.
-      </p>
-      <p class="ecosystem__pending">
-        <Placeholder
-          field={{
-            value: '',
-            pending: true,
-            fallback: 'The full initiative is being written. More to come.',
-            note: 'Protecting Her Ecosystem concept copy, currently being drafted by Nani.',
-          }}
-        />
-      </p>
-      <a href="/about" class="btn btn--gold">Read about the foundation</a>
-    </div>
-  </section>
-
-  <!-- Impact band -->
-  <section class="section impact">
+  <!-- Impact -->
+  <section class="section section--cream impact">
     <div class="wrap">
       <header class="section__head section__head--centred">
         <h2 class="label">Our impact</h2>
@@ -184,102 +94,23 @@ const slides: Slide[] = [
   </section>
 
   <!-- Newsletter -->
-  <section class="section section--cream">
+  <section class="section">
     <div class="wrap wrap--narrow">
       <Newsletter
         source="home"
         heading="Keep up with our newsletter"
-        blurb="Stories from the work, news from the campaigns, and guidance for women living with Graves' disease."
+        blurb="Stories from the work, news from the campaigns, and guidance for women living with Graves&rsquo; disease."
       />
     </div>
   </section>
 </Base>
 
 <style>
-  .hero {
-    display: grid;
-    gap: var(--space-xl);
-    align-items: center;
-    padding-block: var(--space-2xl);
-    padding-inline: var(--gutter);
-    width: min(100%, var(--measure-wide));
-    margin-inline: auto;
-  }
-
-  @media (min-width: 52rem) {
-    .hero {
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: var(--space-2xl);
-    }
-  }
-
-  /* The portrait slot waits on Nani's shoot. Until it lands, the campaign
-     backplate holds the frame so the hero reads as designed, not as a gap. */
-  .hero__frame {
-    position: relative;
-    border: 1px solid var(--sand);
-    border-radius: var(--radius-m);
-    overflow: hidden;
-  }
-
-  .hero__frame::after {
-    content: '';
-    position: absolute;
-    inset: var(--space-xs);
-    border: 1px solid var(--gold);
-    opacity: 0.45;
-    border-radius: calc(var(--radius-m) - 4px);
-    pointer-events: none;
-  }
-
-  .hero__await {
-    position: absolute;
-    inset-inline: 0;
-    bottom: var(--space-l);
-    margin: 0;
-    text-align: center;
-    font-family: var(--font-sans);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--track-widest);
-    color: var(--ink-soft);
-  }
-
-  .hero__headline {
-    font-size: var(--step-5);
-    margin-bottom: var(--space-l);
-  }
-
-  .hero__mission {
-    font-size: var(--step-1);
-    line-height: 1.5;
-    max-width: 44ch;
-  }
-
-  .hero__supporting {
-    font-family: var(--font-sans);
-    font-size: var(--step--1);
-    text-transform: uppercase;
-    letter-spacing: var(--track-wide);
-    color: var(--teal-ink);
-  }
-
-  .hero__ctas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs);
-    margin-top: var(--space-l);
-  }
-
   .section__head {
     margin-bottom: var(--space-xl);
   }
 
   .section__head--centred {
-    text-align: center;
-  }
-
-  .section__head--centred .label {
     text-align: center;
   }
 
@@ -290,15 +121,6 @@ const slides: Slide[] = [
 
   .section--panels {
     padding-block: var(--space-2xl) 0;
-  }
-
-  .ecosystem__lede {
-    font-size: var(--step-1);
-    line-height: 1.55;
-  }
-
-  .ecosystem__pending {
-    margin-bottom: var(--space-l);
   }
 
   .impact__list {

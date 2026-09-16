@@ -106,18 +106,22 @@ const holidayDinner = {
 
   <!-- A beacon -->
   <section class="section section--sand">
-    <div class="wrap wrap--narrow beacon">
-      <span class="label">Who it is for</span>
-      <h2 class="section__title">A beacon for the modern, <span class="em">independent</span> woman</h2>
-      <p class="beacon__lede">
-        {org.shortName} is not a waiting room. It is a society of women who are building, leading
-        and recovering on their own terms, and who want the company of others doing the same.
-      </p>
-      <p>
-        Whether you live with an autoimmune condition or love someone who does, you are welcome
-        here. We speak in the language of campaigns, not clinics. Come as you are, and leave
-        feeling part of something.
-      </p>
+    <div class="wrap beacon">
+      <div class="beacon__head">
+        <span class="label">Who it is for</span>
+        <h2 class="section__title">A beacon for the modern, <span class="em">independent</span> woman</h2>
+      </div>
+      <div class="beacon__copy">
+        <p class="beacon__lede">
+          {org.shortName} is not a waiting room. It is a society of women who are building, leading
+          and recovering on their own terms, and who want the company of others doing the same.
+        </p>
+        <p>
+          Whether you live with an autoimmune condition or love someone who does, you are welcome
+          here. We speak in the language of campaigns, not clinics. Come as you are, and leave
+          feeling part of something.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -278,10 +282,31 @@ const holidayDinner = {
     margin-bottom: var(--space-s);
   }
 
+  .beacon {
+    display: grid;
+    gap: var(--space-l);
+    align-items: start;
+  }
+
+  @media (min-width: 56rem) {
+    .beacon {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .beacon__head .section__title {
+    margin: 0;
+  }
+
   .beacon__lede {
     font-size: var(--step-1);
     line-height: 1.55;
-    margin-top: var(--space-m);
+    margin-top: 0;
+  }
+
+  .beacon__copy p {
+    max-width: 46ch;
   }
 
   .ecosystem {

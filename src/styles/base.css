@@ -257,6 +257,12 @@ a:hover {
   gap: var(--space-l);
 }
 
+@media (min-width: 64rem) {
+  .grid {
+    gap: var(--space-xl);
+  }
+}
+
 @media (min-width: 48rem) {
   .grid--2 {
     grid-template-columns: repeat(2, 1fr);
@@ -364,13 +370,26 @@ a:hover {
   background: var(--white);
   border: 1px solid var(--sand);
   border-radius: var(--radius-m);
-  padding: var(--space-l);
+  padding: var(--space-xl) var(--space-l);
+  display: flex;
+  flex-direction: column;
 }
 
 .card__title {
   font-family: var(--font-display);
   font-size: var(--step-2);
-  margin: 0 0 var(--space-xs);
+  margin: 0 0 var(--space-s);
+}
+
+/*
+  Body copy inside a card sits at full size. It was dropping to --step--1,
+  which made every card read as a thin caption rather than a real block of
+  content, and left the cards looking narrow next to their own whitespace.
+*/
+.card p {
+  font-size: var(--step-0);
+  line-height: 1.6;
+  max-width: none;
 }
 
 .card p:last-child {

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="t">
+  <title id="t">Her Brooch</title>
+  <desc>The thyroid butterfly built as a couture brooch: two faceted wings in the proportions of the gland, a pearl set in the body, and a fine gold bezel.</desc>
+  <path d="M 100 70 C 116 52 138 38 156 34 C 172 30 182 38 180 54 C 178 70 168 86 150 98 C 163 105 171 119 167 133 C 163 148 147 155 132 150 C 119 146 108 136 103 124 C 101 106 100 88 100 70 Z" fill="#5BBCC9"/>
+  <path d="M 100 70 C 84 52 62 38 44 34 C 28 30 18 38 20 54 C 22 70 32 86 50 98 C 37 105 29 119 33 133 C 37 148 53 155 68 150 C 81 146 92 136 97 124 C 99 106 100 88 100 70 Z" fill="#5BBCC9"/>
+  <path d="M 108 78 C 124 64 142 54 160 50" fill="none" stroke="#1F6670" stroke-width="2.6" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 92 78 C 76 64 58 54 40 50" fill="none" stroke="#1F6670" stroke-width="2.6" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 110 122 C 126 126 144 132 156 140" fill="none" stroke="#1F6670" stroke-width="2.4" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 90 122 C 74 126 56 132 44 140" fill="none" stroke="#1F6670" stroke-width="2.4" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 97 74 C 90 62 82 52 72 46" fill="none" stroke="#1F6670" stroke-width="2.8" stroke-linecap="round"/>
+  <path d="M 103 74 C 110 62 118 52 128 46" fill="none" stroke="#1F6670" stroke-width="2.8" stroke-linecap="round"/>
+  <circle cx="70" cy="44.5" r="3.6" fill="#1F6670"/>
+  <circle cx="130" cy="44.5" r="3.6" fill="#1F6670"/>
+  <circle cx="100" cy="76" r="8" fill="#1F6670"/>
+  <circle cx="100" cy="112" r="17.5" fill="#1F6670"/>
+  <circle cx="100" cy="112" r="12" fill="#FFFFFF"/>
+  <path d="M 111.4 115.7 C 109.8 122.4 103.6 126.1 97.2 124.2 C 103.9 125 110 121.4 111.4 115.7 Z" fill="#5BBCC9"/>
+  <circle cx="100" cy="100.5" r="20.5" fill="none" stroke="#C9A961" stroke-width="1.5"/>
+
+</svg>
