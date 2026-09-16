@@ -3,7 +3,16 @@
 Every unresolved decision on The StillHer Foundation rebuild.
 Nothing here is invented. Where the build had to choose, the choice is stated so it can be reversed cheaply.
 
-Last updated: 15 September 2026
+Last updated: 16 September 2026
+
+## Resolved by the 15 September meeting
+
+- **The tagline.** Settled and changed: "I won't let Graves put me in one." The word "disease" is deliberately absent, because the pun is the point.
+- **Road to Her Smile naming.** Settled: "The Road to Her Smile Project".
+- **The logo.** Settled in the negative. The SHF mark with the stem through the S is rejected. Her words: "it's giving money sign and I don't like it, it's giving back vibes." A replacement is in `brand/v2/`.
+- **Lia's identity.** Settled: **Lia is Nani's mother.** The documentary is about the founder's own mother. This was not clear before.
+- **The modelling photograph's provenance.** Settled. Bosi supplied a phone photo of the physical black and white darkroom print, on an Ilford paper envelope beside a film camera. It is the same image as the one rescued from the live Vercel site, so it is genuine and family owned. `reference/nani-refs/lia-modelling-print.jpg`.
+- **Protecting Her Ecosystem.** It is no longer a homepage section. It is slide three of the hero and it has its own page.
 
 ## For Nani
 
@@ -79,3 +88,32 @@ Last updated: 15 September 2026
 
 20. **Two credentials in git history need revoking.**
     A GitHub personal access token was hardcoded in the old `origin` remote URL, and an OpenRouter key is committed in `generate-images.js` on `main` and under the `legacy-rths-v1` tag. Neither is on `rebuild/foundation`, but both are in history and should be treated as compromised.
+
+
+## Raised by the 15 September meeting
+
+21. **The Graves' disease resource page has no approved content.**
+    She asked for it and then set the constraint herself: "we also have to make sure the information we're giving is right." So the page ships as a finished structure with every clinical block pending. Nothing medical is invented. She is working on partnering with other Graves' foundations, and until one is confirmed and a named medical source has reviewed the copy, this page should not go live with real claims in it.
+
+22. **Nani's description of a flare is the best content she has ever given us, and she has not approved it.**
+    During the call, while having a flare, she described it unprompted: processing problems, losing words, needing things repeated, closing her eyes, slowed speech, shortness of breath, asthma, tremors that do not show on camera, extreme fatigue, nausea, low blood pressure. She also said her disability claim was denied.
+    It is on `/graves-disease` as her own first person account, attributed to her, clearly not presented as clinical information. **Confirm she is happy for it to be published** before launch. It is personal and she said it while unwell.
+
+23. **The Her Future funnel offers two options the API does not yet accept.**
+    She added "Earned Income Opportunities" and "Other". The Worker's schema only accepts `iul`, `business_insurance`, `annuities` and `retirement`. The frontend currently bridges both new options into the notes field so submissions still validate and nothing is lost. The Worker needs `earned_income` and `other` added to `HER_FUTURE_SCHEMAS` properly.
+
+24. **The Good Weekend and Her Relief Retreat panel images.**
+    She approved the retreat image ("I like that, keep that there") and Her Future. She rejected the golf image, which reads as a farm, and the Road to Her Smile image. Both are being regenerated.
+
+25. **Speaker section.**
+    She asked "can you add on the website like a speaker panelist" and then said she would look again at the existing speaker page. Confirm whether the current `/speaker` page is what she meant.
+
+26. **She asked for a master spreadsheet of every login and password. It has not been built, deliberately.**
+    Her reasoning was sound: continuity if something happens to either her or Bosi. The solution is not. A plaintext credential file, shared between two people in two countries, is the single worst place to keep them, and it would sit in a Downloads folder and a git repo. A shared password manager vault solves the exact problem she described without creating that risk. This needs raising with her rather than quietly ignoring.
+
+27. **Operational items from the call that are not website work.**
+    Cal.com availability: Monday, Tuesday, Wednesday and Friday 2:30pm to 6:30pm, Thursday unavailable because her daughter has ballet, Saturday and Sunday 9am to 5pm. Luxury Lens at 350 dollars paid via Stripe before the booking confirms, with a line saying the appointment is not confirmed until the invoice is paid. An automated review request after each appointment. Donation agreement paperwork and an automatic 501(c)(3) receipt carrying the EIN.
+    Note that Luxury Lens appears to be a Rosen Relations product rather than a foundation one, so confirm which site it belongs on before building anything.
+
+28. **Deadline.**
+    She speaks on the 3rd. Flyers promoting The Still Her Foundation are already circulating and there is no live site. She called this priority one and asked for the site by the end of the week.

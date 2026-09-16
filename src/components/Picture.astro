@@ -30,6 +30,15 @@ const {
 } = Astro.props;
 
 const widths = [640, 1280, 1920];
+
+/**
+ * Intrinsic size, used only so the browser can reserve the right box before
+ * the image lands. Most slots are 16:9 because the source renders are. The
+ * restored print is a 4:5 photographic print and would otherwise reserve a
+ * landscape box and then jump.
+ */
+const PORTRAIT_SLOTS = new Set(['lia-modelling-restored']);
+const intrinsic = PORTRAIT_SLOTS.has(slot) ? { w: 1024, h: 1280 } : { w: 1280, h: 720 };
 const srcset = (ext: string) => widths.map((w) => `/images/${slot}-${w}.${ext} ${w}w`).join(', ');
 ---
 
@@ -39,8 +48,8 @@ const srcset = (ext: string) => widths.map((w) => `/images/${slot}-${w}.${ext} $
   <img
     src={`/images/${slot}-1280.webp`}
     alt={alt}
-    width="1280"
-    height="720"
+    width={intrinsic.w}
+    height={intrinsic.h}
     loading={loading}
     decoding="async"
     style={`--pic-ratio: ${ratio}; --pic-focus: ${focus};`}

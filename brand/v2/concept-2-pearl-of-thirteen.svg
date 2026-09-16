@@ -1,48 +1,48 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="t">
   <title id="t">Pearl of Thirteen</title>
-  <desc>One pearl in a heavy setting, ringed by thirteen more. A pearl is what a living body makes around an irritant it cannot expel. Thirteen is the count of her mother's teeth.</desc>
-  <circle cx="100" cy="100" r="66" fill="none" stroke="#C9A961" stroke-width="1.4"/>
-  <circle cx="100.00" cy="34.00" r="11.5" fill="#5BBCC9"/>
-  <circle cx="100.00" cy="34.00" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="96.00" cy="29.60" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="130.67" cy="41.56" r="11.5" fill="#5BBCC9"/>
-  <circle cx="130.67" cy="41.56" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="126.67" cy="37.16" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="154.32" cy="62.51" r="11.5" fill="#5BBCC9"/>
-  <circle cx="154.32" cy="62.51" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="150.32" cy="58.11" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="165.52" cy="92.04" r="11.5" fill="#5BBCC9"/>
-  <circle cx="165.52" cy="92.04" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="161.52" cy="87.64" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="161.71" cy="123.40" r="11.5" fill="#5BBCC9"/>
-  <circle cx="161.71" cy="123.40" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="157.71" cy="119.00" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="143.77" cy="149.40" r="11.5" fill="#5BBCC9"/>
-  <circle cx="143.77" cy="149.40" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="139.77" cy="145.00" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="115.79" cy="164.08" r="11.5" fill="#5BBCC9"/>
-  <circle cx="115.79" cy="164.08" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="111.79" cy="159.68" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="84.21" cy="164.08" r="11.5" fill="#5BBCC9"/>
-  <circle cx="84.21" cy="164.08" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="80.21" cy="159.68" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="56.23" cy="149.40" r="11.5" fill="#5BBCC9"/>
-  <circle cx="56.23" cy="149.40" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="52.23" cy="145.00" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="38.29" cy="123.40" r="11.5" fill="#5BBCC9"/>
-  <circle cx="38.29" cy="123.40" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="34.29" cy="119.00" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="34.48" cy="92.04" r="11.5" fill="#5BBCC9"/>
-  <circle cx="34.48" cy="92.04" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="30.48" cy="87.64" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="45.68" cy="62.51" r="11.5" fill="#5BBCC9"/>
-  <circle cx="45.68" cy="62.51" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="41.68" cy="58.11" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="69.33" cy="41.56" r="11.5" fill="#5BBCC9"/>
-  <circle cx="69.33" cy="41.56" r="11.5" fill="none" stroke="#1F6670" stroke-width="2"/>
-  <circle cx="65.33" cy="37.16" r="3.1" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="100" cy="100" r="28" fill="#1F6670"/>
-  <circle cx="100" cy="100" r="21" fill="#FFFFFF"/>
-  <path d="M 120 106 C 117 117 106 123 95 120 C 106 121.5 117.5 115.7 120 106 Z" fill="#5BBCC9"/>
-  <circle cx="92" cy="92" r="5.4" fill="#5BBCC9" opacity="0.5"/>
+  <desc>One pearl in a heavy setting, ringed by thirteen more. A pearl is what a living body builds around an irritant it cannot expel. Thirteen is the count of her mother's teeth.</desc>
+  <circle cx="100" cy="100" r="64" fill="none" stroke="#C9A961" stroke-width="1.4"/>
+  <circle cx="100.00" cy="36.00" r="12.5" fill="#1F6670"/>
+  <circle cx="100.00" cy="36.00" r="10" fill="#FFFFFF"/>
+  <path d="M 109.60 38.80 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="129.74" cy="43.33" r="12.5" fill="#1F6670"/>
+  <circle cx="129.74" cy="43.33" r="10" fill="#FFFFFF"/>
+  <path d="M 139.34 46.13 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="152.67" cy="63.64" r="12.5" fill="#1F6670"/>
+  <circle cx="152.67" cy="63.64" r="10" fill="#FFFFFF"/>
+  <path d="M 162.27 66.44 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="163.53" cy="92.29" r="12.5" fill="#1F6670"/>
+  <circle cx="163.53" cy="92.29" r="10" fill="#FFFFFF"/>
+  <path d="M 173.13 95.09 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="159.84" cy="122.69" r="12.5" fill="#1F6670"/>
+  <circle cx="159.84" cy="122.69" r="10" fill="#FFFFFF"/>
+  <path d="M 169.44 125.49 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="142.44" cy="147.90" r="12.5" fill="#1F6670"/>
+  <circle cx="142.44" cy="147.90" r="10" fill="#FFFFFF"/>
+  <path d="M 152.04 150.70 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="115.32" cy="162.14" r="12.5" fill="#1F6670"/>
+  <circle cx="115.32" cy="162.14" r="10" fill="#FFFFFF"/>
+  <path d="M 124.92 164.94 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="84.68" cy="162.14" r="12.5" fill="#1F6670"/>
+  <circle cx="84.68" cy="162.14" r="10" fill="#FFFFFF"/>
+  <path d="M 94.28 164.94 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="57.56" cy="147.90" r="12.5" fill="#1F6670"/>
+  <circle cx="57.56" cy="147.90" r="10" fill="#FFFFFF"/>
+  <path d="M 67.16 150.70 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="40.16" cy="122.69" r="12.5" fill="#1F6670"/>
+  <circle cx="40.16" cy="122.69" r="10" fill="#FFFFFF"/>
+  <path d="M 49.76 125.49 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="36.47" cy="92.29" r="12.5" fill="#1F6670"/>
+  <circle cx="36.47" cy="92.29" r="10" fill="#FFFFFF"/>
+  <path d="M 46.07 95.09 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="47.33" cy="63.64" r="12.5" fill="#1F6670"/>
+  <circle cx="47.33" cy="63.64" r="10" fill="#FFFFFF"/>
+  <path d="M 56.93 66.44 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="70.26" cy="43.33" r="12.5" fill="#1F6670"/>
+  <circle cx="70.26" cy="43.33" r="10" fill="#FFFFFF"/>
+  <path d="M 79.86 46.13 a 10 10 0 0 1 -12.7 6.2 a 8.4 8.4 0 0 0 10.6 -8.7 Z" fill="#5BBCC9"/>
+  <circle cx="100" cy="100" r="31" fill="#1F6670"/>
+  <circle cx="100" cy="100" r="24.5" fill="#FFFFFF"/>
+  <path d="M 123.5 107 a 24.5 24.5 0 0 1 -31.2 15.3 a 20.6 20.6 0 0 0 26 -21.4 Z" fill="#5BBCC9"/>
+  <circle cx="90" cy="90" r="4.2" fill="#5BBCC9" opacity="0.4"/>
 </svg>

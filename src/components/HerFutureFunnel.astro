@@ -1,20 +1,23 @@
 ---
 /**
- * Her Future discovery call funnel.
+ * Her Future discovery call funnel, as a popup.
  *
- * An inline stepped panel, not a dialog, so the booking calendar can sit in
- * the page on every screen size. One form holds every step; steps are shown
- * and hidden in place, so going back never loses an answer.
+ * Per the 15 September meeting it is a native <dialog>, opened with
+ * showModal() from any element carrying [data-hf-open]. Her words: "just have
+ * it like as a pop-up, when you go to book a call." The "Step 1 of 3"
+ * indicator is gone: "I actually don't have that." The heading is
+ * "Book a call. 20 minutes yours." and nowhere does it ask "What would you
+ * like to talk about."
+ *
+ * One form holds every step; steps are shown and hidden in place, so going
+ * back never loses an answer. Closing the dialog keeps the answers too.
  *
  * Steps:
- *   1. pillar       choose one of four pillars
+ *   1. pillar       choose one of six options
  *   2. question     one or two yes/no questions, only for IUL and Business Insurance
  *   3. details      optional notes, then name, email, phone
  *   4. disclaimer   the 20 minute commitment, must be ticked
  *   then the calendar, shown only after /api/her-future accepts the details.
- *
- * Annuities and Retirement skip step 2, so their flow is three steps and the
- * progress indicator says so.
  *
  * Contract for /api/her-future, every answer is an enum:
  *   iul                -> answers: { has_iul_policy: "yes" | "no" }
@@ -22,6 +25,9 @@
  *                                    happy_with_it: "yes" | "no" (only when the first is "yes") }
  *   annuities          -> answers: {}
  *   retirement         -> answers: {}
+ *
+ * The six pillars map straight to the API. Anything typed under "Other"
+ * travels in the free text notes field.
  *
  * This is a discovery call, never a qualification form. Nothing here asks
  * the visitor about money and nothing here should be added that does.
@@ -31,9 +37,13 @@ import { herFuture } from '@/config/site';
 interface Props {
   /** Unique per page, used to build element ids. */
   id?: string;
+  /** Show the built in trigger band. Turn off if the page supplies its own trigger. */
+  band?: boolean;
 }
 
-const { id = 'hf' } = Astro.props;
+const { id = 'hf', band = true } = Astro.props;
+
+const CTA = 'Book a call. 20 minutes yours.';
 
 const pillars = [
   {
@@ -56,6 +66,16 @@ const pillars = [
     label: 'Retirement & Generational Wealth',
     blurb: 'Retirement, asset protection and what you leave behind.',
   },
+  {
+    id: 'earned_income',
+    label: 'Earned Income Opportunities',
+    blurb: 'Ways to earn alongside what you already do.',
+  },
+  {
+    id: 'other',
+    label: 'Other',
+    blurb: 'Something else on your mind. Type it in.',
+  },
 ] as const;
 
 const yesNo = [
@@ -69,350 +89,476 @@ const bookingUrl =
 const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
-<section class="funnel section" id="book" data-funnel data-booking-url={bookingUrl}>
-  <div class="wrap--narrow">
-    <span class="label">Book a call</span>
-    <h2 class="funnel__title">Twenty minutes, <span class="em">yours</span>.</h2>
-    <p class="funnel__lede">
-      Tell us which pillar you would like to talk about, leave your details, and choose a time. A few
-      short steps and nothing you would not say over coffee.
-    </p>
+{
+  band && (
+    <section class="funnel section section--sand" id="book">
+      <div class="wrap--narrow funnel__band">
+        <span class="label">Book a call</span>
+        <h2 class="funnel__title">Twenty minutes, <span class="em">yours</span>.</h2>
+        <p class="funnel__lede">
+          A discovery call, uninterrupted. A couple of questions, your details, then a time that
+          suits you.
+        </p>
+        <button type="button" class="btn btn--primary funnel__trigger" data-hf-open>
+          {CTA}
+        </button>
+        <p class="funnel__quiet">
+          This is a conversation, not an application. You will never be asked to share figures
+          with us here.
+        </p>
+      </div>
+    </section>
+  )
+}
 
-    <div class="funnel__panel">
-      <div class="funnel__progress" data-progress-wrap>
-        <p class="funnel__count" data-progress aria-live="polite">Step 1 of 4</p>
-        <div class="funnel__bar" aria-hidden="true">
-          <span class="funnel__bar-fill" data-progress-bar style="width: 25%"></span>
+<dialog
+  class="hf-dialog"
+  data-funnel
+  data-booking-url={bookingUrl}
+  aria-labelledby={`${id}-title`}
+  aria-describedby={`${id}-intro`}
+>
+  <!-- Outside the scrolling panel, so it stays put however far the form scrolls. -->
+  <button type="button" class="hf-dialog__close" data-close aria-label="Close">
+    <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.5" fill="none" />
+    </svg>
+  </button>
+
+  <div class="hf-dialog__inner">
+    <header class="hf-dialog__head">
+      <span class="label">Her Future</span>
+      <h2 class="hf-dialog__title" id={`${id}-title`}>Book a call. 20 minutes yours.</h2>
+      <p class="hf-dialog__intro" id={`${id}-intro`}>Just a couple of questions before booking.</p>
+    </header>
+
+    <form class="funnel__form" novalidate data-funnel-form>
+      <div class="hp" aria-hidden="true">
+        <label for={`${id}-website`}>Leave this field empty</label>
+        <input type="text" id={`${id}-website`} name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <!-- Step: pillar -->
+      <div class="funnel__step" data-step="pillar">
+        <h3 class="funnel__heading" id={`${id}-h-pillar`} tabindex="-1" data-step-heading>
+          Choose one of the six
+        </h3>
+
+        <fieldset class="funnel__fieldset" aria-describedby={`${id}-err-pillar`}>
+          <legend class="visually-hidden">Choose one</legend>
+          <div class="funnel__choices">
+            {
+              pillars.map((pillar) => (
+                <label class="choice">
+                  <input type="radio" name="pillar" value={pillar.id} />
+                  <span class="choice__body">
+                    <span class="choice__title">{pillar.label}</span>
+                    <span class="choice__blurb">{pillar.blurb}</span>
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <p class="funnel__error" id={`${id}-err-pillar`} data-error="pillar"></p>
+
+        <!-- Revealed only when Other is chosen. Never sent as its own key. -->
+        <div class="field funnel__other" data-other hidden>
+          <label class="field__label" for={`${id}-other`}>Type it in</label>
+          <input
+            type="text"
+            id={`${id}-other`}
+            name="other_detail"
+            maxlength="200"
+            autocomplete="off"
+            aria-describedby={`${id}-hint-other ${id}-err-other`}
+          />
+          <span class="field__hint" id={`${id}-hint-other`}>A few words is enough.</span>
+          <p class="funnel__error" id={`${id}-err-other`} data-error="other_detail"></p>
+        </div>
+
+        <div class="funnel__actions">
+          <button type="button" class="btn btn--primary" data-next>Continue</button>
         </div>
       </div>
 
-      <form class="funnel__form" novalidate data-funnel-form>
-        <div class="hp" aria-hidden="true">
-          <label for={`${id}-website`}>Leave this field empty</label>
-          <input type="text" id={`${id}-website`} name="website" tabindex="-1" autocomplete="off" />
-        </div>
+      <!-- Step: question (IUL and Business Insurance only) -->
+      <div class="funnel__step" data-step="question" hidden>
+        <h3 class="funnel__heading" id={`${id}-h-question`} tabindex="-1" data-step-heading>
+          One quick question
+        </h3>
 
-        <!-- Step: pillar -->
-        <div class="funnel__step" data-step="pillar">
-          <h3 class="funnel__heading" id={`${id}-h-pillar`} tabindex="-1" data-step-heading>
-            What would you like to talk about?
-          </h3>
-
-          <fieldset class="funnel__fieldset" aria-describedby={`${id}-err-pillar`}>
-            <legend class="funnel__legend">Choose one pillar</legend>
-            <div class="funnel__choices">
-              {
-                pillars.map((pillar) => (
-                  <label class="choice">
-                    <input type="radio" name="pillar" value={pillar.id} />
-                    <span class="choice__body">
-                      <span class="choice__title">{pillar.label}</span>
-                      <span class="choice__blurb">{pillar.blurb}</span>
-                    </span>
-                  </label>
-                ))
-              }
-            </div>
-          </fieldset>
-          <p class="funnel__error" id={`${id}-err-pillar`} data-error="pillar"></p>
-
-          <div class="funnel__actions">
-            <button type="button" class="btn btn--primary" data-next>Continue</button>
+        <fieldset
+          class="funnel__fieldset"
+          data-branch="iul"
+          aria-describedby={`${id}-err-has_iul_policy`}
+          hidden
+        >
+          <legend class="funnel__legend funnel__legend--question">
+            Do you currently have an IUL policy?
+          </legend>
+          <div class="funnel__choices funnel__choices--row">
+            {
+              yesNo.map((opt) => (
+                <label class="choice choice--compact">
+                  <input type="radio" name="has_iul_policy" value={opt.value} />
+                  <span class="choice__body">
+                    <span class="choice__title">{opt.label}</span>
+                  </span>
+                </label>
+              ))
+            }
           </div>
-        </div>
+        </fieldset>
+        <p class="funnel__error" id={`${id}-err-has_iul_policy`} data-error="has_iul_policy"></p>
 
-        <!-- Step: question (IUL and Business Insurance only) -->
-        <div class="funnel__step" data-step="question" hidden>
-          <h3 class="funnel__heading" id={`${id}-h-question`} tabindex="-1" data-step-heading>
-            One quick question
-          </h3>
-
-          <fieldset
-            class="funnel__fieldset"
-            data-branch="iul"
-            aria-describedby={`${id}-err-has_iul_policy`}
-            hidden
-          >
-            <legend class="funnel__legend funnel__legend--question">
-              Do you currently have an IUL policy?
-            </legend>
-            <div class="funnel__choices funnel__choices--row">
-              {
-                yesNo.map((opt) => (
-                  <label class="choice choice--compact">
-                    <input type="radio" name="has_iul_policy" value={opt.value} />
-                    <span class="choice__body">
-                      <span class="choice__title">{opt.label}</span>
-                    </span>
-                  </label>
-                ))
-              }
-            </div>
-          </fieldset>
-          <p class="funnel__error" id={`${id}-err-has_iul_policy`} data-error="has_iul_policy"></p>
-
-          <fieldset
-            class="funnel__fieldset"
-            data-branch="business_insurance"
-            aria-describedby={`${id}-err-has_business_insurance`}
-            hidden
-          >
-            <legend class="funnel__legend funnel__legend--question">
-              Do you currently have business insurance?
-            </legend>
-            <div class="funnel__choices funnel__choices--row">
-              {
-                yesNo.map((opt) => (
-                  <label class="choice choice--compact">
-                    <input type="radio" name="has_business_insurance" value={opt.value} />
-                    <span class="choice__body">
-                      <span class="choice__title">{opt.label}</span>
-                    </span>
-                  </label>
-                ))
-              }
-            </div>
-          </fieldset>
-          <p
-            class="funnel__error"
-            id={`${id}-err-has_business_insurance`}
-            data-error="has_business_insurance"
-          >
-          </p>
-
-          <fieldset
-            class="funnel__fieldset"
-            data-branch="business_insurance"
-            data-when="has_business_insurance=yes"
-            aria-describedby={`${id}-err-happy_with_it`}
-            hidden
-          >
-            <legend class="funnel__legend funnel__legend--question">Are you happy with it?</legend>
-            <div class="funnel__choices funnel__choices--row">
-              {
-                yesNo.map((opt) => (
-                  <label class="choice choice--compact">
-                    <input type="radio" name="happy_with_it" value={opt.value} />
-                    <span class="choice__body">
-                      <span class="choice__title">{opt.label}</span>
-                    </span>
-                  </label>
-                ))
-              }
-            </div>
-          </fieldset>
-          <p class="funnel__error" id={`${id}-err-happy_with_it`} data-error="happy_with_it"></p>
-
-          <div class="funnel__actions">
-            <button type="button" class="btn btn--ghost" data-back>Back</button>
-            <button type="button" class="btn btn--primary" data-next>Continue</button>
+        <fieldset
+          class="funnel__fieldset"
+          data-branch="business_insurance"
+          aria-describedby={`${id}-err-has_business_insurance`}
+          hidden
+        >
+          <legend class="funnel__legend funnel__legend--question">
+            Do you currently have business insurance?
+          </legend>
+          <div class="funnel__choices funnel__choices--row">
+            {
+              yesNo.map((opt) => (
+                <label class="choice choice--compact">
+                  <input type="radio" name="has_business_insurance" value={opt.value} />
+                  <span class="choice__body">
+                    <span class="choice__title">{opt.label}</span>
+                  </span>
+                </label>
+              ))
+            }
           </div>
+        </fieldset>
+        <p
+          class="funnel__error"
+          id={`${id}-err-has_business_insurance`}
+          data-error="has_business_insurance"
+        >
+        </p>
+
+        <fieldset
+          class="funnel__fieldset"
+          data-branch="business_insurance"
+          data-when="has_business_insurance=yes"
+          aria-describedby={`${id}-err-happy_with_it`}
+          hidden
+        >
+          <legend class="funnel__legend funnel__legend--question">Are you happy with it?</legend>
+          <div class="funnel__choices funnel__choices--row">
+            {
+              yesNo.map((opt) => (
+                <label class="choice choice--compact">
+                  <input type="radio" name="happy_with_it" value={opt.value} />
+                  <span class="choice__body">
+                    <span class="choice__title">{opt.label}</span>
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <p class="funnel__error" id={`${id}-err-happy_with_it`} data-error="happy_with_it"></p>
+
+        <div class="funnel__actions">
+          <button type="button" class="btn btn--ghost" data-back>Back</button>
+          <button type="button" class="btn btn--primary" data-next>Continue</button>
+        </div>
+      </div>
+
+      <!-- Step: details -->
+      <div class="funnel__step" data-step="details" hidden>
+        <h3 class="funnel__heading" id={`${id}-h-details`} tabindex="-1" data-step-heading>
+          Your details
+        </h3>
+
+        <div class="field">
+          <label class="field__label" for={`${id}-notes`}>
+            Is there anything you'd like us to know or keep in mind for this call?
+          </label>
+          <textarea
+            id={`${id}-notes`}
+            name="notes"
+            maxlength="1700"
+            rows="3"
+            aria-describedby={`${id}-hint-notes ${id}-err-notes`}></textarea>
+          <span class="field__hint" id={`${id}-hint-notes`}>Optional.</span>
+          <p class="funnel__error" id={`${id}-err-notes`} data-error="notes"></p>
         </div>
 
-        <!-- Step: details -->
-        <div class="funnel__step" data-step="details" hidden>
-          <h3 class="funnel__heading" id={`${id}-h-details`} tabindex="-1" data-step-heading>
-            Your details
-          </h3>
+        <div class="funnel__contact">
+          <div class="field">
+            <label class="field__label" for={`${id}-name`}>Name</label>
+            <input
+              type="text"
+              id={`${id}-name`}
+              name="name"
+              required
+              maxlength="120"
+              autocomplete="name"
+              aria-describedby={`${id}-err-name`}
+            />
+            <p class="funnel__error" id={`${id}-err-name`} data-error="name"></p>
+          </div>
 
           <div class="field">
-            <label class="field__label" for={`${id}-notes`}>
-              Is there anything you'd like us to know or keep in mind for this call?
-            </label>
-            <textarea
-              id={`${id}-notes`}
-              name="notes"
-              maxlength="2000"
-              rows="4"
-              aria-describedby={`${id}-hint-notes ${id}-err-notes`}></textarea>
-            <span class="field__hint" id={`${id}-hint-notes`}>Optional.</span>
-            <p class="funnel__error" id={`${id}-err-notes`} data-error="notes"></p>
-          </div>
-
-          <div class="funnel__contact">
-            <div class="field">
-              <label class="field__label" for={`${id}-name`}>Name</label>
-              <input
-                type="text"
-                id={`${id}-name`}
-                name="name"
-                required
-                maxlength="120"
-                autocomplete="name"
-                aria-describedby={`${id}-err-name`}
-              />
-              <p class="funnel__error" id={`${id}-err-name`} data-error="name"></p>
-            </div>
-
-            <div class="field">
-              <label class="field__label" for={`${id}-email`}>Email</label>
-              <input
-                type="email"
-                id={`${id}-email`}
-                name="email"
-                required
-                maxlength="254"
-                autocomplete="email"
-                inputmode="email"
-                aria-describedby={`${id}-err-email`}
-              />
-              <p class="funnel__error" id={`${id}-err-email`} data-error="email"></p>
-            </div>
-
-            <div class="field">
-              <label class="field__label" for={`${id}-phone`}>Phone</label>
-              <input
-                type="tel"
-                id={`${id}-phone`}
-                name="phone"
-                maxlength="32"
-                autocomplete="tel"
-                inputmode="tel"
-                aria-describedby={`${id}-hint-phone ${id}-err-phone`}
-              />
-              <span class="field__hint" id={`${id}-hint-phone`}>Optional. Include your country code.</span>
-              <p class="funnel__error" id={`${id}-err-phone`} data-error="phone"></p>
-            </div>
-          </div>
-
-          <div class="funnel__actions">
-            <button type="button" class="btn btn--ghost" data-back>Back</button>
-            <button type="button" class="btn btn--primary" data-next>Continue</button>
-          </div>
-        </div>
-
-        <!-- Step: disclaimer -->
-        <div class="funnel__step" data-step="disclaimer" hidden>
-          <h3 class="funnel__heading" id={`${id}-h-disclaimer`} tabindex="-1" data-step-heading>
-            Before you book
-          </h3>
-
-          <p class="funnel__disclaimer">{herFuture.disclaimer}</p>
-
-          <div class="check">
+            <label class="field__label" for={`${id}-email`}>Email</label>
             <input
-              type="checkbox"
-              id={`${id}-accept`}
-              name="disclaimerAccepted"
-              value="true"
-              aria-describedby={`${id}-err-disclaimerAccepted`}
+              type="email"
+              id={`${id}-email`}
+              name="email"
+              required
+              maxlength="254"
+              autocomplete="email"
+              inputmode="email"
+              aria-describedby={`${id}-err-email`}
             />
-            <label for={`${id}-accept`}>I understand, and I will set aside 20 uninterrupted minutes.</label>
+            <p class="funnel__error" id={`${id}-err-email`} data-error="email"></p>
           </div>
-          <p
-            class="funnel__error"
-            id={`${id}-err-disclaimerAccepted`}
-            data-error="disclaimerAccepted"
-          >
-          </p>
 
-          {
-            turnstileKey && (
-              <div class="funnel__turnstile" data-turnstile data-sitekey={turnstileKey} />
-            )
-          }
-
-          <div class="funnel__actions">
-            <button type="button" class="btn btn--ghost" data-back>Back</button>
-            <button type="submit" class="btn btn--primary">Continue to booking</button>
+          <div class="field">
+            <label class="field__label" for={`${id}-phone`}>Phone</label>
+            <input
+              type="tel"
+              id={`${id}-phone`}
+              name="phone"
+              maxlength="32"
+              autocomplete="tel"
+              inputmode="tel"
+              aria-describedby={`${id}-hint-phone ${id}-err-phone`}
+            />
+            <span class="field__hint" id={`${id}-hint-phone`}>Optional. Include your country code.</span>
+            <p class="funnel__error" id={`${id}-err-phone`} data-error="phone"></p>
           </div>
-          <p class="form__status" data-status role="status" aria-live="polite"></p>
         </div>
 
-        <!-- Calendar, only after the API has accepted the details -->
-        <div class="funnel__step" data-step="calendar" hidden>
-          <h3 class="funnel__heading" id={`${id}-h-calendar`} tabindex="-1" data-step-heading>
-            Choose your time
-          </h3>
-
-          {
-            bookingUrl ? (
-              <>
-                <p>
-                  Thank you, <span data-thanks-name>there</span>. Pick a slot that suits you below.
-                </p>
-                <div class="funnel__calendar" data-calendar-mount />
-                <p class="funnel__fallback">
-                  If the calendar does not load,
-                  <a href={bookingUrl} target="_blank" rel="noopener" data-calendar-link>
-                    open it in a new tab
-                  </a>.
-                </p>
-              </>
-            ) : (
-              <>
-                <p>
-                  Thank you, <span data-thanks-name>there</span>. We have your details and will be in touch
-                  to arrange your call.
-                </p>
-                <div class="funnel__pending ph-frame" style="--ph-ratio: 16 / 9">
-                  <span class="funnel__pending-inner">
-                    <span class="funnel__pending-kicker">Booking calendar</span>
-                    <span class="funnel__pending-title">Opens shortly</span>
-                  </span>
-                </div>
-              </>
-            )
-          }
+        <div class="funnel__actions">
+          <button type="button" class="btn btn--ghost" data-back>Back</button>
+          <button type="button" class="btn btn--primary" data-next>Continue</button>
         </div>
-      </form>
-    </div>
+      </div>
 
-    <p class="funnel__quiet">
-      This is a conversation, not an application. You will never be asked to share figures with us here.
+      <!-- Step: disclaimer -->
+      <div class="funnel__step" data-step="disclaimer" hidden>
+        <h3 class="funnel__heading" id={`${id}-h-disclaimer`} tabindex="-1" data-step-heading>
+          Before you book
+        </h3>
+
+        <p class="funnel__disclaimer">{herFuture.disclaimer}</p>
+
+        <div class="check">
+          <input
+            type="checkbox"
+            id={`${id}-accept`}
+            name="disclaimerAccepted"
+            value="true"
+            aria-describedby={`${id}-err-disclaimerAccepted`}
+          />
+          <label for={`${id}-accept`}>I understand, and I will set aside 20 uninterrupted minutes.</label>
+        </div>
+        <p
+          class="funnel__error"
+          id={`${id}-err-disclaimerAccepted`}
+          data-error="disclaimerAccepted"
+        >
+        </p>
+
+        {
+          turnstileKey && (
+            <div class="funnel__turnstile" data-turnstile data-sitekey={turnstileKey} />
+          )
+        }
+
+        <div class="funnel__actions">
+          <button type="button" class="btn btn--ghost" data-back>Back</button>
+          <button type="submit" class="btn btn--primary">Continue to booking</button>
+        </div>
+        <p class="form__status" data-status role="status" aria-live="polite"></p>
+      </div>
+
+      <!-- Calendar, only after the API has accepted the details -->
+      <div class="funnel__step" data-step="calendar" hidden>
+        <h3 class="funnel__heading" id={`${id}-h-calendar`} tabindex="-1" data-step-heading>
+          Choose your time
+        </h3>
+
+        {
+          bookingUrl ? (
+            <>
+              <p>
+                Thank you, <span data-thanks-name>there</span>. Pick a slot that suits you below.
+              </p>
+              <div class="funnel__calendar" data-calendar-mount />
+              <p class="funnel__fallback">
+                If the calendar does not load,
+                <a href={bookingUrl} target="_blank" rel="noopener" data-calendar-link>
+                  open it in a new tab
+                </a>.
+              </p>
+            </>
+          ) : (
+            <>
+              <p>
+                Thank you, <span data-thanks-name>there</span>. We have your details and will be in
+                touch to arrange your call.
+              </p>
+              <div class="funnel__pending ph-frame" style="--ph-ratio: 16 / 9">
+                <span class="funnel__pending-inner">
+                  <span class="funnel__pending-kicker">Booking calendar</span>
+                  <span class="funnel__pending-title">Opens shortly</span>
+                </span>
+              </div>
+            </>
+          )
+        }
+
+        <div class="funnel__actions">
+          <button type="button" class="btn btn--ghost" data-close>Done</button>
+        </div>
+      </div>
+    </form>
+
+    <p class="hf-dialog__foot">
+      We will never ask about your income, assets, net worth or account balances.
     </p>
   </div>
-</section>
+</dialog>
 
 <style>
+  /* ---------------- Trigger band ---------------- */
+  .funnel__band {
+    text-align: center;
+  }
+
+  .funnel__band .label {
+    margin-inline: auto;
+  }
+
   .funnel__title {
     margin-bottom: var(--space-s);
   }
 
   .funnel__lede {
-    margin-bottom: var(--space-l);
+    margin: 0 auto var(--space-l);
   }
 
-  .funnel__panel {
-    background: var(--white);
+  .funnel__trigger {
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .funnel__quiet {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin: var(--space-m) auto 0;
+  }
+
+  /* ---------------- Dialog ---------------- */
+  .hf-dialog {
+    /* The dialog element is the backdrop hit area. Its padding is zero so a
+       click on it, and not on the inner panel, is a click on the backdrop. */
+    width: min(100% - (var(--gutter) * 2), 42rem);
+    max-height: min(92svh, 60rem);
+    margin: auto;
+    padding: 0;
     border: 1px solid var(--sand);
     border-radius: var(--radius-m);
-    padding: clamp(var(--space-m), 2vw + 1rem, var(--space-xl));
-    box-shadow: var(--shadow-soft);
-  }
-
-  .funnel__progress {
-    margin-bottom: var(--space-l);
-  }
-
-  .funnel__count {
-    font-family: var(--font-sans);
-    font-size: var(--step--2);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: var(--track-widest);
-    color: var(--teal-ink);
-    margin: 0 0 var(--space-2xs);
-  }
-
-  .funnel__bar {
-    height: 2px;
-    background: var(--sand-tint);
-    border-radius: var(--radius-pill);
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: var(--shadow-lift);
     overflow: hidden;
   }
 
-  .funnel__bar-fill {
-    display: block;
-    height: 100%;
-    background: var(--gold);
-    transition: width var(--dur-base) var(--ease);
+  .hf-dialog::backdrop {
+    background: color-mix(in srgb, var(--ink) 55%, transparent);
+    backdrop-filter: blur(2px);
   }
 
-  .funnel__heading {
+  .hf-dialog[open] {
+    display: grid;
+    animation: hf-in var(--dur-base) var(--ease);
+  }
+
+  @keyframes hf-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .hf-dialog__inner {
+    position: relative;
+    max-height: min(92svh, 60rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: clamp(var(--space-l), 3vw + 1rem, var(--space-xl));
+  }
+
+  .hf-dialog__close {
+    position: absolute;
+    z-index: 1;
+    top: var(--space-s);
+    right: var(--space-s);
+    background: var(--white);
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+
+  .hf-dialog__close:hover {
+    border-color: var(--gold-ink);
+  }
+
+  /* The dialog is display: grid when open; the inner panel is its only tracked child. */
+  .hf-dialog[open] {
+    position: fixed;
+  }
+
+  .hf-dialog__head {
+    padding-right: 3rem;
+    margin-bottom: var(--space-l);
+    padding-bottom: var(--space-m);
+    border-bottom: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  }
+
+  .hf-dialog__title {
     font-size: var(--step-3);
+    line-height: 1.05;
+    margin-bottom: var(--space-xs);
+  }
+
+  .hf-dialog__intro {
+    font-size: var(--step-0);
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .hf-dialog__foot {
+    font-size: var(--step--2);
+    color: var(--ink-soft);
+    margin: var(--space-l) 0 0;
+    padding-top: var(--space-s);
+    border-top: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  }
+
+  /* ---------------- Steps ---------------- */
+  .funnel__heading {
+    font-size: var(--step-2);
     margin-bottom: var(--space-m);
-    scroll-margin-top: 6rem;
   }
 
   .funnel__heading:focus {
@@ -497,7 +643,7 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   }
 
   .choice:has(input:focus-visible) {
-    outline: 2px solid var(--gold);
+    outline: 2px solid var(--gold-ink);
     outline-offset: 3px;
   }
 
@@ -529,6 +675,14 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   .choice--compact .choice__title {
     font-family: var(--font-sans);
     font-size: var(--step-0);
+  }
+
+  .funnel__other {
+    margin-top: var(--space-m);
+  }
+
+  .funnel__other[hidden] {
+    display: none;
   }
 
   .funnel__error {
@@ -612,13 +766,13 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     border: 1px solid var(--sand);
     border-radius: var(--radius-m);
     overflow: hidden;
-    min-height: 40rem;
+    min-height: 30rem;
   }
 
   .funnel__calendar iframe {
     display: block;
     width: 100%;
-    height: 44rem;
+    height: 34rem;
     border: 0;
   }
 
@@ -652,10 +806,15 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     color: var(--ink);
   }
 
-  .funnel__quiet {
-    font-size: var(--step--1);
-    color: var(--ink-soft);
-    margin-top: var(--space-m);
+  /* The page behind must not scroll while the dialog is open. */
+  :global(html.hf-locked) {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hf-dialog[open] {
+      animation: none;
+    }
   }
 </style>
 
@@ -665,6 +824,12 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
    * does not use the shared data-form handler. It follows the same status
    * conventions: a [data-status] live region, a disabled button while
    * sending, and friendly errors that never expose internals.
+   *
+   * Dialog behaviour: any [data-hf-open] opens it with showModal(), which gives
+   * us the focus trap and Escape for free. Focus moves to the current step's
+   * heading on open and returns to whichever trigger opened it on close. A
+   * click on the backdrop (the dialog element itself, outside the inner
+   * panel) closes it.
    */
 
   type StepName = 'pillar' | 'question' | 'details' | 'disclaimer' | 'calendar';
@@ -677,13 +842,15 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     sending: 'Sending your details.',
     failed: 'Something went wrong. Please try again, or email us directly.',
     rateLimited: 'That is a few too many tries. Please wait a moment and try again.',
-    choosePillar: 'Please choose one pillar to continue.',
+    choosePillar: 'Please choose one to continue.',
+    other: 'Please type in what you have in mind.',
+    otherLong: 'Please keep this under 200 characters.',
     answer: 'Please choose an answer to continue.',
     name: 'Please tell us your name.',
     nameLong: 'Please keep your name under 120 characters.',
     email: 'Please enter a valid email address.',
     phone: 'Please use digits, spaces and + ( ) - . only, up to 32 characters.',
-    notesLong: 'Please keep your notes under 2000 characters.',
+    notesLong: 'Please keep your notes a little shorter.',
     accept: 'Please tick the box to confirm you have read this.',
   };
 
@@ -691,22 +858,23 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   const PILLARS_WITH_QUESTION = new Set(['iul', 'business_insurance']);
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const PHONE_PATTERN = /^[0-9+()\-.\s]{1,32}$/;
+  const NOTES_MAX = 2000;
 
-  const root = document.querySelector<HTMLElement>('[data-funnel]');
+
+  const root = document.querySelector<HTMLDialogElement>('dialog[data-funnel]');
 
   if (root) {
     const form = root.querySelector<HTMLFormElement>('[data-funnel-form]');
     const steps = Array.from(root.querySelectorAll<HTMLElement>('[data-step]'));
-    const progressWrap = root.querySelector<HTMLElement>('[data-progress-wrap]');
-    const progress = root.querySelector<HTMLElement>('[data-progress]');
-    const progressBar = root.querySelector<HTMLElement>('[data-progress-bar]');
     const status = root.querySelector<HTMLElement>('[data-status]');
     const submitBtn = root.querySelector<HTMLButtonElement>('button[type="submit"]');
     const turnstileEl = root.querySelector<HTMLElement>('[data-turnstile]');
+    const otherWrap = root.querySelector<HTMLElement>('[data-other]');
     const bookingUrl = root.dataset.bookingUrl || '';
 
     let current: StepName = 'pillar';
     let turnstileRendered = false;
+    let opener: HTMLElement | null = null;
 
     if (form) {
       const stepEl = (name: StepName) => steps.find((s) => s.dataset.step === name) ?? null;
@@ -723,6 +891,59 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         PILLARS_WITH_QUESTION.has(pillar())
           ? FORM_STEPS
           : FORM_STEPS.filter((s) => s !== 'question');
+
+      /* ---------------- Dialog open and close ---------------- */
+
+      function focusHeading() {
+        const heading = stepEl(current)?.querySelector<HTMLElement>('[data-step-heading]');
+        heading?.focus();
+      }
+
+      function open(trigger: HTMLElement | null) {
+        opener = trigger;
+        if (root!.open) return;
+
+        if (typeof root!.showModal === 'function') {
+          root!.showModal();
+        } else {
+          // Very old engines without <dialog>. Still usable, no focus trap.
+          root!.setAttribute('open', '');
+        }
+
+        document.documentElement.classList.add('hf-locked');
+        if (current === 'disclaimer') mountTurnstile();
+        requestAnimationFrame(focusHeading);
+      }
+
+      function close() {
+        if (typeof root!.close === 'function' && root!.open) root!.close();
+        else root!.removeAttribute('open');
+      }
+
+      // Runs for Escape, the close buttons and the backdrop alike.
+      root.addEventListener('close', () => {
+        document.documentElement.classList.remove('hf-locked');
+        const target = opener;
+        opener = null;
+        target?.focus();
+      });
+
+      // Backdrop click. The inner panel fills the dialog, so a click whose
+      // target is the dialog element itself landed outside the panel.
+      root.addEventListener('click', (e) => {
+        if (e.target === root) close();
+      });
+
+      root.querySelectorAll<HTMLButtonElement>('[data-close]').forEach((btn) =>
+        btn.addEventListener('click', close)
+      );
+
+      document.querySelectorAll<HTMLElement>('[data-hf-open]').forEach((trigger) =>
+        trigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          open(trigger);
+        })
+      );
 
       /* ---------------- Status and errors ---------------- */
 
@@ -774,27 +995,11 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
           group.hidden = !show;
         });
+
+        if (otherWrap) otherWrap.hidden = p !== 'other';
       }
 
       /* ---------------- Step display ---------------- */
-
-      function updateProgress() {
-        if (!progressWrap) return;
-
-        if (current === 'calendar') {
-          progressWrap.hidden = true;
-          return;
-        }
-
-        progressWrap.hidden = false;
-        const list = activeSteps();
-        const index = list.indexOf(current);
-        const n = index + 1;
-        const total = list.length;
-
-        if (progress) progress.textContent = `Step ${n} of ${total}`;
-        if (progressBar) progressBar.style.width = `${Math.round((n / total) * 100)}%`;
-      }
 
       function show(name: StepName) {
         current = name;
@@ -803,12 +1008,10 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         });
 
         syncBranches();
-        updateProgress();
 
         if (name === 'disclaimer') mountTurnstile();
 
-        const heading = stepEl(name)?.querySelector<HTMLElement>('[data-step-heading]');
-        heading?.focus();
+        focusHeading();
       }
 
       function neighbour(direction: 1 | -1): StepName | null {
@@ -819,6 +1022,9 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       }
 
       /* ---------------- Validation ---------------- */
+
+      const otherText = () => (field<HTMLInputElement>('other_detail')?.value ?? '').trim();
+      const notesText = () => (field<HTMLTextAreaElement>('notes')?.value ?? '').trim();
 
       function validate(name: StepName): boolean {
         const scope = stepEl(name);
@@ -832,6 +1038,19 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             setError('pillar', MESSAGES.choosePillar);
             focusFirst('pillar');
             return false;
+          }
+          if (p === 'other') {
+            const text = otherText();
+            if (!text) {
+              setError('other_detail', MESSAGES.other);
+              focusFirst('other_detail');
+              return false;
+            }
+            if (text.length > 200) {
+              setError('other_detail', MESSAGES.otherLong);
+              focusFirst('other_detail');
+              return false;
+            }
           }
           return true;
         }
@@ -859,14 +1078,14 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         }
 
         if (name === 'details') {
-          const notes = field<HTMLTextAreaElement>('notes')?.value ?? '';
           const nameVal = (field<HTMLInputElement>('name')?.value ?? '').trim();
           const email = (field<HTMLInputElement>('email')?.value ?? '').trim();
           const phone = (field<HTMLInputElement>('phone')?.value ?? '').trim();
 
           let firstBad = '';
 
-          if (notes.length > 2000) {
+          // The bridge prefix shares the notes cap, so check the combined length.
+          if (composeNotes().length > NOTES_MAX) {
             setError('notes', MESSAGES.notesLong);
             firstBad = firstBad || 'notes';
           }
@@ -926,6 +1145,21 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
       /* ---------------- Payload ---------------- */
 
+      /**
+       * Notes as sent. For the two bridged options the visitor's real choice
+       * is written at the front, so nothing is lost while the Worker catches
+       * up. For the four accepted pillars notes go through untouched.
+       */
+      function composeNotes(): string {
+        const notes = notesText();
+        // "Other" is a free choice, so whatever they typed is carried into
+        // notes. Every other pillar is an enum the API already understands.
+        if (pillar() === 'other' && otherText()) {
+          return notes ? `They wrote: "${otherText()}". ${notes}` : `They wrote: "${otherText()}".`;
+        }
+        return notes;
+      }
+
       function buildPayload() {
         const p = pillar();
         const answers: Record<string, string> = {};
@@ -941,7 +1175,7 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         const payload: Record<string, unknown> = {
           pillar: p,
           answers,
-          notes: (field<HTMLTextAreaElement>('notes')?.value ?? '').trim(),
+          notes: composeNotes(),
           name: (field<HTMLInputElement>('name')?.value ?? '').trim(),
           email: (field<HTMLInputElement>('email')?.value ?? '').trim(),
           phone: (field<HTMLInputElement>('phone')?.value ?? '').trim(),
@@ -1060,7 +1294,15 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         })
       );
 
-      // Reveal or hide the follow up question as soon as the first is answered.
+      // Reveal the Other field, or the follow up question, as soon as a choice is made.
+      form.querySelectorAll<HTMLInputElement>('input[name="pillar"]').forEach((r) =>
+        r.addEventListener('change', () => {
+          syncBranches();
+          setError('pillar', '');
+          if (pillar() === 'other') focusFirst('other_detail');
+        })
+      );
+
       form.querySelectorAll<HTMLInputElement>('input[name="has_business_insurance"]').forEach((r) =>
         r.addEventListener('change', () => {
           syncBranches();
@@ -1084,19 +1326,13 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         void submit();
       });
 
-      // If the page CTA points here, land the visitor on the first heading.
-      document.querySelectorAll<HTMLAnchorElement>('a[href="#book"]').forEach((a) =>
-        a.addEventListener('click', () => {
-          if (current === 'pillar') {
-            requestAnimationFrame(() => {
-              stepEl('pillar')?.querySelector<HTMLElement>('[data-step-heading]')?.focus();
-            });
-          }
-        })
-      );
+      // Deep link support: /her-future#book opens the dialog on arrival.
+      if (window.location.hash === '#book') {
+        const trigger = document.querySelector<HTMLElement>('[data-hf-open]');
+        open(trigger);
+      }
 
       syncBranches();
-      updateProgress();
     }
   }
 </script>

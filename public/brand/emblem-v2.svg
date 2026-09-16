@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="e2t">
+  <title id="e2t">The Still Her Foundation emblem</title>
+  <desc>Her Brooch. The thyroid butterfly drawn as a couture brooch, a pearl set in the body. Hand built path geometry, no type.</desc>
+  <path d="M 100 66 C 113 49 131 35 149 29 C 166 23 180 30 179 48 C 178 67 167 85 149 97 C 161 105 168 119 165 133 C 163 141 155 146 147 145 C 149 152 144 158 137 158 C 131 158 127 154 126 149 C 120 153 112 150 108 143 C 103 134 100 119 100 105 C 99 92 99 79 100 66 Z" fill="#5BBCC9"/>
+  <path d="M 100 66 C 87 49 69 35 51 29 C 34 23 20 30 21 48 C 22 67 33 85 51 97 C 39 105 32 119 35 133 C 37 141 45 146 53 145 C 51 152 56 158 63 158 C 69 158 73 154 74 149 C 80 153 88 150 92 143 C 97 134 100 119 100 105 C 101 92 101 79 100 66 Z" fill="#5BBCC9"/>
+  <path d="M 106 76 C 117 62 132 50 147 44 C 160 39 170 45 169 57 C 168 70 159 83 145 92 C 154 100 159 112 157 124 C 154 136 142 143 130 139 C 119 135 111 124 108 112" fill="none" stroke="#C9A961" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 94 76 C 83 62 68 50 53 44 C 40 39 30 45 31 57 C 32 70 41 83 55 92 C 46 100 41 112 43 124 C 46 136 58 143 70 139 C 81 135 89 124 92 112" fill="none" stroke="#C9A961" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 95 58 C 88 45 82 37 75 31" fill="none" stroke="#1F6670" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M 105 58 C 112 45 118 37 125 31" fill="none" stroke="#1F6670" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="73.5" cy="29.5" r="4.2" fill="#1F6670"/>
+  <circle cx="126.5" cy="29.5" r="4.2" fill="#1F6670"/>
+  <path d="M 100 52 C 108 52 113 60 113 72 L 113 124 C 113 137 107 145 100 145 C 93 145 87 137 87 124 L 87 72 C 87 60 92 52 100 52 Z" fill="#1F6670"/>
+  <circle cx="100" cy="100" r="22" fill="#1F6670"/>
+  <circle cx="100" cy="100" r="13.5" fill="#FFFFFF"/>
+  <path d="M 111.5 103.5 C 110.2 110.5 103.4 115 96.4 113.3 C 103.4 114 110.1 109.6 111.5 103.5 Z" fill="#5BBCC9"/>
+  <circle cx="94.8" cy="94.8" r="3" fill="#5BBCC9" opacity="0.5"/>
+  <circle cx="100" cy="100" r="17" fill="none" stroke="#C9A961" stroke-width="1.4"/>
+</svg>

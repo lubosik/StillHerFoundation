@@ -301,3 +301,219 @@ That is deliberate, so the renditions can be regenerated at other widths without
 credits again, but it is heavy for a Git working tree. Adding `src/assets/images/_originals/`
 to `.gitignore`, or moving it to Git LFS, is worth considering. `.gitignore` sits outside this
 agent's write scope so it was left untouched.
+
+---
+
+# Session two, 16 September 2026
+
+Owner: `visual-v2`. Scope: `EDITS_SEP15.md` sections 2, 6 and 7. Four jobs: the new full bleed
+hero of Nani, the Good Weekend golf redo, the Road to Her Smile Project redo, and the
+restoration of her mother's modelling print.
+
+## Generation summary
+
+| Item | Value |
+|---|---|
+| Provider | Higgsfield MCP |
+| Model | `nano_banana_2` at `resolution: 2k`, `aspect_ratio: 16:9`, served as `nano_banana_flash` |
+| Native output | 2752 x 1536 PNG |
+| Cost per image | 2 credits, confirmed against the balance |
+| Images generated | 9 candidates across 3 slots |
+| Images accepted | 3 |
+| Upscale jobs | 1 at 2 credits, rejected on inspection |
+| Credits spent | 20 |
+| Opening balance | 155.04 |
+| Closing balance | 135.04 |
+| Budget cap | 90 credits, not exceeded |
+
+### Model choice
+
+The previous session established that `nano_banana_2` bills 2 credits per image at the 2k tier
+against 11 for GPT Image 2. It held the art direction first time again, including the hero,
+which was the one job authorised to spend more. It carried Nani's likeness from a single
+reference image well enough that the expensive model was never needed, so the hero cost 8
+credits for four candidates rather than 44.
+
+### Likeness reference
+
+`reference/nani-refs/nani-studio.jpeg` was uploaded through `media_upload` plus `media_confirm`
+and passed to every hero request as an `image_references` media. Media id
+`a72884f1-bd82-4137-9251-088d47dbd1fb`.
+
+`nani-red-carpet-GETTY-WATERMARKED.jpeg` was used only on screen to check the likeness. It was
+never uploaded, never sent to a model and is not on the site.
+
+### Consent
+
+Nani asked for images of herself and supplied her own reference photograph for the purpose. No
+other identifiable person was generated. The Road to Her Smile Project candidates contain no
+face at all.
+
+## Slots
+
+### hero-nani
+
+New slot. This is the full bleed hero for the L'Echelon front page in section 2.
+
+| Field | Value |
+|---|---|
+| Model | `nano_banana_2` 2k, 16:9 |
+| Credits | 8, four candidates |
+| Files | `src/assets/images/hero-nani-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Source | `src/assets/images/_originals/hero-nani.png` |
+
+Prompt:
+
+> Wide cinematic editorial campaign still, cream Mediterranean penthouse salon in Monaco. The woman from the reference image: long dark hair with a blunt fringe, strong dark brows, a full sleeve tattoo down her right arm, slim, dressed in a cream tailored suit with a soft silk camisole and a fine gold pendant necklace. She perches on the arm of a large cream sofa at the right of frame, one leg tucked, leaning her weight into the sofa arm, hand resting lightly on the cushion, shoulders relaxed, smiling broadly and warmly at camera, radiating success and good health. The left third of the frame is intentionally quiet and empty: a plain sunlit cream wall and pale stone floor, clean negative space with no objects. Behind her the room opens through an arch to a terrace with cypress trees and hazy blue sea, sand coloured stone, cream bouclé, brushed brass, one teal silk cushion for accent, huge soft window light from the left. Rich, warm, expensive, editorial. Medium format film, shallow depth of field, gentle grain. No text, no lettering, no signage, no watermark, no logos.
+
+Alt text:
+
+> Nani Rosen smiling, perched on a cream sofa in a sunlit Mediterranean villa salon.
+
+Why this one. It is the only candidate that does all four of her asks at once: she is perched
+half up and half leaning on the arm of the couch rather than sitting in it, the smile is broad
+and warm, the room reads Monaco rather than spa, and the left third is a flat sunlit wall with
+nothing in it. Her face lands at roughly 68 per cent across, so a cream scrim over the left
+third covers none of her. Verified by compositing a scrim over the shipped 1920 WebP.
+
+Likeness check at full resolution: blunt fringe, long dark hair, strong brows, the right arm
+sleeve tattoo and the "R" pendant all carried from the reference. Both hands correct, five
+digits each. No text anywhere in the frame.
+
+The three rejected candidates are kept as JPEGs in `brand/alternates/hero-nani-ALT-a.jpg`,
+`-b.jpg` and `-c.jpg`. Candidate a is strong but the bottom right of the room reads as a
+bathtub. Candidate b seats her in an armchair rather than on its arm. Candidate c puts her in a
+dress in a room that reads closer to a spa than to Monaco.
+
+### good-weekend-course
+
+Replaces the previous files of the same name, which read as a farm.
+
+| Field | Value |
+|---|---|
+| Model | `nano_banana_2` 2k, 16:9 |
+| Credits | 4, two candidates |
+| Files | `src/assets/images/good-weekend-course-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Source | `src/assets/images/_originals/good-weekend-course.png`, overwritten |
+
+Prompt:
+
+> Luxury editorial photograph of a manicured championship golf course at soft dawn. In the near foreground a putting green with a hole cut into the turf and a flagstick standing in the hole, the flag hanging softly in still air. Immediately beside the green a deep bunker of freshly raked pale sand with clean parallel rake lines. In the mid foreground fairway turf with several fresh divots cut out of the grass and open divot holes clearly visible. Beyond that a wide fairway with crisp alternating light and dark mowing stripes running to the horizon. Low golden mist lying over the grass, long dawn shadows, cream and sand tones, warm soft light, cypress and olive trees along the far edge. Unmistakably a golf course, immaculate and expensive. Editorial campaign quality, medium format film, subtle grain. No people, no faces, no text, no lettering, no signage, no watermark, no logos.
+
+Alt text:
+
+> A golf green with the flag in the hole, a raked bunker and divots at soft dawn.
+
+Every note she gave is answered in frame: field, divot holes trailing across the fairway, a
+hole with a flagstick standing in it, and a raked bunker so the sand is not blocked. Mowing
+stripes and dawn mist keep it in the same editorial register as the rest of the site. The
+rejected sibling is at `brand/alternates/good-weekend-course-ALT.jpg`. It has a stronger bunker
+but a saturated blue flag and a foreground that reads as mud rather than divots.
+
+### rths-project
+
+New slot, already referenced by `src/config/site.ts`. Replaces the literal empty road.
+
+| Field | Value |
+|---|---|
+| Model | `nano_banana_2` 2k, 16:9 |
+| Credits | 6, three candidates, all genuinely different |
+| Files | `src/assets/images/rths-project-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Source | `src/assets/images/_originals/rths-project.png` |
+
+Prompt:
+
+> Intimate editorial photograph, horizontal. Close view of an older woman's hands only, weathered, dignified, softly lined, resting open and cupped together in her lap on a cream linen skirt, one hand gently holding the other. Cropped at the mid forearm: no face, no head, no shoulders, no body above the forearms anywhere in the frame. Warm side light from a window falls across the hands, cream and sand tones, a simple thin gold ring, a muted teal thread in the linen weave. Soft shadow, generous negative space on one side. Tender, resilient, dignified. Medium format film, shallow depth of field, natural skin texture, fine grain, editorial campaign quality. No face, no text, no lettering, no signage, no watermark, no logos.
+
+Alt text:
+
+> An older woman's hands resting folded and open in her lap on cream linen.
+
+Why this one. The project is about a woman's dignity being given back, so the representation
+that carries the most weight is the woman herself, present but not identified. Hands hold
+restoration and dignity without going anywhere near teeth or dentistry, and without a face.
+Inspected at full resolution: two hands, correct digit count, no extra fingers, no face
+anywhere, no text.
+
+The two alternates are deliberately different takes and are kept for the page owner:
+`brand/alternates/rths-project-ALT-doorway.jpg` is an arched door half open onto warm morning
+light falling across a stone floor, with a chair, a folded cloth and a teal bowl waiting in the
+room beyond. `brand/alternates/rths-project-ALT-mirror.jpg` is an antique brass hand mirror
+lying on cream linen and turned to the window, reflecting only light and sky.
+
+### lia-modelling-restored
+
+A restoration, not a generation. No new person was created and nothing about her was changed.
+
+| Field | Value |
+|---|---|
+| Source | `reference/nani-refs/lia-modelling-print.jpg`, a phone snapshot of a physical print |
+| Method | Python and Pillow only. The upscaler was tried and rejected |
+| Credits | 2, spent on the rejected upscale |
+| Master | `src/assets/images/lia-modelling-restored.jpg`, 810 x 1138 |
+| Renditions | `src/assets/images/lia-modelling-restored-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Working files | `src/assets/images/_originals/lia-modelling-workingcrop.png` and `lia-modelling-restored.png` |
+
+What was done:
+
+1. Crop. The print sits at an angle in a stack next to a camera and an Ilford paper envelope.
+   Its four corners were located, then a single perspective transform lifted the print out of
+   the snapshot. The carpet, the camera, the envelope and every neighbouring print are gone.
+   The right edge was pulled in by about 30 pixels of blank paper margin because a neighbouring
+   photograph overlaps the print there. No part of her is lost.
+2. Deskew. The print was tilted 13.5 degrees and also keystoned, so a plain rotation was not
+   enough. The perspective transform in step 1 handled both. The result is rectangular and
+   upright, and the recovered proportions land at almost exactly 4:5, which is what an 8 by 10
+   print should measure. That is the check that the corner positions were right.
+3. Tone. Converted to greyscale, which removes the yellowed cast in one move. A gentle flat
+   field pass, applied at 60 per cent strength, evened out the phone's uneven lighting without
+   flattening the print's own tonality. Levels were then stretched on the 0.4 and 99.6
+   percentiles and a mild S curve restored contrast. The blacks in her hair and the near white
+   of the studio backdrop both came back.
+4. Upscale. **Rejected.** `upscale_image` with the bytedance backend returned a clean 2160 x
+   3024 file, but a side by side of the face against the Pillow restoration showed it had
+   redrawn her: eyelashes invented where the print has none, eyebrows resharpened and reshaped,
+   the mouth re-rendered with hard edges, and synthesised skin texture. The instruction was
+   "don't even change a thing on her", so the upscale was discarded and the Pillow restoration
+   shipped alone. The rejected file was not saved into the repository.
+
+Because the upscale was dropped, the true optical resolution of this photograph is 810 pixels
+wide. The 1280 and 1920 renditions are honest Lanczos enlargements of that master, produced so
+the `w` descriptors in `Picture.astro` describe the real pixel widths of the files. They carry
+no detail beyond the master.
+
+Alt text:
+
+> Nani's mother in her modelling years, a restored black and white darkroom print.
+
+## Rendered file sizes
+
+Measured on disk after writing, not reported by the encoder. The 1920 WebP cap is 250KB and the
+1920 AVIF cap is 180KB. All four slots are inside both.
+
+| Slot | 1920 webp | 1920 avif | 1280 webp | 1280 avif | 640 webp | 640 avif |
+|---|---|---|---|---|---|---|
+| `hero-nani` | 105.9KB | 74.1KB | 55.7KB | 41.6KB | 19.0KB | 14.2KB |
+| `good-weekend-course` | 245.2KB | 165.2KB | 123.9KB | 101.4KB | 31.2KB | 24.6KB |
+| `rths-project` | 156.9KB | 100.3KB | 72.2KB | 51.1KB | 20.2KB | 15.3KB |
+| `lia-modelling-restored` | 118.6KB | 54.4KB | 72.3KB | 37.2KB | 31.0KB | 19.5KB |
+
+Every file was also verified to carry its labelled pixel width, and every `public/images/` copy
+was byte compared against its `src/assets/images/` original.
+
+## Notes for the page owner
+
+1. The hero slot is named `hero-nani`. Nothing in the repository named it, so it was chosen to
+   sit alongside the existing convention. `hero-backplate` was left untouched rather than
+   overwritten, because it is still referenced by `src/pages/index.astro`.
+2. `rths-road` is now orphaned by `src/config/site.ts`, which already points the initiative at
+   `rths-project`, but `src/pages/index.astro` line 22 still uses `slot: 'rths-road'` for a
+   slide. The old files were left in place so that reference does not break. Delete them once
+   that slide is repointed.
+3. `src/components/Picture.astro` hardcodes `width="1280" height="720"` on the `img`, which
+   assumes every slot is 16:9. `lia-modelling-restored` is portrait at 4:5. The CSS
+   `aspect-ratio` overrides the layout so nothing breaks visually, but the intrinsic ratio is
+   wrong for that one slot and will cost a little layout stability. Components sit outside this
+   agent's write scope, so it was left alone.
+4. `src/assets/images/_originals/` grew by three more full resolution PNGs. The earlier note
+   about `.gitignore` or Git LFS for that directory still stands.

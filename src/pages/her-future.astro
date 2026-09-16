@@ -2,9 +2,11 @@
 /**
  * Her Future. Planning for the future, presented only under the foundation.
  *
- * Four pillars. Asset protection lives inside Retirement & Generational
- * Wealth; it is not a fifth pillar. The funnel below the pillars runs before
- * the calendar. Nothing on this page asks a visitor about money.
+ * Five pillars since the 15 September meeting: Earned Income Opportunities
+ * joined the four. Asset protection still lives inside Retirement &
+ * Generational Wealth. The booking funnel is a popup (HerFutureFunnel), opened
+ * from any [data-hf-open] button on this page. Nothing on this page asks a
+ * visitor about money.
  */
 import Base from '@/layouts/Base.astro';
 import HerFutureFunnel from '@/components/HerFutureFunnel.astro';
@@ -36,13 +38,21 @@ const pillars = [
     title: 'Retirement & Generational Wealth',
     body: 'Planning for the years after work and for what you pass on. Asset protection sits here too: keeping what you have built safe, for you and for the next generation.',
   },
+  {
+    id: 'earned_income',
+    number: '05',
+    title: 'Earned Income Opportunities',
+    body: 'Ways to earn alongside what you already do. What is involved, what it asks of you, and the questions worth asking before you say yes to anything.',
+  },
 ];
+
+const CTA = 'Book a call. 20 minutes yours.';
 
 const howItWorks = [
   {
     step: 'One',
     title: 'Choose a pillar',
-    body: 'Pick the area you would like to talk about. Just one.',
+    body: 'Pick one of the five, or choose Other and type it in. Just one.',
   },
   {
     step: 'Two',
@@ -59,7 +69,7 @@ const howItWorks = [
 
 <Base
   title="Her Future"
-  description="Autoimmune or not, a woman's future depends on her. Book a 20 minute discovery call to talk about IUL, business insurance, annuities, retirement and generational wealth."
+  description="Autoimmune or not, a woman's future depends on her. Book a 20 minute discovery call to talk about IUL, business insurance, annuities, retirement, generational wealth or earned income opportunities."
 >
   <!-- Hero -->
   <section class="section hf-hero">
@@ -73,9 +83,10 @@ const howItWorks = [
             future. Her Future is the foundation's space for that conversation: quiet, unhurried, and
             on your terms.
           </p>
-          <a href="#book" class="btn btn--primary">
-            Book a call to discuss your generational wealth planning today.
-          </a>
+          <button type="button" class="btn btn--primary" data-hf-open>{CTA}</button>
+          <p class="hf-hero__under">
+            A discovery call to talk about your generational wealth planning. Not an application.
+          </p>
         </div>
 
         <div class="hf-hero__media">
@@ -94,11 +105,11 @@ const howItWorks = [
   <!-- Pillars -->
   <section class="section section--cream" aria-labelledby="pillars-heading">
     <div class="wrap">
-      <span class="label">Four pillars</span>
+      <span class="label">Five pillars</span>
       <h2 id="pillars-heading">Where we can <span class="em">begin</span></h2>
       <p class="hf-pillars__lede">
-        Every discovery call starts with one of these four. Choose the one that is on your mind now;
-        the rest can wait for another day.
+        Every discovery call starts with one of these five, or with whatever else is on your mind.
+        Choose the one that matters now; the rest can wait for another day.
       </p>
 
       <div class="grid grid--2 hf-pillars">
@@ -150,9 +161,7 @@ const howItWorks = [
     <div class="wrap--narrow">
       <hr class="rule rule--short" />
       <p class="hf-repeat__line">Planning is an act of care. Start with twenty minutes.</p>
-      <a href="#book" class="btn btn--ghost">
-        Book a call to discuss your generational wealth planning today.
-      </a>
+      <button type="button" class="btn btn--ghost" data-hf-open>{CTA}</button>
     </div>
   </section>
 
@@ -189,6 +198,12 @@ const howItWorks = [
     line-height: 1.3;
   }
 
+  .hf-hero__under {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin: var(--space-s) 0 0;
+  }
+
   .hf-hero__media :global(.pic img) {
     border-radius: var(--radius-m);
     box-shadow: var(--shadow-lift);
@@ -202,6 +217,13 @@ const howItWorks = [
     position: relative;
     display: grid;
     align-content: start;
+  }
+
+  /* Five cards in a two column grid leaves one alone. Let it run full width. */
+  @media (min-width: 48rem) {
+    .hf-pillar:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
   }
 
   .hf-pillar__number {

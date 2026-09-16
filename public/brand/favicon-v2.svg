@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="f2t">
+  <title id="f2t">The Still Her Foundation</title>
+  <desc>The emblem simplified for 16px: the same butterfly and the same two teals, drawn larger and heavier. No antennae, no gold hairline.</desc>
+  <g transform="translate(100 100) scale(1.16) translate(-100 -100)">
+  <path d="M 100 66 C 113 49 131 35 149 29 C 166 23 180 30 179 48 C 178 67 167 85 149 97 C 161 105 168 119 165 133 C 163 141 155 146 147 145 C 149 152 144 158 137 158 C 131 158 127 154 126 149 C 120 153 112 150 108 143 C 103 134 100 119 100 105 C 99 92 99 79 100 66 Z" fill="#5BBCC9"/>
+  <path d="M 100 66 C 87 49 69 35 51 29 C 34 23 20 30 21 48 C 22 67 33 85 51 97 C 39 105 32 119 35 133 C 37 141 45 146 53 145 C 51 152 56 158 63 158 C 69 158 73 154 74 149 C 80 153 88 150 92 143 C 97 134 100 119 100 105 C 101 92 101 79 100 66 Z" fill="#5BBCC9"/>
+  <path d="M 100 56 C 109 56 115 64 115 76 L 115 122 C 115 135 108 143 100 143 C 92 143 85 135 85 122 L 85 76 C 85 64 91 56 100 56 Z" fill="#1F6670"/>
+  <circle cx="100" cy="100" r="24" fill="#1F6670"/>
+  <circle cx="100" cy="100" r="12.5" fill="#FFFFFF"/>
+  </g>
+</svg>

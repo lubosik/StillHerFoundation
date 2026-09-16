@@ -1,0 +1,291 @@
+---
+/**
+ * Protecting Her Ecosystem. Route: /her-ecosystem.
+ *
+ * Slide three of the home hero and a line in the nav, so it needs a page of
+ * its own. Nani is still writing it. From the 15 September meeting: it is the
+ * ideology behind the work. Her body is her ecosystem. It would hold holistic
+ * practitioners, a real line of resources, modules that break down what
+ * Graves' disease actually is, and exercises that are Graves friendly and
+ * useful to any woman managing the stress her body carries. Eventually a
+ * digital product.
+ *
+ * Her worry shapes the tone: "my concern is having like manifestation for a
+ * Graves disease thing, people gonna think I'm one of those influencers
+ * trying to make money off of my problem. I need something that's gonna be
+ * taken seriously." So: serious, plain, grounded. No wellness-speak.
+ *
+ * The page is a finished structure with pending content. The pending fields
+ * are local because site.ts is owned elsewhere; they share the Pending shape
+ * so they can be lifted into site.ts in one move.
+ */
+import Base from '@/layouts/Base.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import Picture from '@/components/Picture.astro';
+import type { Pending } from '@/config/site';
+
+const IN_DEVELOPMENT = 'In development. Nani is writing this now.';
+
+const pending = (note: string, fallback: string = IN_DEVELOPMENT): Pending<string> => ({
+  value: '',
+  pending: true,
+  fallback,
+  note,
+});
+
+const parts = [
+  {
+    id: 'practitioners',
+    number: '01',
+    title: 'Practitioners',
+    summary: 'Holistic practitioners, listed by name, with what they do and how to reach them.',
+    field: pending('Her Ecosystem: practitioner list. Names, disciplines and contact details, confirmed by Nani.'),
+  },
+  {
+    id: 'resources',
+    number: '02',
+    title: 'Resources',
+    summary: 'A real line of resources for women living with Graves’ disease. Checked, not collected.',
+    field: pending('Her Ecosystem: resource list. Each item confirmed and sourced.'),
+  },
+  {
+    id: 'modules',
+    number: '03',
+    title: 'Modules',
+    summary: 'Short modules that break down what Graves’ disease actually is, thoroughly and in plain language.',
+    field: pending('Her Ecosystem: module outline and content. Reviewed by a named medical source before publication.'),
+  },
+  {
+    id: 'exercises',
+    number: '04',
+    title: 'Exercises',
+    summary: 'Movement that is Graves friendly, and useful to any woman managing the stress her body carries.',
+    field: pending('Her Ecosystem: exercise programme. Reviewed by a qualified practitioner before publication.'),
+  },
+] as const;
+---
+
+<Base
+  title="Protecting Her Ecosystem"
+  description="Protecting Her Ecosystem is the thinking behind The StillHer Foundation. Her body is her ecosystem. Practitioners, resources, modules and exercises, in development."
+>
+  <!-- Hero -->
+  <section class="section eco-hero">
+    <div class="wrap">
+      <div class="eco-hero__grid">
+        <div class="eco-hero__copy">
+          <span class="label">The initiative</span>
+          <h1 class="eco-hero__title">Her body is her <span class="em">ecosystem</span>.</h1>
+          <p class="eco-hero__lede">
+            Protecting Her Ecosystem is the thinking behind everything the foundation does. A
+            woman's body is a system. What she does to look after it is how she protects everything
+            that depends on her.
+          </p>
+          <p class="eco-hero__status">
+            <span class="visually-hidden">Status: </span>
+            In development
+          </p>
+        </div>
+
+        <div class="eco-hero__media">
+          <Picture
+            slot="texture-teal-wash"
+            alt="A teal watercolour wash bleeding across cream paper."
+            ratio="4 / 5"
+            focus="50% 50%"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What it is -->
+  <section class="section section--white" aria-labelledby="idea-heading">
+    <div class="wrap wrap--narrow">
+      <span class="label">The idea</span>
+      <h2 id="idea-heading">Plain, practical, and meant to be taken <span class="em">seriously</span></h2>
+      <p>
+        Fundraising pays for the work. It does not, on its own, help anyone understand Graves'
+        disease or live with it better. Protecting Her Ecosystem is the part of the foundation that
+        does that: a legitimate line of resources, practitioners, and clear explanations, built for
+        women who need them.
+      </p>
+      <p>
+        It is not a wellness brand and it does not ask you to believe anything. Everything in it is
+        meant to be checked, and nothing is published until it has been.
+      </p>
+      <p class="eco-plain">
+        This page is the structure of the initiative, not yet its content. Nani is writing it now.
+      </p>
+    </div>
+  </section>
+
+  <!-- What it will hold -->
+  <section class="section section--sand" aria-labelledby="parts-heading">
+    <div class="wrap">
+      <header class="eco-head">
+        <span class="label">What it will hold</span>
+        <h2 id="parts-heading" class="eco-head__title">Four <span class="em">parts</span></h2>
+      </header>
+
+      <ol class="eco-parts">
+        {
+          parts.map((part) => (
+            <li class="eco-part" id={part.id}>
+              <span class="eco-part__number" aria-hidden="true">
+                {part.number}
+              </span>
+              <div class="eco-part__body">
+                <h3 class="eco-part__title">{part.title}</h3>
+                <p class="eco-part__summary">{part.summary}</p>
+                <p class="eco-part__status">
+                  <Placeholder field={part.field} />
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Eventually -->
+  <section class="section" aria-labelledby="later-heading">
+    <div class="wrap wrap--narrow">
+      <span class="label">Later</span>
+      <h2 id="later-heading">A digital <span class="em">product</span>, in time</h2>
+      <p>
+        The intention is to turn this into a digital product that can be bought, so that the work
+        can fund itself and reach further than the foundation can on its own. Not yet. First it has
+        to be right.
+      </p>
+      <hr class="rule rule--short" />
+      <div class="eco-links">
+        <a href="/graves-disease" class="btn btn--ghost">Graves' disease resource</a>
+        <a href="/her-relief-retreat" class="btn btn--ghost">Her Relief Retreat</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------------- Hero ---------------- */
+  .eco-hero__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .eco-hero__grid {
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .eco-hero__title {
+    font-size: var(--step-5);
+    line-height: 1.02;
+    margin-bottom: var(--space-m);
+    max-width: 12ch;
+  }
+
+  .eco-hero__lede {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 44ch;
+  }
+
+  .eco-hero__status {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--gold-ink);
+    margin: var(--space-l) 0 0;
+  }
+
+  .eco-hero__media :global(.pic img) {
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-lift);
+  }
+
+  @media (max-width: 59.999rem) {
+    .eco-hero__media {
+      max-width: 24rem;
+    }
+  }
+
+  .eco-plain {
+    margin-top: var(--space-l);
+    padding-left: var(--space-m);
+    border-left: 1px solid var(--gold);
+    color: var(--ink-soft);
+  }
+
+  /* ---------------- Parts ---------------- */
+  .eco-head {
+    margin-bottom: var(--space-xl);
+  }
+
+  .eco-head__title {
+    font-size: var(--step-4);
+    margin: 0;
+  }
+
+  .eco-parts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 48rem) {
+    .eco-parts {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .eco-part {
+    display: grid;
+    gap: var(--space-s);
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    padding: var(--space-l);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .eco-part__number {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+    line-height: 1;
+    color: var(--gold-ink);
+  }
+
+  .eco-part__title {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-xs);
+  }
+
+  .eco-part__summary {
+    margin-bottom: var(--space-s);
+  }
+
+  .eco-part__status {
+    margin: 0;
+    padding-top: var(--space-s);
+    border-top: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+    font-size: var(--step--1);
+  }
+
+  /* ---------------- Later ---------------- */
+  .eco-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+</style>

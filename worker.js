@@ -76,6 +76,14 @@ const HER_FUTURE_SCHEMAS = {
   /* No questions. answers must be an empty object. */
   annuities: {},
   retirement: {},
+  /*
+   * Added 16 September after the client asked for a fifth pillar and an
+   * "Other" escape hatch. Both are choices, not questions, so neither takes
+   * any answers. What the visitor typed under "Other" arrives in notes, which
+   * is free text and is deliberately not scanned.
+   */
+  earned_income: {},
+  other: {},
 };
 
 /*

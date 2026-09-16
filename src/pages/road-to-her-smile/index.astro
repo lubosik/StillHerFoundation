@@ -5,14 +5,26 @@ import InquiryForm from '@/components/InquiryForm.astro';
 import StickyPanel from '@/components/StickyPanel.astro';
 import Newsletter from '@/components/Newsletter.astro';
 import Placeholder from '@/components/Placeholder.astro';
+import Picture from '@/components/Picture.astro';
 import { giving, partnerships, sponsors, isPlaceholder } from '@/config/site';
 
 /**
- * Road to Her Smile. The campaign page.
+ * The Road to Her Smile Project. The campaign page.
+ *
+ * Renamed on 15 September. Her words: "I need that to be the road to her
+ * smile project" and "just let that be big." The hero is now full bleed in
+ * the HeroStage manner, with the headline she gave on the call set over a
+ * cream scrim on the `rths-project` image slot.
+ *
+ * Factual correction from the same call: Lia Spriggs is Nani Rosen's mother.
+ * The documentary is about the founder's own mother. Stated once, plainly,
+ * and not overstated.
  *
  * Every line of story copy comes from reference/MIGRATION.md, the verbatim
  * record of the current live site. Nothing here is invented.
  */
+
+const PROJECT = 'The Road to Her Smile Project';
 
 const card = giving.find((method) => method.id === 'card');
 const cardHref = card?.detail.value ?? '';
@@ -62,32 +74,41 @@ const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
 ---
 
 <Base
-  title="Road to Her Smile"
-  description="Road to Her Smile is a documentary about Lia Spriggs, an Italian immigrant failed by a husband, a doctor, and a trusted community. A StillHer Foundation film."
+  title={PROJECT}
+  description="The Road to Her Smile Project is a documentary about Lia Spriggs, the founder's mother: an Italian immigrant failed by a husband, a doctor, and a trusted community. A StillHer Foundation film."
+  bare
 >
-  <!-- Hero -->
-  <section class="section hero">
-    <div class="wrap hero__grid">
-      <div class="hero__copy">
-        <span class="label">A StillHer Foundation documentary</span>
-        <h1>Road to <span class="em">Her</span> Smile</h1>
-        <p class="hero__announce">
-          We are proud to announce our first project backed by the Protecting Her Ecosystem
-          initiative.
-        </p>
-        <p class="hero__synopsis">
-          She was left to fight for her life.<br />And still, she remained standing.
-        </p>
-        <div class="hero__ctas">
-          <a href="#donate" class="btn btn--primary">Donate</a>
-          <a href="#partnerships" class="btn btn--ghost">Partner with us</a>
-        </div>
+  <!-- Hero, full bleed. The photograph is the background, the words sit on top. -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__media" aria-hidden="true">
+      <Picture
+        slot="rths-project"
+        alt=""
+        ratio="16 / 9"
+        focus="50% 40%"
+        loading="eager"
+        sizes="100vw"
+      />
+      <div class="hero__scrim"></div>
+    </div>
+
+    <div class="hero__copy">
+      <span class="hero__kicker">A StillHer Foundation documentary</span>
+      <h1 class="hero__headline" id="hero-title">
+        Thirteen teeth. Ripped out of her mouth on a promise that never came true.
+      </h1>
+      <p class="hero__after">And still, she remains <span class="em">resilient</span>.</p>
+      <div class="hero__ctas">
+        <a href="#donate" class="btn btn--primary">Donate</a>
+        <a href="#partnerships" class="btn btn--ghost">Partner with us</a>
       </div>
-      <div class="hero__media">
-        <div class="ph-frame" style="--ph-ratio: 4 / 5">
-          Portrait of Lia<br />photograph to follow
-        </div>
-      </div>
+    </div>
+
+    <div class="hero__foot">
+      <span class="hero__footlabel">{PROJECT}</span>
+      <span class="hero__footnote">
+        Our first project backed by the Protecting Her Ecosystem initiative.
+      </span>
     </div>
   </section>
 
@@ -100,8 +121,11 @@ const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
           <span class="label">The film</span>
           <h2>A <span class="em">documentary</span></h2>
           <p class="lede">
-            Road to Her Smile gives the road to redemption back to a woman who had it stolen from
-            her.
+            The Road to Her Smile Project gives the road to redemption back to a woman who had it
+            stolen from her.
+          </p>
+          <p class="kin">
+            Lia Spriggs is the mother of the foundation's founder, Nani Rosen. This is her story.
           </p>
           <p>
             Lia Spriggs was a model in Verona, Italy, a woman whose natural presence and elegance
@@ -141,8 +165,8 @@ const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
             <li class="pillars__item">
               <h3 class="pillars__title">Restoration</h3>
               <p>
-                Road to Her Smile is Lia's road back. And with your support, she will not have to
-                walk it alone. Every gift brings her closer to her smile.
+                The Road to Her Smile Project is Lia's road back. And with your support, she will
+                not have to walk it alone. Every gift brings her closer to her smile.
               </p>
             </li>
           </ul>
@@ -213,11 +237,11 @@ const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
             {
               cardHref ? (
                 <a href={cardHref} class="btn btn--primary" target="_blank" rel="noopener">
-                  Donate to Road to Her Smile
+                  Donate to the project
                 </a>
               ) : (
                 <span class="btn btn--primary" aria-disabled="true">
-                  Donate to Road to Her Smile
+                  Donate to the project
                 </span>
               )
             }
@@ -228,7 +252,7 @@ const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
       </div>
 
       <StickyPanel
-        kicker="Road to Her Smile"
+        kicker={PROJECT}
         heading="Partnership Opportunities"
         body="Sponsor the film, or cover it. Every partner is credited on screen."
         ctaLabel="Sponsor Now"
@@ -244,8 +268,8 @@ const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
         <span class="label">Partner with the film</span>
         <h2>Partnership <span class="em">Opportunities</span></h2>
         <p class="lede">
-          Two ways to be part of Road to Her Smile: back the production as a sponsor, or bring
-          the story to your audience as press.
+          Two ways to be part of The Road to Her Smile Project: back the production as a sponsor,
+          or bring the story to your audience as press.
         </p>
       </header>
 
@@ -306,8 +330,8 @@ const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
         <div slot="press" class="panel">
           <h3>Press</h3>
           <p>
-            Road to Her Smile offers multiple entry points for coverage. We welcome interview
-            requests, features, and collaborative storytelling.
+            The Road to Her Smile Project offers multiple entry points for coverage. We welcome
+            interview requests, features, and collaborative storytelling.
           </p>
 
           <div class="press">
@@ -347,42 +371,94 @@ const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
   <!-- Newsletter -->
   <section class="section">
     <div class="wrap wrap--narrow">
-      <Newsletter source="rths" heading="Be the first to know when Road to Her Smile premieres." />
+      <Newsletter
+        source="rths"
+        heading="Be the first to know when The Road to Her Smile Project premieres."
+      />
     </div>
   </section>
 </Base>
 
 <style>
-  /* ---------------- Hero ---------------- */
-  .hero__grid {
+  /* ---------------- Hero, full bleed ---------------- */
+  .hero {
+    position: relative;
+    min-height: min(92svh, 56rem);
     display: grid;
-    gap: var(--space-xl);
-    align-items: center;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--cream);
   }
 
-  @media (min-width: 52rem) {
-    .hero__grid {
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: var(--space-2xl);
-    }
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    /* Shows through until the rths-project image lands, so the stage never reads broken. */
+    background: linear-gradient(120deg, var(--cream) 0%, var(--sand-tint) 60%, var(--sand) 100%);
   }
 
-  .hero__announce {
+  .hero__media :global(.pic),
+  .hero__media :global(.pic img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero__media :global(.pic img) {
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  /* Cream scrim, strong on the left where the type sits, clearing to the right. */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--cream) 94%, transparent) 0%,
+        color-mix(in srgb, var(--cream) 84%, transparent) 38%,
+        color-mix(in srgb, var(--cream) 34%, transparent) 66%,
+        transparent 90%
+      ),
+      linear-gradient(to top, color-mix(in srgb, var(--cream) 82%, transparent) 0%, transparent 34%);
+  }
+
+  .hero__copy {
+    display: grid;
+    align-content: center;
+    width: min(100% - (var(--gutter) * 2), var(--measure-wide));
+    margin-inline: auto;
+    padding-block: var(--space-2xl) calc(var(--space-2xl) + 3.5rem);
+    max-width: none;
+  }
+
+  .hero__kicker {
+    display: block;
     font-family: var(--font-sans);
-    font-size: var(--step--1);
+    font-size: var(--step--2);
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: var(--track-wide);
+    letter-spacing: var(--track-widest);
     color: var(--teal-ink);
-    max-width: 40ch;
-    line-height: 1.7;
+    margin-bottom: var(--space-s);
   }
 
-  .hero__synopsis {
+  .hero__headline {
+    font-size: var(--step-5);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    max-width: 16ch;
+    margin-bottom: var(--space-m);
+    color: var(--ink);
+  }
+
+  .hero__after {
     font-family: var(--font-display);
     font-size: var(--step-2);
-    font-style: italic;
     line-height: 1.3;
     max-width: 30ch;
+    color: var(--ink);
   }
 
   .hero__ctas {
@@ -392,8 +468,63 @@ const deckPending = isPlaceholder(partnerships.sponsorshipDeck);
     margin-top: var(--space-l);
   }
 
-  .hero__media .ph-frame {
-    width: 100%;
+  .hero__foot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-m);
+    width: min(100% - (var(--gutter) * 2), var(--measure-wide));
+    margin-inline: auto;
+    padding-bottom: var(--space-l);
+  }
+
+  .hero__footlabel,
+  .hero__footnote {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+  }
+
+  .hero__footlabel {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .hero__footnote {
+    color: var(--ink-soft);
+  }
+
+  /* On a phone the scrim goes full width, because there is no side to clear. */
+  @media (max-width: 47.999rem) {
+    .hero__scrim {
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--cream) 55%, transparent) 0%,
+        color-mix(in srgb, var(--cream) 88%, transparent) 42%,
+        var(--cream) 78%
+      );
+    }
+
+    .hero__copy {
+      align-content: end;
+      padding-block: 14rem calc(var(--space-2xl) + 4rem);
+    }
+  }
+
+  .kin {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    padding-left: var(--space-m);
+    border-left: 1px solid var(--gold);
+    margin-block: var(--space-m) var(--space-l);
   }
 
   /* ---------------- Campaign body + sticky aside ---------------- */

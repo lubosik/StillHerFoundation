@@ -1,14 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="t">
   <title id="t">The Kept Promise</title>
-  <desc>A wax seal with thirteen scallops, a bloom pressed into it. A seal is the object of a promise that is meant to hold. Her mother was given one that did not.</desc>
-  <path d="M 100.00 30.00 A 19.0 19.0 0 0 1 132.53 38.02 A 19.0 19.0 0 0 1 157.61 60.24 A 19.0 19.0 0 0 1 169.49 91.56 A 19.0 19.0 0 0 1 165.45 124.82 A 19.0 19.0 0 0 1 146.42 152.40 A 19.0 19.0 0 0 1 116.75 167.97 A 19.0 19.0 0 0 1 83.25 167.97 A 19.0 19.0 0 0 1 53.58 152.40 A 19.0 19.0 0 0 1 34.55 124.82 A 19.0 19.0 0 0 1 30.51 91.56 A 19.0 19.0 0 0 1 42.39 60.24 A 19.0 19.0 0 0 1 67.47 38.02 A 19.0 19.0 0 0 1 100.00 30.00 Z" fill="#5BBCC9"/>
-  <circle cx="100" cy="100" r="60" fill="none" stroke="#C9A961" stroke-width="1.6" opacity="0.9"/>
-  <g transform="rotate(-90 100 100)"><path d="M 100 100 C 84 96 74 80 78 64 C 82 48 96 42 100 44 C 104 42 118 48 122 64 C 126 80 116 96 100 100 Z" fill="#F7F2E9"/></g>
-  <g transform="rotate(-18 100 100)"><path d="M 100 100 C 84 96 74 80 78 64 C 82 48 96 42 100 44 C 104 42 118 48 122 64 C 126 80 116 96 100 100 Z" fill="#F7F2E9"/></g>
-  <g transform="rotate(54 100 100)"><path d="M 100 100 C 84 96 74 80 78 64 C 82 48 96 42 100 44 C 104 42 118 48 122 64 C 126 80 116 96 100 100 Z" fill="#F7F2E9"/></g>
-  <g transform="rotate(126 100 100)"><path d="M 100 100 C 84 96 74 80 78 64 C 82 48 96 42 100 44 C 104 42 118 48 122 64 C 126 80 116 96 100 100 Z" fill="#F7F2E9"/></g>
-  <g transform="rotate(198 100 100)"><path d="M 100 100 C 84 96 74 80 78 64 C 82 48 96 42 100 44 C 104 42 118 48 122 64 C 126 80 116 96 100 100 Z" fill="#F7F2E9"/></g>
-  <circle cx="100" cy="100" r="13.5" fill="#F7F2E9"/>
-  <circle cx="100" cy="100" r="13.5" fill="none" stroke="#5BBCC9" stroke-width="2.4"/>
-  <circle cx="100" cy="100" r="6" fill="#5BBCC9"/>
+  <desc>A wax seal with thirteen scallops and a bloom pressed into it. A seal is the object of a promise that is meant to hold. Her mother was given one that did not.</desc>
+  <path d="M 100.00 32.00 A 18.5 18.5 0 0 1 131.60 39.79 A 18.5 18.5 0 0 1 155.96 61.37 A 18.5 18.5 0 0 1 167.50 91.80 A 18.5 18.5 0 0 1 163.58 124.11 A 18.5 18.5 0 0 1 145.09 150.90 A 18.5 18.5 0 0 1 116.27 166.02 A 18.5 18.5 0 0 1 83.73 166.02 A 18.5 18.5 0 0 1 54.91 150.90 A 18.5 18.5 0 0 1 36.42 124.11 A 18.5 18.5 0 0 1 32.50 91.80 A 18.5 18.5 0 0 1 44.04 61.37 A 18.5 18.5 0 0 1 68.40 39.79 A 18.5 18.5 0 0 1 100.00 32.00 Z" fill="#5BBCC9"/>
+  <circle cx="100" cy="100" r="57" fill="none" stroke="#C9A961" stroke-width="1.6"/>
+  <g transform="rotate(-90 100 100)"><path d="M 100 100 C 89 97 82 86 85 74 C 88 62 97 57 100 58 C 103 57 112 62 115 74 C 118 86 111 97 100 100 Z" fill="#F7F2E9"/></g>
+  <g transform="rotate(-18 100 100)"><path d="M 100 100 C 89 97 82 86 85 74 C 88 62 97 57 100 58 C 103 57 112 62 115 74 C 118 86 111 97 100 100 Z" fill="#F7F2E9"/></g>
+  <g transform="rotate(54 100 100)"><path d="M 100 100 C 89 97 82 86 85 74 C 88 62 97 57 100 58 C 103 57 112 62 115 74 C 118 86 111 97 100 100 Z" fill="#F7F2E9"/></g>
+  <g transform="rotate(126 100 100)"><path d="M 100 100 C 89 97 82 86 85 74 C 88 62 97 57 100 58 C 103 57 112 62 115 74 C 118 86 111 97 100 100 Z" fill="#F7F2E9"/></g>
+  <g transform="rotate(198 100 100)"><path d="M 100 100 C 89 97 82 86 85 74 C 88 62 97 57 100 58 C 103 57 112 62 115 74 C 118 86 111 97 100 100 Z" fill="#F7F2E9"/></g>
+  <circle cx="100" cy="100" r="11" fill="#F7F2E9"/>
+  <circle cx="100" cy="100" r="11" fill="none" stroke="#5BBCC9" stroke-width="2.6"/>
+  <circle cx="100" cy="100" r="4.6" fill="#5BBCC9"/>
+  <circle cx="100.00" cy="50.00" r="2.2" fill="#F7F2E9"/>
+  <circle cx="123.24" cy="55.73" r="2.2" fill="#F7F2E9"/>
+  <circle cx="141.15" cy="71.60" r="2.2" fill="#F7F2E9"/>
+  <circle cx="149.64" cy="93.97" r="2.2" fill="#F7F2E9"/>
+  <circle cx="146.75" cy="117.73" r="2.2" fill="#F7F2E9"/>
+  <circle cx="133.16" cy="137.43" r="2.2" fill="#F7F2E9"/>
+  <circle cx="111.97" cy="148.55" r="2.2" fill="#F7F2E9"/>
+  <circle cx="88.03" cy="148.55" r="2.2" fill="#F7F2E9"/>
+  <circle cx="66.84" cy="137.43" r="2.2" fill="#F7F2E9"/>
+  <circle cx="53.25" cy="117.73" r="2.2" fill="#F7F2E9"/>
+  <circle cx="50.36" cy="93.97" r="2.2" fill="#F7F2E9"/>
+  <circle cx="58.85" cy="71.60" r="2.2" fill="#F7F2E9"/>
+  <circle cx="76.76" cy="55.73" r="2.2" fill="#F7F2E9"/>
 </svg>
