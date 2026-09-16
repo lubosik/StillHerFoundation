@@ -517,3 +517,249 @@ was byte compared against its `src/assets/images/` original.
    agent's write scope, so it was left alone.
 4. `src/assets/images/_originals/` grew by three more full resolution PNGs. The earlier note
    about `.gitignore` or Git LFS for that directory still stands.
+
+---
+
+# Session three, 16 September 2026
+
+Owner: `visual-graves`. Scope: six section images for the Graves' disease resource page, so the
+page is not a wall of text. Page copy, components and styles were written by another agent and
+were not touched here.
+
+## Graves resource page
+
+### Generation summary
+
+| Item | Value |
+|---|---|
+| Provider | Higgsfield MCP |
+| Model | `nano_banana_2` at `resolution: 2k`, `aspect_ratio: 16:9`, served as `nano_banana_flash` |
+| Native output | 2752 x 1536 PNG |
+| Cost per image | 2 credits, confirmed against the balance |
+| Images generated | 12, two candidates across six slots |
+| Images accepted | 6 |
+| Credits spent | 24 |
+| Opening balance | 135.04 |
+| Closing balance | 111.04 |
+| Budget cap | 50 credits, not exceeded |
+
+### Model choice
+
+`nano_banana_2` again, on the evidence of the two previous sessions: 2 credits per image at the
+2k tier against 11 for GPT Image 2. It held the art direction on the first pass for all six
+slots, so the expensive model was never needed and is not mentioned again here.
+
+### Art direction applied
+
+Luxury editorial, soft natural light, cream, sand and warm neutrals. Teal carried as an accent
+in fabric, glaze or ceramic only, never as a wash. Fine champagne gold detail where it earned a
+place. Subtle film grain. Calm, dignified, adult.
+
+Every prompt carried an explicit negative tail: no faces, no text, no lettering, no signage, no
+watermark, no logos. Nothing clinical was prompted or accepted: no hospital, no scrubs, no
+stethoscope, no lab coat, no syringe, no pill bottle, no anatomical diagram, no thyroid
+illustration, no corporate healthcare blue. Nothing in the wellness influencer register either:
+no crystals, no meditation poses, no candles, no soft focus spirituality.
+
+### Compliance check
+
+No identifiable face appears in any accepted image. `graves-living` is a full backlit silhouette
+with no rendered features. `graves-body` was cropped after generation to remove the underside of
+the jaw so the frame starts at the throat. `graves-support` shows hands and forearms only.
+The other three contain no people at all.
+
+Every accepted frame was inspected at full resolution and then crop zoomed into the regions most
+likely to carry a defect: the nightstand book in `graves-symptoms`, the sheet of paper in
+`graves-diagnosis`, the wall switch and stone floor in `graves-hero`, the window surround and
+the glazed pot in `graves-living`, and the finger and nail count in `graves-body` and
+`graves-support`. No text, no malformed hands and no accidental faces were found in any accepted
+frame. Both discarded siblings per slot were rejected on composition or palette rather than on a
+defect, so no extra credits were spent on regeneration.
+
+### Slots
+
+#### 1. graves-hero
+
+Sits behind the page title.
+
+| Field | Value |
+|---|---|
+| Model | `nano_banana_2` 2k, 16:9 |
+| Credits | 4, two candidates |
+| Files | `src/assets/images/graves-hero-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Source | `src/assets/images/_originals/graves-hero.png` |
+
+Prompt:
+
+> Wide quiet interior editorial photograph. Early morning sunlight falling in a soft diagonal across a cream limewash wall, a low linen armchair in sand coloured fabric set against it, a single small teal ceramic vessel resting on a pale wood side table. Warm neutral palette, cream, sand, oatmeal. Pale stone floor. Generous negative space, calm and contemplative, the feeling of a room just before a conversation. Nobody in frame. Luxury editorial interiors photography, medium format film, soft natural light, subtle film grain. No people, no faces, no text, no lettering, no signage, no watermark, no logos.
+
+Alt text:
+
+> Morning light falling across a cream plaster wall above a linen armchair and a small teal vase.
+
+Chosen because the upper two thirds of the frame is a flat sunlit wall, which gives the page
+title a clean field to sit on. The rejected sibling put a framed picture, a wall shelf and a
+large draped teal throw into the frame, all of which compete with type.
+
+#### 2. graves-body
+
+| Field | Value |
+|---|---|
+| Model | `nano_banana_2` 2k, 16:9 |
+| Credits | 4, two candidates |
+| Files | `src/assets/images/graves-body-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Source | `src/assets/images/_originals/graves-body.png`, 2375 x 1336, cropped from the raw generation |
+
+Prompt:
+
+> Abstract intimate editorial close up. The hollow of a woman's throat and the line of her collarbone in soft raking window light, warm shadow gathering in the hollow, a fine champagne gold chain resting on the skin, cream linen shirt collar open at the edge of frame. Cropped hard below the chin so no mouth, no face and no head are visible at all. Dignified and editorial, restrained, not sensual. Warm neutral palette, cream and sand. Medium format film, shallow depth of field, natural skin texture, subtle grain. No face, no text, no lettering, no signage, no watermark, no logos.
+
+Alt text:
+
+> The hollow of a throat and collarbone in soft light, a fine gold chain over an open linen shirt.
+
+The raw generation left the underside of the jaw in the top of the frame. No features were
+visible and it was not identifiable, but the brief asked for no face, so the frame was cropped
+to `2375x1336+188+200` before encoding, which removes the jaw entirely and lands at an exact
+16:9. The cropped file is what is stored in `_originals`, so the renditions are reproducible
+from it. The 1920 rendition is a downscale of a 2375 pixel wide master, so no upscaling is
+involved.
+
+This is the slot that had to suggest the body without a single medical cue. The throat is the
+part of the body the condition acts on, and reading it as a fine jewellery frame rather than an
+anatomy plate is the whole point. The rejected sibling was light through a cupped hand, which is
+clean and anatomically correct but reads as generic charity stock and has a cool grey background
+that sits outside the palette.
+
+#### 3. graves-symptoms
+
+| Field | Value |
+|---|---|
+| Model | `nano_banana_2` 2k, 16:9 |
+| Credits | 4, two candidates |
+| Files | `src/assets/images/graves-symptoms-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Source | `src/assets/images/_originals/graves-symptoms.png` |
+
+Prompt:
+
+> An empty unmade bed in late afternoon light, rumpled cream linen sheets and a soft crumpled pillow, one teal linen edge showing at the foot of the bed. Wooden shutters half closed at the window casting long warm bars of light across the bedding and the pale plaster wall. Warm sand and ivory palette, quiet and heavy with rest, tasteful and calm rather than sad. Completely empty, nobody in frame. Luxury editorial interiors photography, medium format film, soft natural light, subtle film grain. No people, no faces, no text, no lettering, no signage, no watermark, no logos.
+
+Alt text:
+
+> An empty unmade bed in cream linen, lit in warm bars through half closed shutters.
+
+The book on the nightstand was crop zoomed and is blank. Chosen over a wider sibling that reads
+as a furniture catalogue and drops a pair of slippers on the floor. This one is tighter, warmer
+and the shutter light does the work.
+
+#### 4. graves-diagnosis
+
+| Field | Value |
+|---|---|
+| Model | `nano_banana_2` 2k, 16:9 |
+| Credits | 4, two candidates |
+| Files | `src/assets/images/graves-diagnosis-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Source | `src/assets/images/_originals/graves-diagnosis.png` |
+
+Prompt:
+
+> Calm editorial still life, horizontal. A worn cream linen cloth over a plain table, a tumbler of water half full, a folded blank sheet of cream paper, a simple black pen laid across the corner of the table, warm morning light raking in from a window at the left and casting long soft shadows. Warm neutral palette, sand, ivory, pale oak, a single teal ceramic saucer as the only colour accent. Still, composed, serious. Nobody in frame. Editorial still life photography, medium format film, subtle grain. The paper is entirely blank with nothing printed or written on it. No people, no faces, no text, no lettering, no writing, no signage, no watermark, no logos.
+
+Alt text:
+
+> A glass of water, a blank folded sheet of paper and a pen on a linen covered table.
+
+The sheet of paper was crop zoomed at full resolution and is completely blank, which is the
+whole risk on this slot. The pen carries no branding. The teal glazed saucer is the accent.
+Chosen over a sibling on a pale oak desk whose only teal was a bottle far back and out of focus,
+so the palette read thinner.
+
+#### 5. graves-living
+
+| Field | Value |
+|---|---|
+| Model | `nano_banana_2` 2k, 16:9 |
+| Credits | 4, two candidates |
+| Files | `src/assets/images/graves-living-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Source | `src/assets/images/_originals/graves-living.png` |
+
+Prompt:
+
+> Editorial photograph, a woman in full silhouette against a tall arched window filled with warm Mediterranean morning light. She stands in profile looking out, dark simple silhouette with no facial features visible at all, hair gathered loosely, a soft linen dress catching the light at its edge. Dust in the air, cream plaster walls either side, warm sand toned stone floor, a teal glazed pot on the sill. Calm, composed, unhurried, quietly strong. Backlit so her features are entirely lost in shadow. Medium format film, subtle grain, luxury editorial campaign quality. No visible face, no facial features, no text, no lettering, no signage, no watermark, no logos.
+
+Alt text:
+
+> A woman in silhouette at an arched window, looking out over warm Mediterranean rooftops.
+
+She stands upright with her chin level, which is what carries strength rather than sadness. The
+silhouette is pure outline, crop zoomed to confirm no eye, mouth or feature is rendered.
+
+The rejected sibling was a woman from behind at open balcony doors over the Amalfi coast. It is
+a good photograph and has no face at all, but two large expanses of cyan sea and cool grey white
+walls push it outside the cream and sand palette, and teal stops being an accent when it fills a
+third of the frame. This frame keeps teal to a single glazed pot on the sill.
+
+#### 6. graves-support
+
+| Field | Value |
+|---|---|
+| Model | `nano_banana_2` 2k, 16:9 |
+| Credits | 4, two candidates |
+| Files | `src/assets/images/graves-support-{1920,1280,640}.{webp,avif}`, copied to `public/images/` |
+| Source | `src/assets/images/_originals/graves-support.png` |
+
+Prompt:
+
+> Close editorial photograph across a table of cream linen. Two people's hands meeting near the centre of the frame, one hand resting protectively over the back of another hand, fingers softly curled, a plain cup of tea to one side out of focus. Cropped above the wrists so nothing above the wrists appears, no arms, no bodies, no heads, no faces. Warm afternoon window light, cream, sand and oatmeal tones with one small teal ceramic accent. Quiet solidarity, dignified and calm. Medium format film, shallow depth of field, natural skin texture, subtle grain. Correct human hands, five fingers on each hand. No faces, no heads, no text, no lettering, no signage, no watermark, no logos.
+
+Alt text:
+
+> One hand resting over another on a cream linen tablecloth, cropped above the wrists.
+
+Two hands, four fingers and a thumb on each, verified by crop zoom at full resolution. The
+rejected sibling resolved as four hands in an overlapping cluster where the digit count could
+not be read cleanly, which is exactly the defect this check exists to catch.
+
+### Rendered file sizes
+
+Measured on disk with `stat -f%z` after writing, not reported by the encoder. The 1920 WebP cap
+is 250KB and the 1920 AVIF cap is 180KB. All six slots are inside both caps under either reading
+of KB, decimal or binary. Quality was selected per file by a descending ladder that stops at the
+first setting under the cap.
+
+| Slot | 1920 webp | 1920 avif | 1280 webp | 1280 avif | 640 webp | 640 avif |
+|---|---|---|---|---|---|---|
+| `graves-hero` | 177,112 B | 44,972 B | 49,912 B | 19,969 B | 15,804 B | 7,021 B |
+| `graves-body` | 244,828 B | 173,948 B | 119,968 B | 76,439 B | 34,168 B | 16,055 B |
+| `graves-symptoms` | 209,816 B | 165,932 B | 138,148 B | 91,336 B | 58,730 B | 34,604 B |
+| `graves-diagnosis` | 243,330 B | 91,241 B | 104,066 B | 49,004 B | 35,992 B | 19,208 B |
+| `graves-living` | 206,168 B | 129,619 B | 119,292 B | 61,093 B | 36,158 B | 19,266 B |
+| `graves-support` | 249,624 B | 142,528 B | 129,578 B | 60,538 B | 37,088 B | 19,872 B |
+
+Largest 1920 WebP is `graves-support` at 249,624 bytes, which is 243.8 KiB. Largest 1920 AVIF is
+`graves-body` at 173,948 bytes, which is 169.9 KiB. Total delivered payload across the 36 files
+is 3.0MB.
+
+Every file was confirmed to carry its labelled pixel width, and all 36 `public/images/` copies
+were byte compared against their `src/assets/images/` originals with `cmp`. All 36 match.
+
+Pixel dimensions: five slots render at 1920 x 1072, 1280 x 714 and 640 x 357, because the model
+outputs 2752 x 1536, which is 1.792 rather than a true 1.778. `graves-body` renders at an exact
+1920 x 1080, 1280 x 720 and 640 x 360 because its post generation crop was chosen to land on
+16:9. `src/components/Picture.astro` hardcodes `width="1280" height="720"`, which is very close
+to the five and exact for the sixth, so no layout instability is introduced by these slots.
+
+### Notes for the page owner
+
+1. Slot names are `graves-hero`, `graves-body`, `graves-symptoms`, `graves-diagnosis`,
+   `graves-living` and `graves-support`. Nothing in the repository named them, so they follow
+   the existing `<topic>-<subject>` convention.
+2. `src/assets/images/_originals/` grew by six more full resolution PNGs, about 51MB. The note
+   from the first session has since been acted on: that directory is now listed in `.gitignore`,
+   so these PNGs stay local and out of the tree. Nothing further is needed.
+   The 36 delivered renditions in `src/assets/images/` and `public/images/` were picked up and
+   committed by the page owner in `f734000`, so this agent committed nothing itself. Only this
+   log file is left modified.
+3. The machine was down to 104MB of free disk during this run, which is why candidate PNGs were
+   converted to inspection JPEGs and deleted rather than held. Worth clearing before the next
+   image session, because a full batch of twelve 2k PNGs is about 110MB on its own.
