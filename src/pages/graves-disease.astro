@@ -8,82 +8,204 @@
  * awareness, but we also have to make sure the information we're giving is
  * right."
  *
- * So this page invents nothing clinical. No prevalence, no symptom list, no
- * treatment, no cause, no statistic. Every medical block below is a designed
- * placeholder awaiting review by a named medical source. She is working on
- * partnering with other Graves' foundations; until one is confirmed the
- * partner section is a placeholder too.
+ * So: every clinical claim on this page is traceable to a named authority and
+ * carries a visible citation. Nothing is written from memory. The full
+ * research pack, including the sources that could not be reached and the
+ * claims that were deliberately excluded, is in reference/GRAVES_RESEARCH.md.
  *
- * The only real content is Nani's own description of a flare, in her own
- * words, about her own body. It is presented as exactly that, not as
- * clinical information.
+ * Three rules this page must keep:
+ *   1. Graves' disease is a CAUSE of hyperthyroidism, not a synonym for it.
+ *   2. Treatments are described, never recommended.
+ *   3. Where authorities disagree, say so and give the range. Do not pick one
+ *      and present it as settled.
  *
- * The pending fields below are local to this page rather than in site.ts,
- * because site.ts is owned elsewhere. They use the same Pending shape so they
- * can be lifted into site.ts in one move. Noted in the hand back.
+ * Nani's account of a flare is her own words about her own body, approved by
+ * the client on 16 September. It is not clinical information and is not
+ * presented as any.
  */
 import Base from '@/layouts/Base.astro';
-import Placeholder from '@/components/Placeholder.astro';
+import Picture from '@/components/Picture.astro';
 import Newsletter from '@/components/Newsletter.astro';
-import type { Pending } from '@/config/site';
 
-const REVIEW_LINE =
-  'This section is being written with, and reviewed by, a named medical source. It will be published once that review is complete.';
+/** A named source behind a claim. Every citation on the page is one of these. */
+const SRC = {
+  nhs: { name: 'NHS', href: 'https://www.nhs.uk/conditions/overactive-thyroid-hyperthyroidism/' },
+  nhsSymptoms: { name: 'NHS', href: 'https://www.nhs.uk/conditions/overactive-thyroid-hyperthyroidism/symptoms/' },
+  nhsDiagnosis: { name: 'NHS', href: 'https://www.nhs.uk/conditions/overactive-thyroid-hyperthyroidism/diagnosis/' },
+  nhsTreatment: { name: 'NHS', href: 'https://www.nhs.uk/conditions/overactive-thyroid-hyperthyroidism/treatment/' },
+  nhsComplications: { name: 'NHS', href: 'https://www.nhs.uk/conditions/overactive-thyroid-hyperthyroidism/complications/' },
+  niddk: { name: 'NIDDK, US National Institutes of Health', href: 'https://www.niddk.nih.gov/health-information/endocrine-diseases/graves-disease' },
+  ata: { name: 'American Thyroid Association', href: 'https://www.thyroid.org/graves-disease/' },
+  ataEye: { name: 'American Thyroid Association', href: 'https://www.thyroid.org/thyroid-eye-disease/' },
+  btf: { name: 'British Thyroid Foundation', href: 'https://www.btf-thyroid.org/hyperthyroidism-leaflet' },
+  btfEye: { name: 'British Thyroid Foundation', href: 'https://www.btf-thyroid.org/thyroid-eye-disease-leaflet' },
+  btfMind: { name: 'British Thyroid Foundation', href: 'https://www.btf-thyroid.org/psychological-symptoms-and-thyroid-disorders' },
+  cleveland: { name: 'Cleveland Clinic', href: 'https://my.clevelandclinic.org/health/diseases/15244-graves-disease' },
+  medline: { name: 'MedlinePlus Genetics, US National Library of Medicine', href: 'https://medlineplus.gov/genetics/condition/graves-disease/' },
+  cuh: { name: 'Cambridge University Hospitals NHS Foundation Trust', href: 'https://www.cuh.nhs.uk/patient-information/hyperthyroidism-due-to-graves-disease/' },
+} as const;
 
-const pending = (note: string, fallback: string = REVIEW_LINE): Pending<string> => ({
-  value: '',
-  pending: true,
-  fallback,
-  note,
-});
+type Src = { name: string; href: string };
 
-const blocks = [
+/** Long read sections. Each paragraph carries the source it came from. */
+const sections = [
   {
     id: 'what-it-is',
     number: '01',
     title: "What Graves' disease is",
-    field: pending("Graves' resource page: what the condition is. Text from a named medical source."),
+    image: 'graves-body',
+    imageAlt: 'Soft daylight falling across a cupped hand.',
+    paras: [
+      { text: 'The thyroid is a small gland in the lower neck, shaped a little like a butterfly. It makes hormones that control how your body uses energy, which is why it affects your heart rate, your weight, your temperature, your digestion and your mood.', src: [SRC.medline, SRC.ata] },
+      { text: "Graves' disease is an autoimmune condition. That means the body's own immune system turns against the thyroid gland, and the thyroid responds by becoming overactive.", src: [SRC.btf] },
+      { text: 'The immune system makes antibodies that attach to thyroid cells and tell them to produce too much hormone. They are called thyrotropin receptor antibodies, or TRAb. They work by imitating the signal the body normally uses to tell the thyroid what to do.', src: [SRC.ata, SRC.niddk] },
+      { text: "This is the part people most often get wrong. Graves' disease is not another name for an overactive thyroid. An overactive thyroid, also called hyperthyroidism, has several causes. Graves' disease is the most common one. About 4 in every 5 people with an overactive thyroid have Graves' disease.", src: [SRC.nhs, SRC.niddk] },
+    ],
   },
   {
     id: 'how-it-shows-up',
     number: '02',
     title: 'How it shows up',
-    field: pending("Graves' resource page: how the condition presents. Text from a named medical source."),
+    image: 'graves-symptoms',
+    imageAlt: 'An empty linen bed in late afternoon light, shutters half closed.',
+    paras: [
+      { text: 'Symptoms can come on gradually over months, or suddenly over days. It is unlikely that any one person will have all of them, and no two people look the same.', src: [SRC.nhsSymptoms, SRC.cleveland] },
+      { text: 'The NHS lists nervousness, anxiety, irritability, mood swings, difficulty sleeping, tiredness, sensitivity to heat, muscle weakness, needing to pass urine more often, persistent thirst, itchiness and loss of interest in sex.', src: [SRC.nhsSymptoms] },
+      { text: 'Physical signs can include a swelling in the neck from an enlarged thyroid, an irregular or fast heartbeat, trembling, warm skin and heavy sweating, hair thinning, and weight loss despite eating more than usual.', src: [SRC.nhsSymptoms] },
+      { text: 'Some of it is less expected. Periods can become lighter, less frequent or stop. Breathlessness is common. So is a change in mood: anxiety, low mood, tearfulness and a short temper are all recognised, and they are symptoms, not character.', src: [SRC.cleveland, SRC.btfMind] },
+    ],
+    callout: {
+      title: 'It can affect the eyes',
+      paras: [
+        { text: "Thyroid eye disease, also called Graves' ophthalmopathy, is a recognised part of the condition. The tissues around the eye become inflamed. Eyes can feel dry and gritty, water, become sensitive to light, or look more prominent. Vision can blur or double.", src: [SRC.btfEye, SRC.nhsComplications] },
+        { text: 'How often it happens depends on who you ask. The NHS says around 1 in 4 people with Graves’ disease. The American Thyroid Association and Cleveland Clinic say about a third. The British Thyroid Foundation’s eye leaflet says about 40 percent. What they agree on is that most cases are mild and improve, and that only around 5 percent become moderate or severe.', src: [SRC.nhsComplications, SRC.ata, SRC.btfEye] },
+        { text: 'It does not always arrive in step with the thyroid. Eye symptoms commonly appear around six months before or after the thyroid diagnosis, and can begin after treatment has started.', src: [SRC.ata, SRC.btfEye] },
+      ],
+    },
+  },
+  {
+    id: 'who-it-affects',
+    number: '03',
+    title: 'Who it affects',
+    image: 'graves-living',
+    imageAlt: 'A figure at a window looking out onto a warm Mediterranean morning.',
+    paras: [
+      { text: 'It is far more common in women. The American Thyroid Association puts it at 7 to 8 times more common in women than in men.', src: [SRC.ata] },
+      { text: 'Estimates of how many people have it vary between authorities. NIDDK says nearly 1 in 100 Americans. MedlinePlus Genetics says about 1 in 200 people. Both are US National Institutes of Health sources. We have not found a published UK figure for Graves’ disease specifically.', src: [SRC.niddk, SRC.medline] },
+      { text: 'It is more common in people over 30, and it tends to run in families. A family history of Graves’ disease or of Hashimoto’s disease raises the chance of it, as does having another autoimmune condition such as type 1 diabetes, rheumatoid arthritis or vitiligo.', src: [SRC.niddk, SRC.btf] },
+      { text: 'Smoking matters more than most people realise. It raises the chance of developing Graves’ disease, and smokers are up to eight times more likely to develop thyroid eye disease than non smokers.', src: [SRC.niddk, SRC.btf] },
+      { text: 'Stress is harder to pin down. The British Thyroid Foundation says it appears to play a role, and some people report a major stress in the year before diagnosis. The NHS and NIDDK do not list it. We mention it because people ask, not because it is settled.', src: [SRC.btf, SRC.cleveland] },
+    ],
   },
   {
     id: 'getting-diagnosed',
-    number: '03',
+    number: '04',
     title: 'Getting diagnosed',
-    field: pending("Graves' resource page: diagnosis. Text from a named medical source."),
+    image: 'graves-diagnosis',
+    imageAlt: 'A glass of water, a folded paper and a pen on a table in window light.',
+    paras: [
+      { text: 'It usually starts with a blood test that a GP can order, alongside your symptoms. The test measures TSH, the hormone the pituitary gland uses to signal the thyroid, and T3 and T4, the two main thyroid hormones.', src: [SRC.nhsDiagnosis] },
+      { text: 'A low TSH with high T3 or T4 usually means the thyroid is overactive. That says nothing yet about why.', src: [SRC.nhsDiagnosis] },
+      { text: "What confirms Graves' disease specifically is an antibody test, the TSH receptor antibody test. A positive result confirms the diagnosis without further testing.", src: [SRC.nhsDiagnosis, SRC.ata] },
+      { text: 'Sometimes more is done: a thyroid uptake scan, or an ultrasound that measures blood flow through the gland. The British Thyroid Foundation notes that scans are only rarely needed.', src: [SRC.niddk, SRC.btf] },
+    ],
+  },
+  {
+    id: 'treatment',
+    number: '05',
+    title: 'What treatment looks like',
+    image: null,
+    imageAlt: '',
+    intro: 'This section describes what exists. It is not a recommendation, and nothing here should be read as advice about your own care. Which treatment suits a person is a decision made with their doctor. Cleveland Clinic notes plainly that there is no agreement in the medical community on which treatment is best.',
+    introSrc: [SRC.cleveland],
+    paras: [
+      { text: 'Antithyroid medicine stops the thyroid producing excess hormone. In the UK the main ones are carbimazole and propylthiouracil; in the US, methimazole. People usually take them for 12 to 18 months, and it can be a few months before any benefit is felt. The British Thyroid Foundation puts the chance of a lasting cure after a course of tablets at roughly 30 to 50 percent.', src: [SRC.nhsTreatment, SRC.ata, SRC.btf] },
+      { text: 'Beta blockers are sometimes given alongside, to settle a fast heartbeat, tremor and nervousness while the main treatment takes effect. They do not change what the thyroid is doing.', src: [SRC.nhsTreatment, SRC.niddk] },
+      { text: 'Radioactive iodine is taken as a drink or a capsule. The thyroid absorbs it and it reduces the gland’s ability to make hormone. Almost everyone who has it later develops an underactive thyroid, which is then managed with daily hormone tablets. There are precautions afterwards about close contact and about pregnancy.', src: [SRC.nhsTreatment, SRC.niddk] },
+      { text: 'Surgery removes all or part of the thyroid. Afterwards the body cannot make thyroid hormone, so daily medicine such as levothyroxine is needed for life.', src: [SRC.nhsTreatment, SRC.cleveland] },
+      { text: 'Eye disease is treated separately and by degree, from lubricating drops and sunglasses for mild cases through to steroids, other medicines, radiotherapy or surgery when it is severe.', src: [SRC.btfEye, SRC.ataEye] },
+    ],
   },
   {
     id: 'living-with-it',
-    number: '04',
+    number: '06',
     title: 'Living with it',
-    field: pending("Graves' resource page: day to day management. Text from a named medical source."),
-  },
-  {
-    id: 'support',
-    number: '05',
-    title: 'Where to get support',
-    field: pending(
-      "Graves' resource page: support organisations and lines. Confirmed partners only.",
-      'Support organisations will be listed here once partnerships are confirmed. Until then, please speak to your doctor.'
-    ),
+    image: 'graves-support',
+    imageAlt: 'Two pairs of hands resting together on cream linen.',
+    paras: [
+      { text: 'Treated properly, the outlook is generally good. The American Thyroid Association describes Graves’ disease as controllable, safely treated, and treatment almost always successful.', src: [SRC.cleveland, SRC.ata] },
+      { text: 'It can come back. Relapse can happen at any stage after stopping medicine, and is most likely within six months of stopping.', src: [SRC.cuh] },
+      { text: 'Monitoring becomes part of life. After tablets, occasional blood tests if things stay stable. After surgery or radioiodine, frequent tests until levels settle and then yearly ones, because of the long term chance of an underactive thyroid.', src: [SRC.btf, SRC.cuh] },
+      { text: 'The mental side is real and it is documented. The British Thyroid Foundation describes feeling more emotional than before, mood that changes rapidly, anxiety, low mood and irritability. Most people improve as the thyroid is brought under control, though not always as fast as they hope, and some feel not quite right for a while even after the blood tests look normal.', src: [SRC.btfMind] },
+      { text: 'Left untreated, an overactive thyroid raises the risk of an irregular heartbeat, heart failure, weakened bones and complications in pregnancy. There is also a rare emergency called thyroid storm, for which the NHS says to call 999.', src: [SRC.nhsComplications, SRC.niddk] },
+    ],
   },
 ] as const;
 
-const partnerSlots = [
-  pending("Graves' partner organisation 1: name, logo and link.", 'Partner to be confirmed'),
-  pending("Graves' partner organisation 2: name, logo and link.", 'Partner to be confirmed'),
-  pending("Graves' partner organisation 3: name, logo and link.", 'Partner to be confirmed'),
-];
+/** Short sourced facts. The page is called "Did you know", so these carry it. */
+const facts = [
+  { text: 'It is named after Robert James Graves, an Irish physician who described it about 150 years ago. In much of Europe the same condition is called Basedow’s disease.', src: SRC.ata },
+  { text: 'The thyroid is shaped like a butterfly, which is why the butterfly became the symbol for thyroid conditions.', src: SRC.medline },
+  { text: 'Thyroid hormones affect nearly every organ, including the way the heart beats. Untreated, Graves’ disease can lead to a rapid irregular heartbeat.', src: SRC.niddk },
+  { text: 'Eye symptoms can appear around six months before the thyroid diagnosis, so the eyes are sometimes the first sign.', src: SRC.ata },
+  { text: 'Smokers are up to eight times more likely to develop thyroid eye disease than non smokers.', src: SRC.btf },
+  { text: 'About 4 in every 5 people with an overactive thyroid have Graves’ disease.', src: SRC.nhs },
+  { text: 'Treating an overactive thyroid often leads to an underactive one. Almost everyone who has radioiodine later develops hypothyroidism.', src: SRC.niddk },
+  { text: 'It can show on the skin. A rare sign makes the skin on the shins thick, reddish and rough.', src: SRC.niddk },
+] as const;
+
+/**
+ * Real organisations, with details taken from their own pages. No number here
+ * is inferred. Thyroid UK is deliberately not described as a helpline: their
+ * own support page states they have no telephone Support Networkers.
+ */
+const support = [
+  {
+    name: 'British Thyroid Foundation',
+    where: 'United Kingdom',
+    body: 'A patient charity with written query and volunteer peer support from people who live with thyroid conditions.',
+    detail: 'Office 01423 810093, 11am to 3pm on selected weekdays. Their own pages differ on which days, so check the site.',
+    href: 'https://www.btf-thyroid.org/',
+    note: 'Registered charity 1006391 in England and Wales, SC046037 in Scotland.',
+  },
+  {
+    name: 'Thyroid UK',
+    where: 'United Kingdom',
+    body: 'Information, local groups and an online community. Their office line is an office line, not a helpline.',
+    detail: 'Office 01255 820407, Monday to Friday 10am to 2pm. enquiries@thyroiduk.org',
+    href: 'https://thyroiduk.org/',
+    note: 'Registered charity 1125270.',
+  },
+  {
+    name: 'Thyroid Eye Disease Charitable Trust',
+    where: 'United Kingdom',
+    body: 'Specifically for thyroid eye disease. Helpline, peer group, patient events and free membership.',
+    detail: 'Helpline 07469 921 782. info@tedct.org.uk',
+    href: 'https://tedct.org.uk/',
+    note: '',
+  },
+  {
+    name: "Graves' Disease and Thyroid Foundation",
+    where: 'United States',
+    body: 'Online support groups, patient bulletins and an annual conference. Founded in 1990.',
+    detail: 'Toll free 1-877-643-3123 in the USA and Canada. info@gdatf.org',
+    href: 'https://gdatf.org/',
+    note: '',
+  },
+  {
+    name: 'American Thyroid Association',
+    where: 'United States',
+    body: 'The professional body for thyroid medicine, with plain language patient pages and a tool for finding a specialist.',
+    detail: 'Contact by form on their site.',
+    href: 'https://www.thyroid.org/',
+    note: '',
+  },
+] as const;
 
 /*
- * NANI'S OWN WORDS. Taken from the 15 September meeting, during which she was
- * in a flare and described it unprompted. Lightly tidied for the page, nothing
- * added. She has NOT yet approved this for publication. Confirm with her
- * before this page goes live, and take it down if she asks.
+ * NANI'S OWN WORDS. From the 15 September meeting, during which she was in a
+ * flare and described it unprompted. Lightly tidied, nothing added.
+ * Approved for publication by the client on 16 September 2026.
  */
 const flare = {
   lines: [
@@ -91,123 +213,182 @@ const flare = {
     'I talk slower because I cannot get my brain to just get the thought out. You have to keep repeating yourself, because I am having processing problems. I cannot get my words out.',
     'You get short of breath. What you do not see are the shakes. I get tremors. They do not show on camera.',
     'I am having extreme nausea. My energy is just dwindling, like when someone has low blood pressure.',
-    'I do not go to work because of this. I applied for disability, and I was denied.”'
+    'I do not go to work because of this. I applied for disability, and I was denied.”',
   ],
   attribution: 'Nani Rosen, founder of The StillHer Foundation, describing a flare while in one.',
 };
+
+const sourceList = Array.from(
+  new Map(Object.values(SRC).map((s) => [s.name, s])).values()
+) as Src[];
 ---
 
 <Base
   title="Graves' Disease"
-  description="Graves, did you know? A resource page from The StillHer Foundation for anyone who wants to understand Graves' disease. General awareness information, not medical advice."
+  description="Graves, did you know? A sourced guide to Graves' disease from The StillHer Foundation. General awareness information, not medical advice."
 >
   <!-- Hero -->
-  <section class="section gd-hero">
-    <div class="wrap">
-      <div class="gd-hero__grid">
-        <div class="gd-hero__copy">
-          <span class="label">Graves' disease</span>
-          <h1 class="gd-hero__title">Graves. Did you <span class="em">know</span>?</h1>
-          <p class="gd-hero__lede">
-            A resource page for the people living with Graves' disease, the people who love them,
-            and the people who have only just heard the name.
-          </p>
-        </div>
+  <section class="gd-stage">
+    <div class="gd-stage__media">
+      <Picture
+        slot="graves-hero"
+        alt=""
+        ratio="16 / 9"
+        focus="60% 50%"
+        loading="eager"
+        sizes="100vw"
+      />
+      <div class="gd-stage__scrim" aria-hidden="true"></div>
+    </div>
 
-        <aside class="gd-notice" aria-label="Important">
-          <span class="label label--gold">Please read first</span>
-          <p class="gd-notice__body">
-            This page is general awareness information. It is not medical advice. If you are
-            concerned about your health, or about someone else's, please speak to a doctor.
-          </p>
-          <p class="gd-notice__small">
-            Every medical statement on this page is either attributed to a named medical source or
-            is still awaiting one. We do not publish anything in between.
-          </p>
-        </aside>
+    <div class="wrap gd-stage__inner">
+      <div class="gd-stage__copy">
+        <span class="label">Graves' disease</span>
+        <h1 class="gd-stage__title">Graves. Did you <span class="em">know</span>?</h1>
+        <p class="gd-stage__lede">
+          A guide for the people living with it, the people who love them, and the people who
+          have only just heard the name.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- Did you know, five blocks -->
-  <section class="section section--white" aria-labelledby="dyk-heading">
+  <!-- The notice. Deliberately high on the page. -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <aside class="gd-notice" aria-labelledby="gd-notice-h">
+        <span class="label label--gold" id="gd-notice-h">Please read first</span>
+        <p>
+          This page is general awareness information. It is not medical advice, and it is not a
+          substitute for seeing a doctor. If you are worried about your health, or someone
+          else's, please speak to a doctor. In the UK the NHS advises seeing a GP if you have
+          symptoms of an overactive thyroid.
+        </p>
+        <p class="gd-notice__meta">
+          Every medical statement on this page is attributed to a named source and linked. We do
+          not publish anything we cannot trace. Where authorities differ, we say so rather than
+          picking one. Nothing here recommends a treatment.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Long read -->
+  {
+    sections.map((section, i) => (
+      <section class:list={['section', i % 2 === 1 && 'section--cream']} id={section.id}>
+        <div class="wrap gd-section">
+          <div class="gd-section__head">
+            <span class="gd-section__number">{section.number}</span>
+            <h2 class="gd-section__title">{section.title}</h2>
+          </div>
+
+          <div class="gd-section__body">
+            {'intro' in section && section.intro && (
+              <p class="gd-section__intro">
+                {section.intro}
+                <cite class="gd-cite">
+                  {section.introSrc.map((s: Src, n: number) => (
+                    <>
+                      {n > 0 && ', '}
+                      <a href={s.href} rel="noopener nofollow" target="_blank">{s.name}</a>
+                    </>
+                  ))}
+                </cite>
+              </p>
+            )}
+
+            {section.paras.map((para) => (
+              <p class="gd-para">
+                {para.text}
+                <cite class="gd-cite">
+                  {para.src.map((s: Src, n: number) => (
+                    <>
+                      {n > 0 && ', '}
+                      <a href={s.href} rel="noopener nofollow" target="_blank">{s.name}</a>
+                    </>
+                  ))}
+                </cite>
+              </p>
+            ))}
+
+            {'callout' in section && section.callout && (
+              <aside class="gd-callout">
+                <h3 class="gd-callout__title">{section.callout.title}</h3>
+                {section.callout.paras.map((para) => (
+                  <p class="gd-para">
+                    {para.text}
+                    <cite class="gd-cite">
+                      {para.src.map((s: Src, n: number) => (
+                        <>
+                          {n > 0 && ', '}
+                          <a href={s.href} rel="noopener nofollow" target="_blank">{s.name}</a>
+                        </>
+                      ))}
+                    </cite>
+                  </p>
+                ))}
+              </aside>
+            )}
+          </div>
+
+          {section.image && (
+            <figure class="gd-section__figure">
+              <Picture
+                slot={section.image}
+                alt={section.imageAlt}
+                ratio="4 / 3"
+                sizes="(min-width: 64rem) 40vw, 100vw"
+              />
+            </figure>
+          )}
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- Her words -->
+  <section class="section section--sand">
+    <div class="wrap wrap--narrow gd-flare">
+      <span class="label">In her own words</span>
+      <h2 class="gd-flare__title">What a flare actually <span class="em">looks</span> like</h2>
+      <p class="gd-flare__frame">
+        These are Nani's words about her own body, said while it was happening. They are one
+        woman's experience of one flare. They are not a description of the condition, and they
+        are not a checklist.
+      </p>
+
+      <blockquote class="gd-flare__quote">
+        {flare.lines.map((line) => <p>{line}</p>)}
+      </blockquote>
+      <p class="gd-flare__attr">{flare.attribution}</p>
+
+      <p class="gd-flare__after">
+        As Nani put it on the same call, it shows up differently in different bodies. If any of
+        this sounds like you, or like someone you know, speak to a doctor.
+      </p>
+    </div>
+  </section>
+
+  <!-- Did you know -->
+  <section class="section" id="did-you-know">
     <div class="wrap">
       <header class="gd-head">
         <span class="label">Did you know</span>
-        <h2 id="dyk-heading" class="gd-head__title">Five things worth <span class="em">knowing</span></h2>
-        <p class="gd-head__lede">
-          Each of these is being written with a recognised medical source and will be published once
-          that source has reviewed it.
-        </p>
+        <h2 class="gd-h2">Eight things worth <span class="em">knowing</span></h2>
       </header>
 
-      <ol class="gd-blocks">
+      <ul class="gd-facts">
         {
-          blocks.map((block) => (
-            <li class="gd-block" id={block.id}>
-              <span class="gd-block__number" aria-hidden="true">
-                {block.number}
-              </span>
-              <div class="gd-block__body">
-                <h3 class="gd-block__title">{block.title}</h3>
-                <p class="gd-block__text">
-                  <Placeholder field={block.field} />
-                </p>
-                <p class="gd-block__source">
-                  <span class="gd-block__source-label">Source</span>
-                  <span class="gd-block__source-value">Awaiting a named medical source</span>
-                </p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
-
-  <!-- Nani, in her own words -->
-  <section class="section section--sand" aria-labelledby="flare-heading">
-    <div class="wrap wrap--narrow">
-      <span class="label">In her own words</span>
-      <h2 id="flare-heading">What a flare actually <span class="em">looks</span> like</h2>
-      <p class="gd-flare__frame">
-        These are Nani's words about her own body, said while it was happening. They are one woman's
-        experience of one flare. They are not a description of the condition, and they are not a
-        checklist.
-      </p>
-
-      <blockquote class="gd-flare">
-        {flare.lines.map((line) => <p>{line}</p>)}
-        <footer class="gd-flare__cite">{flare.attribution}</footer>
-      </blockquote>
-
-      <p class="gd-flare__after">
-        As Nani put it on the same call, it shows up differently in different bodies. If any of this
-        sounds like you, or like someone you know, speak to a doctor.
-      </p>
-    </div>
-  </section>
-
-  <!-- Partner organisations, pending -->
-  <section class="section" aria-labelledby="partners-heading">
-    <div class="wrap">
-      <header class="gd-head">
-        <span class="label">Go deeper</span>
-        <h2 id="partners-heading" class="gd-head__title">Partner <span class="em">organisations</span></h2>
-        <p class="gd-head__lede">
-          The foundation is working on partnerships with other Graves' disease organisations, so
-          that anyone who wants to know more has somewhere trustworthy to go. They will be listed
-          here once confirmed.
-        </p>
-      </header>
-
-      <ul class="gd-partners">
-        {
-          partnerSlots.map((slot) => (
-            <li class="gd-partner">
-              <div class="ph-frame gd-partner__frame" style="--ph-ratio: 3 / 2">
-                <Placeholder field={slot} />
-              </div>
+          facts.map((fact, i) => (
+            <li class="gd-fact">
+              <span class="gd-fact__n">{String(i + 1).padStart(2, '0')}</span>
+              <p class="gd-fact__text">
+                {fact.text}
+                <cite class="gd-cite">
+                  <a href={fact.src.href} rel="noopener nofollow" target="_blank">{fact.src.name}</a>
+                </cite>
+              </p>
             </li>
           ))
         }
@@ -215,37 +396,65 @@ const flare = {
     </div>
   </section>
 
-  <!-- Where this fits -->
-  <section class="section section--cream">
-    <div class="wrap gd-more">
-      <div class="gd-more__item">
-        <span class="label">Rest and company</span>
-        <h3 class="gd-more__title">Her Relief Retreat</h3>
-        <p>A retreat for women living with Graves' disease. Spa care, rest and community.</p>
-        <a href="/her-relief-retreat" class="btn btn--ghost">About the retreat</a>
-      </div>
-      <div class="gd-more__item">
-        <span class="label">The thinking</span>
-        <h3 class="gd-more__title">Protecting Her Ecosystem</h3>
-        <p>The ideology behind the work. Her body is her ecosystem, and looking after it is the point.</p>
-        <a href="/her-ecosystem" class="btn btn--ghost">Read the initiative</a>
-      </div>
-      <div class="gd-more__item">
-        <span class="label">The founder</span>
-        <h3 class="gd-more__title">Nani Rosen</h3>
-        <p>Why the foundation exists, from the woman who lives with the condition every day.</p>
-        <a href="/founder" class="btn btn--ghost">About the founder</a>
-      </div>
+  <!-- Support -->
+  <section class="section section--cream" id="support">
+    <div class="wrap">
+      <header class="gd-head">
+        <span class="label">Go deeper</span>
+        <h2 class="gd-h2">Where to get <span class="em">support</span></h2>
+        <p class="gd-head__lede">
+          These are independent organisations, not partners of this foundation. Details are taken
+          from their own pages. We are working on partnerships so there is somewhere trustworthy
+          to send people, and we will say plainly when one is confirmed.
+        </p>
+      </header>
+
+      <ul class="gd-support">
+        {
+          support.map((org) => (
+            <li class="card gd-org">
+              <span class="gd-org__where">{org.where}</span>
+              <h3 class="card__title">{org.name}</h3>
+              <p>{org.body}</p>
+              <p class="gd-org__detail">{org.detail}</p>
+              {org.note && <p class="gd-org__note">{org.note}</p>}
+              <a class="gd-org__link" href={org.href} rel="noopener nofollow" target="_blank">
+                Visit {org.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
-  <!-- Newsletter -->
-  <section class="section section--white">
+  <!-- Sources -->
+  <section class="section section--tight" id="sources">
+    <div class="wrap">
+      <h2 class="label">Sources used on this page</h2>
+      <ul class="gd-sources">
+        {
+          sourceList.map((s) => (
+            <li>
+              <a href={s.href} rel="noopener nofollow" target="_blank">{s.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="gd-sources__note">
+        Checked 16 September 2026. Medical guidance changes, so if you are reading this long
+        after that date, follow the links to the source. Our full research notes, including the
+        claims we chose not to publish and why, are kept with the site.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="wrap wrap--narrow">
       <Newsletter
-        source="graves-disease"
-        heading="Be told when this page is complete"
-        blurb="We will write once the reviewed sections and partner organisations are published."
+        source="graves"
+        heading="Keep up with the foundation"
+        blurb="We will write when this page is updated, and when partner organisations are confirmed."
       />
     </div>
   </section>
@@ -253,62 +462,239 @@ const flare = {
 
 <style>
   /* ---------------- Hero ---------------- */
-  .gd-hero__grid {
+  .gd-stage {
+    position: relative;
     display: grid;
-    gap: var(--space-xl);
-    align-items: start;
+    align-items: end;
+    min-height: min(62svh, 34rem);
+    isolation: isolate;
+    overflow: hidden;
   }
 
-  @media (min-width: 60rem) {
-    .gd-hero__grid {
-      grid-template-columns: 1.3fr 0.9fr;
-      gap: var(--space-2xl);
-      align-items: end;
-    }
+  .gd-stage__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
   }
 
-  .gd-hero__title {
+  .gd-stage__media :global(.pic),
+  .gd-stage__media :global(.pic img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .gd-stage__media :global(.pic img) {
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  .gd-stage__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--cream) 94%, transparent) 0%,
+        color-mix(in srgb, var(--cream) 80%, transparent) 40%,
+        color-mix(in srgb, var(--cream) 24%, transparent) 72%,
+        transparent 92%
+      ),
+      linear-gradient(to top, color-mix(in srgb, var(--cream) 70%, transparent) 0%, transparent 40%);
+  }
+
+  .gd-stage__inner {
+    padding-block: var(--space-2xl);
+  }
+
+  .gd-stage__copy {
+    max-width: 32rem;
+  }
+
+  .gd-stage__title {
     font-size: var(--step-5);
-    line-height: 1.02;
-    margin-bottom: var(--space-m);
-  }
-
-  .gd-hero__lede {
-    font-size: var(--step-1);
-    line-height: 1.5;
-    max-width: 44ch;
-  }
-
-  .gd-notice {
-    background: var(--white);
-    border: 1px solid var(--sand);
-    border-left: 3px solid var(--gold);
-    border-radius: var(--radius-m);
-    padding: var(--space-l);
-    box-shadow: var(--shadow-soft);
-  }
-
-  .gd-notice__body {
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-    line-height: 1.4;
     margin-bottom: var(--space-s);
   }
 
-  .gd-notice__small {
+  .gd-stage__lede {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 34ch;
+  }
+
+  @media (max-width: 47.999rem) {
+    .gd-stage__scrim {
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--cream) 40%, transparent) 0%,
+        color-mix(in srgb, var(--cream) 90%, transparent) 55%,
+        var(--cream) 85%
+      );
+    }
+
+    .gd-stage {
+      min-height: min(72svh, 34rem);
+    }
+  }
+
+  /* ---------------- Notice ---------------- */
+  .gd-notice {
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-m);
+    padding: var(--space-l);
+    background: var(--white);
+    max-width: 62ch;
+  }
+
+  .gd-notice p {
+    margin-bottom: var(--space-s);
+  }
+
+  .gd-notice p:last-child {
+    margin-bottom: 0;
+  }
+
+  .gd-notice__meta {
     font-size: var(--step--1);
     color: var(--ink-soft);
+  }
+
+  /* ---------------- Long read ---------------- */
+  .gd-section {
+    display: grid;
+    gap: var(--space-l);
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .gd-section {
+      grid-template-columns: 17rem minmax(0, 1fr) minmax(0, 21rem);
+      gap: var(--space-xl);
+    }
+  }
+
+  .gd-section__number {
+    display: block;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+    color: var(--gold-ink);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .gd-section__title {
+    font-size: var(--step-3);
     margin: 0;
   }
 
-  /* ---------------- Section heads ---------------- */
+  .gd-para,
+  .gd-section__intro {
+    font-size: var(--step-0);
+    line-height: 1.7;
+    max-width: 62ch;
+  }
+
+  .gd-section__intro {
+    font-style: italic;
+    color: var(--ink-soft);
+    border-left: 2px solid var(--gold);
+    padding-left: var(--space-m);
+  }
+
+  /* A citation sits on its own line, quiet, always present. */
+  .gd-cite {
+    display: block;
+    font-style: normal;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    margin-top: var(--space-3xs);
+  }
+
+  .gd-cite a {
+    color: var(--ink-soft);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .gd-cite a:hover {
+    color: var(--teal-ink);
+  }
+
+  .gd-callout {
+    border: 1px solid var(--sand);
+    border-left: 3px solid var(--teal);
+    border-radius: var(--radius-m);
+    background: var(--white);
+    padding: var(--space-l);
+    margin-top: var(--space-l);
+  }
+
+  .gd-callout__title {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-s);
+  }
+
+  .gd-section__figure {
+    margin: 0;
+  }
+
+  .gd-section__figure :global(.pic img) {
+    border-radius: var(--radius-m);
+  }
+
+  /* ---------------- Her words ---------------- */
+  .gd-flare__title {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-m);
+  }
+
+  .gd-flare__frame {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    max-width: 58ch;
+  }
+
+  .gd-flare__quote {
+    margin: var(--space-l) 0 var(--space-s);
+    padding-left: var(--space-l);
+    border-left: 2px solid var(--gold);
+  }
+
+  .gd-flare__quote p {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 52ch;
+  }
+
+  .gd-flare__quote p:last-child {
+    margin-bottom: 0;
+  }
+
+  .gd-flare__attr {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink-soft);
+    padding-left: calc(var(--space-l) + 2px);
+  }
+
+  .gd-flare__after {
+    margin-top: var(--space-l);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  /* ---------------- Facts ---------------- */
   .gd-head {
     margin-bottom: var(--space-xl);
   }
 
-  .gd-head__title {
+  .gd-h2 {
     font-size: var(--step-4);
-    margin-bottom: var(--space-s);
+    margin: 0 0 var(--space-s);
   }
 
   .gd-head__lede {
@@ -316,104 +702,7 @@ const flare = {
     color: var(--ink-soft);
   }
 
-  /* ---------------- Did you know blocks ---------------- */
-  .gd-blocks {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid var(--gold);
-  }
-
-  .gd-block {
-    display: grid;
-    gap: var(--space-s) var(--space-xl);
-    padding-block: var(--space-l);
-    border-bottom: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
-  }
-
-  @media (min-width: 48rem) {
-    .gd-block {
-      grid-template-columns: 6rem minmax(0, 1fr);
-      padding-block: var(--space-xl);
-    }
-  }
-
-  .gd-block__number {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: var(--step-3);
-    line-height: 1;
-    color: var(--gold-ink);
-  }
-
-  .gd-block__title {
-    font-size: var(--step-2);
-    margin-bottom: var(--space-s);
-  }
-
-  .gd-block__text {
-    max-width: 60ch;
-  }
-
-  .gd-block__source {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs) var(--space-s);
-    align-items: baseline;
-    margin: var(--space-s) 0 0;
-    font-family: var(--font-sans);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--track-wide);
-  }
-
-  .gd-block__source-label {
-    color: var(--gold-ink);
-  }
-
-  .gd-block__source-value {
-    color: var(--ink-soft);
-  }
-
-  /* ---------------- Flare, in her own words ---------------- */
-  .gd-flare__frame {
-    color: var(--ink-soft);
-    margin-bottom: var(--space-l);
-  }
-
-  .gd-flare {
-    margin: 0;
-    padding-left: var(--space-l);
-    border-left: 2px solid var(--gold);
-  }
-
-  .gd-flare p {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    line-height: 1.3;
-    max-width: 30ch;
-    margin-bottom: var(--space-m);
-  }
-
-  .gd-flare__cite {
-    font-family: var(--font-sans);
-    font-size: var(--step--2);
-    text-transform: uppercase;
-    letter-spacing: var(--track-wide);
-    color: var(--ink-soft);
-    margin-top: var(--space-l);
-  }
-
-  .gd-flare__after {
-    margin-top: var(--space-xl);
-    padding-top: var(--space-m);
-    border-top: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
-    font-size: var(--step--1);
-    color: var(--ink-soft);
-  }
-
-  /* ---------------- Partners ---------------- */
-  .gd-partners {
+  .gd-facts {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -422,46 +711,106 @@ const flare = {
   }
 
   @media (min-width: 48rem) {
-    .gd-partners {
-      grid-template-columns: repeat(3, 1fr);
+    .gd-facts {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: var(--space-2xl);
     }
   }
 
-  .gd-partner__frame {
-    width: 100%;
+  .gd-fact {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: var(--space-s);
+    align-items: start;
+    padding-top: var(--space-m);
+    border-top: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   }
 
-  /* ---------------- Where this fits ---------------- */
-  .gd-more {
+  .gd-fact__n {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+    color: var(--gold-ink);
+    line-height: 1;
+  }
+
+  .gd-fact__text {
+    margin: 0;
+    font-size: var(--step-0);
+    line-height: 1.6;
+  }
+
+  /* ---------------- Support ---------------- */
+  .gd-support {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
-    gap: var(--space-xl);
+    gap: var(--space-l);
   }
 
   @media (min-width: 48rem) {
-    .gd-more {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-l);
+    .gd-support {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  .gd-more__item {
-    display: grid;
-    align-content: start;
-    padding-top: var(--space-m);
-    border-top: 1px solid var(--gold);
+  @media (min-width: 72rem) {
+    .gd-support {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
-  .gd-more__item .btn {
-    justify-self: start;
+  .gd-org__where {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--teal-ink);
+    margin-bottom: var(--space-2xs);
+    display: block;
   }
 
-  .gd-more__title {
-    font-size: var(--step-2);
-    margin-bottom: var(--space-xs);
-  }
-
-  .gd-more__item p {
+  .gd-org__detail {
+    font-size: var(--step--1);
     color: var(--ink-soft);
-    margin-bottom: var(--space-m);
+  }
+
+  .gd-org__note {
+    font-size: var(--step--2);
+    color: var(--ink-soft);
+  }
+
+  .gd-org__link {
+    margin-top: auto;
+    padding-top: var(--space-m);
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--teal-ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+    align-self: flex-start;
+  }
+
+  /* ---------------- Sources ---------------- */
+  .gd-sources {
+    list-style: none;
+    margin: 0 0 var(--space-m);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+  }
+
+  .gd-sources a {
+    font-size: var(--step--1);
+  }
+
+  .gd-sources__note {
+    font-size: var(--step--2);
+    color: var(--ink-soft);
+    max-width: 66ch;
   }
 </style>
