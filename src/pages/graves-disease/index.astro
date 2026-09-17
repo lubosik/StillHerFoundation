@@ -1,0 +1,459 @@
+---
+/**
+ * The Graves' disease resource hub. Route: /graves-disease
+ *
+ * A library of articles, rendered as cards from `src/config/resources.ts`.
+ * Each card carries a thumbnail, its tags, the title and a description, which
+ * is the pattern the client asked for.
+ *
+ * Adding the next article means one object in that config plus a page at
+ * `src/pages/graves-disease/<slug>.astro`. This page needs no edit.
+ */
+import Base from '@/layouts/Base.astro';
+import Picture from '@/components/Picture.astro';
+import Newsletter from '@/components/Newsletter.astro';
+import { publishedArticles, allTags, hub } from '@/config/resources';
+
+/** Newest article runs wide as a feature; anything older grids below it. */
+const [lead, ...rest] = publishedArticles;
+---
+
+<Base title={hub.title} description={hub.lede}>
+  <!-- Hero -->
+  <section class="rh-stage">
+    <div class="rh-stage__media">
+      <Picture
+        slot="graves-hero"
+        alt=""
+        ratio="16 / 9"
+        focus="60% 50%"
+        loading="eager"
+        sizes="100vw"
+      />
+      <div class="rh-stage__scrim" aria-hidden="true"></div>
+    </div>
+
+    <div class="wrap rh-stage__inner">
+      <div class="rh-stage__copy">
+        <span class="label">{hub.kicker}</span>
+        <h1 class="rh-stage__title">Graves. Did you <span class="em">know</span>?</h1>
+        <p class="rh-stage__lede">{hub.lede}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The notice sits high, before anyone starts reading. -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <aside class="rh-notice" aria-labelledby="rh-notice-h">
+        <span class="label label--gold" id="rh-notice-h">Please read first</span>
+        <p>
+          Everything in this library is general awareness information. It is not medical advice
+          and it is not a substitute for seeing a doctor. If you are worried about your health,
+          or someone else's, please speak to a doctor.
+        </p>
+        <p class="rh-notice__meta">
+          Every medical statement we publish is attributed to a named source and linked. Where
+          those sources disagree, we say so rather than picking one. Nothing here recommends a
+          treatment.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- The library -->
+  <section class="section section--cream" id="articles">
+    <div class="wrap">
+      <header class="rh-head">
+        <div>
+          <span class="label">The library</span>
+          <h2 class="rh-h2">
+            {publishedArticles.length === 1 ? 'One article' : `${publishedArticles.length} articles`}{' '}
+            <span class="em">so far</span>
+          </h2>
+        </div>
+        <p class="rh-head__note">{hub.note}</p>
+      </header>
+
+      <ul class="rh-topics" aria-label="Topics covered">
+        {allTags.map((tag) => <li class="rh-topic">{tag}</li>)}
+      </ul>
+
+      <ul class="rh-grid rh-grid--feature">
+        <li class="rh-card rh-card--lead">
+          <a class="rh-card__link" href={`/graves-disease/${lead.slug}`}>
+            <div class="rh-card__media">
+              <Picture
+                slot={lead.thumb}
+                alt={lead.thumbAlt}
+                ratio="4 / 3"
+                loading="eager"
+                sizes="(min-width: 56rem) 42vw, 100vw"
+              />
+            </div>
+
+            <div class="rh-card__body">
+              <ul class="rh-tags" aria-label="Tags">
+                {lead.tags.map((tag) => <li class="rh-tag">{tag}</li>)}
+              </ul>
+
+              <h3 class="rh-card__title rh-card__title--lead">{lead.title}</h3>
+              <p class="rh-card__desc rh-card__desc--lead">{lead.description}</p>
+
+              <p class="rh-card__meta">
+                <time datetime={lead.publishedISO}>{lead.published}</time>
+                <span aria-hidden="true">&middot;</span>
+                {lead.readingMinutes} min read
+              </p>
+
+              <span class="rh-card__more" aria-hidden="true">Read the article</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+
+      <ul class="rh-grid">
+        {
+          rest.map((article) => (
+            <li class="rh-card">
+              <a class="rh-card__link" href={`/graves-disease/${article.slug}`}>
+                <div class="rh-card__media">
+                  <Picture
+                    slot={article.thumb}
+                    alt={article.thumbAlt}
+                    ratio="16 / 10"
+                    sizes="(min-width: 64rem) 32vw, (min-width: 40rem) 48vw, 100vw"
+                  />
+                </div>
+
+                <div class="rh-card__body">
+                  <ul class="rh-tags" aria-label="Tags">
+                    {article.tags.map((tag) => <li class="rh-tag">{tag}</li>)}
+                  </ul>
+
+                  <h3 class="rh-card__title">{article.title}</h3>
+                  <p class="rh-card__desc">{article.description}</p>
+
+                  <p class="rh-card__meta">
+                    <time datetime={article.publishedISO}>{article.published}</time>
+                    <span aria-hidden="true">&middot;</span>
+                    {article.readingMinutes} min read
+                  </p>
+
+                  <span class="rh-card__more" aria-hidden="true">Read the article</span>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <Newsletter
+        source="graves-hub"
+        heading="Know when the next one lands"
+        blurb="We will write when a new article is published and when partner organisations are confirmed."
+      />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------------- Hero ---------------- */
+  .rh-stage {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: min(58svh, 30rem);
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .rh-stage__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .rh-stage__media :global(.pic),
+  .rh-stage__media :global(.pic img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .rh-stage__media :global(.pic img) {
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  .rh-stage__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--cream) 94%, transparent) 0%,
+        color-mix(in srgb, var(--cream) 80%, transparent) 42%,
+        color-mix(in srgb, var(--cream) 22%, transparent) 74%,
+        transparent 92%
+      ),
+      linear-gradient(to top, color-mix(in srgb, var(--cream) 70%, transparent) 0%, transparent 40%);
+  }
+
+  .rh-stage__inner {
+    padding-block: var(--space-2xl);
+  }
+
+  .rh-stage__copy {
+    max-width: 40rem;
+  }
+
+  .rh-stage__title {
+    font-size: var(--step-5);
+    margin-bottom: var(--space-s);
+  }
+
+  .rh-stage__lede {
+    font-size: var(--step-0);
+    line-height: 1.6;
+    max-width: 52ch;
+  }
+
+  @media (max-width: 47.999rem) {
+    .rh-stage__scrim {
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--cream) 40%, transparent) 0%,
+        color-mix(in srgb, var(--cream) 90%, transparent) 55%,
+        var(--cream) 85%
+      );
+    }
+  }
+
+  /* ---------------- Notice ---------------- */
+  .rh-notice {
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-m);
+    padding: var(--space-l);
+    background: var(--white);
+    max-width: 64ch;
+  }
+
+  .rh-notice p {
+    margin-bottom: var(--space-s);
+  }
+
+  .rh-notice p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rh-notice__meta {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  /* ---------------- Library ---------------- */
+  .rh-head {
+    display: grid;
+    gap: var(--space-m);
+    margin-bottom: var(--space-l);
+  }
+
+  @media (min-width: 56rem) {
+    .rh-head {
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .rh-h2 {
+    font-size: var(--step-4);
+    margin: 0;
+  }
+
+  .rh-head__note {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 46ch;
+  }
+
+  .rh-topics {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs);
+    margin: 0 0 var(--space-xl);
+    padding: 0 0 var(--space-l);
+    border-bottom: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
+  }
+
+  .rh-topic {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink-soft);
+    padding: 0.3em 0.75em;
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-pill);
+  }
+
+  /* ---------------- Cards ---------------- */
+  .rh-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 40rem) {
+    .rh-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .rh-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  .rh-card {
+    display: flex;
+  }
+
+  /* The lead article runs wide, image beside the copy from 56rem up. */
+  .rh-grid--feature {
+    grid-template-columns: 1fr;
+    margin-bottom: var(--space-xl);
+  }
+
+  @media (min-width: 56rem) {
+    .rh-card--lead .rh-card__link {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      align-items: stretch;
+    }
+
+    .rh-card--lead .rh-card__media :global(.pic),
+    .rh-card--lead .rh-card__media :global(.pic img) {
+      height: 100%;
+    }
+
+    .rh-card--lead .rh-card__media :global(.pic img) {
+      aspect-ratio: auto;
+      object-fit: cover;
+    }
+
+    .rh-card--lead .rh-card__body {
+      padding: var(--space-xl);
+      justify-content: center;
+    }
+  }
+
+  .rh-card__title--lead {
+    font-size: var(--step-3);
+  }
+
+  .rh-card__desc--lead {
+    font-size: var(--step-0);
+  }
+
+  .rh-card__link {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--ink);
+    transition:
+      transform var(--dur-base) var(--ease),
+      box-shadow var(--dur-base) var(--ease);
+  }
+
+  .rh-card__link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .rh-card__media :global(.pic img) {
+    width: 100%;
+  }
+
+  .rh-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--space-l);
+  }
+
+  .rh-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs);
+    margin: 0 0 var(--space-m);
+    padding: 0;
+  }
+
+  .rh-tag {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--teal-ink);
+    background: color-mix(in srgb, var(--teal) 14%, transparent);
+    padding: 0.3em 0.7em;
+    border-radius: var(--radius-s);
+  }
+
+  .rh-card__title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.15;
+    margin: 0 0 var(--space-s);
+  }
+
+  .rh-card__desc {
+    font-size: var(--step--1);
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-m);
+    max-width: none;
+  }
+
+  .rh-card__meta {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: none;
+  }
+
+  .rh-card__meta span {
+    margin-inline: 0.4em;
+  }
+
+  .rh-card__more {
+    margin-top: auto;
+    padding-top: var(--space-m);
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--teal-ink);
+    border-bottom: 1px solid var(--gold);
+    align-self: flex-start;
+  }
+</style>

@@ -1,31 +1,31 @@
 ---
 /**
- * Graves' disease resource page. Route: /graves-disease.
+ * Article: Graves' disease, explained.
+ * Route: /graves-disease/graves-disease-explained
  *
- * Nani framed it as "Graves, did you know". It is the most constrained page
- * on the site. Her words, 15 September: "when you have a nonprofit that is
- * made on helping people, you have to be careful, because yes we're raising
- * awareness, but we also have to make sure the information we're giving is
- * right."
+ * A single column article. Prose runs straight down in one readable measure,
+ * images sit full width between chapters, and citations sit under the
+ * paragraph they belong to. The earlier three column layout put the heading,
+ * the text and the image side by side, which squeezed the prose into a narrow
+ * ribbon and stranded it in a wide page. This replaces it.
  *
- * So: every clinical claim on this page is traceable to a named authority and
- * carries a visible citation. Nothing is written from memory. The full
- * research pack, including the sources that could not be reached and the
- * claims that were deliberately excluded, is in reference/GRAVES_RESEARCH.md.
- *
- * Three rules this page must keep:
+ * Three rules this article keeps:
  *   1. Graves' disease is a CAUSE of hyperthyroidism, not a synonym for it.
  *   2. Treatments are described, never recommended.
- *   3. Where authorities disagree, say so and give the range. Do not pick one
- *      and present it as settled.
+ *   3. Where authorities disagree, say so and give the range.
+ *
+ * The full research pack, including the sources that could not be reached and
+ * the claims deliberately excluded, is in reference/GRAVES_RESEARCH.md.
  *
  * Nani's account of a flare is her own words about her own body, approved by
- * the client on 16 September. It is not clinical information and is not
- * presented as any.
+ * the client on 16 September. It is not clinical information.
  */
 import Base from '@/layouts/Base.astro';
 import Picture from '@/components/Picture.astro';
 import Newsletter from '@/components/Newsletter.astro';
+import { articles } from '@/config/resources';
+
+const article = articles.find((a) => a.slug === 'graves-disease-explained')!;
 
 /** A named source behind a claim. Every citation on the page is one of these. */
 const SRC = {
@@ -47,7 +47,7 @@ const SRC = {
 
 type Src = { name: string; href: string };
 
-/** Long read sections. Each paragraph carries the source it came from. */
+/** The chapters. Each paragraph carries the source it came from. */
 const sections = [
   {
     id: 'what-it-is',
@@ -142,7 +142,7 @@ const sections = [
   },
 ] as const;
 
-/** Short sourced facts. The page is called "Did you know", so these carry it. */
+/** Short sourced facts, set as a break between chapters. */
 const facts = [
   { text: 'It is named after Robert James Graves, an Irish physician who described it about 150 years ago. In much of Europe the same condition is called Basedow’s disease.', src: SRC.ata },
   { text: 'The thyroid is shaped like a butterfly, which is why the butterfly became the symbol for thyroid conditions.', src: SRC.medline },
@@ -218,137 +218,131 @@ const flare = {
   attribution: 'Nani Rosen, founder of The StillHer Foundation, describing a flare while in one.',
 };
 
-/**
- * Byline and dates. The review date is when every source on this page was
- * fetched and read. Keep them honest: if the page is edited, move the
- * published date; if the sources are re-checked, move the review date.
- */
-const byline = {
-  author: 'The StillHer Foundation',
-  published: '17 September 2026',
-  reviewed: '16 September 2026',
-} as const;
+const reviewed = '16 September 2026';
 
 const sourceList = Array.from(
   new Map(Object.values(SRC).map((s) => [s.name, s])).values()
 ) as Src[];
 ---
 
-<Base
-  title="Graves' Disease"
-  description="Graves, did you know? A sourced guide to Graves' disease from The StillHer Foundation. General awareness information, not medical advice."
->
-  <!-- Hero -->
-  <section class="gd-stage">
-    <div class="gd-stage__media">
-      <Picture
-        slot="graves-hero"
-        alt=""
-        ratio="16 / 9"
-        focus="60% 50%"
-        loading="eager"
-        sizes="100vw"
-      />
-      <div class="gd-stage__scrim" aria-hidden="true"></div>
-    </div>
+<Base title={article.title} description={article.description}>
+  <article class="art">
+    <!-- Masthead -->
+    <header class="art__head">
+      <div class="wrap wrap--narrow">
+        <a class="art__back" href="/graves-disease">
+          <span aria-hidden="true">&larr;</span> All resources
+        </a>
 
-    <div class="wrap gd-stage__inner">
-      <div class="gd-stage__copy">
-        <span class="label">Graves' disease</span>
-        <h1 class="gd-stage__title">Graves. Did you <span class="em">know</span>?</h1>
-        <p class="gd-stage__lede">
-          A guide for the people living with it, the people who love them, and the people who
-          have only just heard the name.
-        </p>
+        <ul class="art__tags" aria-label="Tags">
+          {article.tags.map((tag) => <li class="art__tag">{tag}</li>)}
+        </ul>
 
-        <p class="gd-byline">
-          By {byline.author}
+        <h1 class="art__title">{article.title}</h1>
+        <p class="art__standfirst">{article.description}</p>
+
+        <p class="art__meta">
+          By The StillHer Foundation
           <span aria-hidden="true">&middot;</span>
-          <time datetime="2026-09-17">{byline.published}</time>
+          <time datetime={article.publishedISO}>{article.published}</time>
+          <span aria-hidden="true">&middot;</span>
+          {article.readingMinutes} min read
         </p>
       </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- The notice. Deliberately high on the page. -->
-  <section class="section section--tight">
-    <div class="wrap">
-      <aside class="gd-notice" aria-labelledby="gd-notice-h">
-        <span class="label label--gold" id="gd-notice-h">Please read first</span>
+    <!-- Lead image -->
+    <div class="wrap art__lead">
+      <Picture
+        slot="graves-hero"
+        alt="Morning light falling across a cream plaster wall above a linen armchair."
+        ratio="16 / 9"
+        loading="eager"
+        sizes="(min-width: 64rem) 80rem, 100vw"
+      />
+    </div>
+
+    <div class="wrap wrap--narrow art__body">
+      <!-- Notice -->
+      <aside class="art__notice" aria-labelledby="art-notice-h">
+        <span class="label label--gold" id="art-notice-h">Please read first</span>
         <p>
-          This page is general awareness information. It is not medical advice, and it is not a
-          substitute for seeing a doctor. If you are worried about your health, or someone
+          This article is general awareness information. It is not medical advice, and it is not
+          a substitute for seeing a doctor. If you are worried about your health, or someone
           else's, please speak to a doctor. In the UK the NHS advises seeing a GP if you have
           symptoms of an overactive thyroid.
         </p>
-        <p class="gd-notice__meta">
-          Every medical statement on this page is attributed to a named source and linked. We do
-          not publish anything we cannot trace. Where authorities differ, we say so rather than
+        <p class="art__notice-meta">
+          Every medical statement here is attributed to a named source and linked. We do not
+          publish anything we cannot trace. Where authorities differ, we say so rather than
           picking one. Nothing here recommends a treatment.
         </p>
       </aside>
-    </div>
-  </section>
 
-  <!-- Her words. Moved to the top: this is the reason anyone reads the page. -->
-  <section class="section section--sand">
-    <div class="wrap wrap--narrow gd-flare">
-      <span class="label">Start here</span>
-      <h2 class="gd-flare__title">
-        Here is what a flare actually looks like, in the founder's <span class="em">own words</span>
-      </h2>
-      <p class="gd-flare__frame">
-        Nani Rosen said this while it was happening to her. It is one woman's experience of one
-        flare, not a description of the condition and not a checklist. Everything after it is
-        sourced and cited.
+      <!-- Introduction -->
+      <p class="art__lede">
+        If you have just been told you have Graves' disease, or you are reading this because
+        someone you love has, the first thing worth knowing is that it is common, it is
+        treatable, and it is not the same thing as an overactive thyroid, even though the two
+        get used interchangeably.
       </p>
 
-      <blockquote class="gd-flare__quote">
-        {flare.lines.map((line) => <p>{line}</p>)}
-      </blockquote>
-      <p class="gd-flare__attr">{flare.attribution}</p>
-
-      <p class="gd-flare__after">
-        As Nani put it on the same call, it shows up differently in different bodies. If any of
-        this sounds like you, or like someone you know, speak to a doctor.
+      <p class="art__lede">
+        The second thing worth knowing is what it actually feels like from the inside, which is
+        the part the medical pages tend to leave out. So we are starting there.
       </p>
-    </div>
-  </section>
 
-  <!-- Contents. Six questions, so the page can be skimmed or dipped into. -->
-  <section class="section section--tight">
-    <div class="wrap">
-      <h2 class="label">What this page answers</h2>
-      <ol class="gd-toc">
-        {
-          sections.map((section) => (
-            <li>
-              <a href={`#${section.id}`}>
-                <span class="gd-toc__n">{section.number}</span>
-                <span class="gd-toc__t">{section.title}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
+      <!-- Her words, straight after the introduction -->
+      <section class="art__flare" aria-labelledby="flare-h">
+        <span class="label">Start here</span>
+        <h2 class="art__flare-title" id="flare-h">
+          Here is what a flare actually looks like, in the founder's <span class="em">own words</span>
+        </h2>
+        <p class="art__flare-frame">
+          Nani Rosen said this while it was happening to her. It is one woman's experience of one
+          flare, not a description of the condition and not a checklist. Everything after it is
+          sourced and cited.
+        </p>
 
-  <!-- Long read -->
-  {
-    sections.map((section, i) => (
-      <section class:list={['section', i % 2 === 1 && 'section--cream']} id={section.id}>
-        <div class="wrap gd-section">
-          <div class="gd-section__head">
-            <span class="gd-section__number">{section.number}</span>
-            <h2 class="gd-section__title">{section.title}</h2>
-          </div>
+        <blockquote class="art__quote">
+          {flare.lines.map((line) => <p>{line}</p>)}
+        </blockquote>
+        <p class="art__quote-attr">{flare.attribution}</p>
 
-          <div class="gd-section__body">
+        <p class="art__flare-after">
+          As Nani put it on the same call, it shows up differently in different bodies. If any of
+          this sounds like you, or like someone you know, speak to a doctor.
+        </p>
+      </section>
+
+      <!-- Contents -->
+      <nav class="art__toc" aria-labelledby="toc-h">
+        <h2 class="label" id="toc-h">In this article</h2>
+        <ol>
+          {
+            sections.map((section) => (
+              <li>
+                <a href={`#${section.id}`}>
+                  <span class="art__toc-n">{section.number}</span>
+                  <span class="art__toc-t">{section.title}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+
+      <!-- Chapters -->
+      {
+        sections.map((section, i) => (
+          <section class="art__chapter" id={section.id}>
+            <p class="art__chapter-n">Chapter {section.number}</p>
+            <h2 class="art__chapter-title">{section.title}</h2>
+
             {'intro' in section && section.intro && (
-              <p class="gd-section__intro">
+              <p class="art__intro">
                 {section.intro}
-                <cite class="gd-cite">
+                <cite class="art__cite">
                   {section.introSrc.map((s: Src, n: number) => (
                     <>
                       {n > 0 && ', '}
@@ -360,9 +354,9 @@ const sourceList = Array.from(
             )}
 
             {section.paras.map((para) => (
-              <p class="gd-para">
+              <p class="art__para">
                 {para.text}
-                <cite class="gd-cite">
+                <cite class="art__cite">
                   {para.src.map((s: Src, n: number) => (
                     <>
                       {n > 0 && ', '}
@@ -374,12 +368,12 @@ const sourceList = Array.from(
             ))}
 
             {'callout' in section && section.callout && (
-              <aside class="gd-callout">
-                <h3 class="gd-callout__title">{section.callout.title}</h3>
+              <aside class="art__callout">
+                <h3 class="art__callout-title">{section.callout.title}</h3>
                 {section.callout.paras.map((para) => (
-                  <p class="gd-para">
+                  <p class="art__para">
                     {para.text}
-                    <cite class="gd-cite">
+                    <cite class="art__cite">
                       {para.src.map((s: Src, n: number) => (
                         <>
                           {n > 0 && ', '}
@@ -391,317 +385,237 @@ const sourceList = Array.from(
                 ))}
               </aside>
             )}
-          </div>
 
-          {section.image && (
-            <figure class="gd-section__figure">
-              <Picture
-                slot={section.image}
-                alt={section.imageAlt}
-                ratio="4 / 3"
-                sizes="(min-width: 64rem) 40vw, 100vw"
-              />
-            </figure>
-          )}
-        </div>
-      </section>
-    ))
-  }
+            {/* The image sits between chapters, full column width, never beside the prose. */}
+            {section.image && i < sections.length - 1 && (
+              <figure class="art__figure">
+                <Picture
+                  slot={section.image}
+                  alt={section.imageAlt}
+                  ratio="16 / 9"
+                  sizes="(min-width: 64rem) 46rem, 100vw"
+                />
+              </figure>
+            )}
+          </section>
+        ))
+      }
 
-
-  <!-- Did you know -->
-  <section class="section" id="did-you-know">
-    <div class="wrap">
-      <header class="gd-head">
+      <!-- Did you know -->
+      <section class="art__facts" aria-labelledby="facts-h">
         <span class="label">Did you know</span>
-        <h2 class="gd-h2">Eight things worth <span class="em">knowing</span></h2>
-      </header>
+        <h2 class="art__facts-title" id="facts-h">Eight things worth <span class="em">knowing</span></h2>
+        <ol class="art__facts-list">
+          {
+            facts.map((fact) => (
+              <li>
+                <p class="art__para">
+                  {fact.text}
+                  <cite class="art__cite">
+                    <a href={fact.src.href} rel="noopener nofollow" target="_blank">{fact.src.name}</a>
+                  </cite>
+                </p>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
 
-      <ul class="gd-facts">
-        {
-          facts.map((fact, i) => (
-            <li class="gd-fact">
-              <span class="gd-fact__n">{String(i + 1).padStart(2, '0')}</span>
-              <p class="gd-fact__text">
-                {fact.text}
-                <cite class="gd-cite">
-                  <a href={fact.src.href} rel="noopener nofollow" target="_blank">{fact.src.name}</a>
-                </cite>
-              </p>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <!-- Support -->
-  <section class="section section--cream" id="support">
-    <div class="wrap">
-      <header class="gd-head">
+      <!-- Support -->
+      <section class="art__support" aria-labelledby="support-h">
         <span class="label">Go deeper</span>
-        <h2 class="gd-h2">Where to get <span class="em">support</span></h2>
-        <p class="gd-head__lede">
+        <h2 class="art__facts-title" id="support-h">Where to get <span class="em">support</span></h2>
+        <p class="art__para">
           These are independent organisations, not partners of this foundation. Details are taken
           from their own pages. We are working on partnerships so there is somewhere trustworthy
           to send people, and we will say plainly when one is confirmed.
         </p>
-      </header>
 
-      <ul class="gd-support">
-        {
-          support.map((org) => (
-            <li class="card gd-org">
-              <span class="gd-org__where">{org.where}</span>
-              <h3 class="card__title">{org.name}</h3>
-              <p>{org.body}</p>
-              <p class="gd-org__detail">{org.detail}</p>
-              {org.note && <p class="gd-org__note">{org.note}</p>}
-              <a class="gd-org__link" href={org.href} rel="noopener nofollow" target="_blank">
-                Visit {org.name}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
+        <ul class="art__orgs">
+          {
+            support.map((org) => (
+              <li class="art__org">
+                <span class="art__org-where">{org.where}</span>
+                <h3 class="art__org-name">{org.name}</h3>
+                <p>{org.body}</p>
+                <p class="art__org-detail">{org.detail}</p>
+                {org.note && <p class="art__org-note">{org.note}</p>}
+                <a class="art__org-link" href={org.href} rel="noopener nofollow" target="_blank">
+                  Visit {org.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
 
-  <!-- Sources -->
-  <section class="section section--tight" id="sources">
-    <div class="wrap">
-      <h2 class="label">Sources used on this page</h2>
-      <ul class="gd-sources">
-        {
-          sourceList.map((s) => (
-            <li>
-              <a href={s.href} rel="noopener nofollow" target="_blank">{s.name}</a>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="gd-sources__note">
-        Every source on this page was fetched and read on {byline.reviewed}. Medical guidance
-        changes, so if you are reading this long after that date, follow the links to the
-        source. Our full research notes, including the claims we chose not to publish and why,
-        are kept with the site.
+      <!-- Sources -->
+      <section class="art__sources" aria-labelledby="sources-h">
+        <h2 class="label" id="sources-h">Sources used in this article</h2>
+        <ul class="art__source-list">
+          {
+            sourceList.map((s) => (
+              <li>
+                <a href={s.href} rel="noopener nofollow" target="_blank">{s.name}</a>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="art__sources-note">
+          Every source in this article was fetched and read on {reviewed}. Medical guidance
+          changes, so if you are reading this long after that date, follow the links to the
+          source. Our full research notes, including the claims we chose not to publish and why,
+          are kept with the site.
+        </p>
+      </section>
+
+      <p class="art__footback">
+        <a href="/graves-disease"><span aria-hidden="true">&larr;</span> Back to all resources</a>
       </p>
     </div>
-  </section>
+  </article>
 
-  <section class="section">
+  <section class="section section--cream">
     <div class="wrap wrap--narrow">
       <Newsletter
-        source="graves"
-        heading="Keep up with the foundation"
-        blurb="We will write when this page is updated, and when partner organisations are confirmed."
+        source="graves-article"
+        heading="Know when the next one lands"
+        blurb="We will write when a new article is published and when partner organisations are confirmed."
       />
     </div>
   </section>
 </Base>
 
 <style>
-  /* ---------------- Hero ---------------- */
-  .gd-stage {
-    position: relative;
-    display: grid;
-    align-items: end;
-    min-height: min(62svh, 34rem);
-    isolation: isolate;
-    overflow: hidden;
+  /*
+    One column, top to bottom. Prose is capped at a readable measure and
+    centred; images break the full column width between chapters. Nothing sits
+    beside the text, because that is what squeezed the previous version into a
+    ribbon.
+  */
+  .art {
+    padding-top: var(--space-xl);
   }
 
-  .gd-stage__media {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
+  /* ---------------- Masthead ---------------- */
+  .art__back,
+  .art__footback a {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--teal-ink);
+    text-decoration: none;
+    margin-bottom: var(--space-l);
   }
 
-  .gd-stage__media :global(.pic),
-  .gd-stage__media :global(.pic img) {
-    width: 100%;
-    height: 100%;
+  .art__back:hover,
+  .art__footback a:hover {
+    color: var(--ink);
   }
 
-  .gd-stage__media :global(.pic img) {
-    aspect-ratio: auto;
-    object-fit: cover;
+  .art__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs);
+    margin: 0 0 var(--space-m);
+    padding: 0;
   }
 
-  .gd-stage__scrim {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(
-        to right,
-        color-mix(in srgb, var(--cream) 94%, transparent) 0%,
-        color-mix(in srgb, var(--cream) 80%, transparent) 40%,
-        color-mix(in srgb, var(--cream) 24%, transparent) 72%,
-        transparent 92%
-      ),
-      linear-gradient(to top, color-mix(in srgb, var(--cream) 70%, transparent) 0%, transparent 40%);
+  .art__tag {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--teal-ink);
+    background: color-mix(in srgb, var(--teal) 14%, transparent);
+    padding: 0.3em 0.7em;
+    border-radius: var(--radius-s);
   }
 
-  .gd-stage__inner {
-    padding-block: var(--space-2xl);
-  }
-
-  .gd-stage__copy {
-    max-width: 32rem;
-  }
-
-  .gd-stage__title {
+  .art__title {
     font-size: var(--step-5);
-    margin-bottom: var(--space-s);
+    line-height: 1.02;
+    margin-bottom: var(--space-m);
   }
 
-  .gd-stage__lede {
+  .art__standfirst {
     font-size: var(--step-1);
     line-height: 1.5;
-    max-width: 34ch;
+    color: var(--ink-soft);
+    margin-bottom: var(--space-m);
   }
 
-  .gd-byline {
-    margin-top: var(--space-m);
-    margin-bottom: 0;
+  .art__meta {
     font-family: var(--font-sans);
     font-size: var(--step--2);
     text-transform: uppercase;
     letter-spacing: var(--track-wide);
     color: var(--ink-soft);
+    margin: 0;
+    max-width: none;
   }
 
-  .gd-byline span {
+  .art__meta span {
     margin-inline: 0.4em;
   }
 
-  /* ---------------- Contents ---------------- */
-  .gd-toc {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0;
-    counter-reset: none;
+  .art__lead {
+    margin-block: var(--space-xl);
   }
 
-  @media (min-width: 48rem) {
-    .gd-toc {
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: var(--space-2xl);
-    }
+  .art__lead :global(.pic img) {
+    border-radius: var(--radius-m);
   }
 
-  .gd-toc a {
-    display: grid;
-    grid-template-columns: 3rem 1fr;
-    align-items: baseline;
-    gap: var(--space-s);
-    padding-block: var(--space-s);
-    border-bottom: 1px solid color-mix(in srgb, var(--sand) 70%, transparent);
-    text-decoration: none;
-    color: var(--ink);
-    transition: color var(--dur-fast) var(--ease);
+  /* ---------------- Body ---------------- */
+  .art__body {
+    padding-bottom: var(--space-2xl);
   }
 
-  .gd-toc a:hover {
-    color: var(--teal-ink);
-  }
-
-  .gd-toc__n {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: var(--step-0);
-    color: var(--gold-ink);
-  }
-
-  .gd-toc__t {
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-    line-height: 1.25;
-  }
-
-  @media (max-width: 47.999rem) {
-    .gd-stage__scrim {
-      background: linear-gradient(
-        to bottom,
-        color-mix(in srgb, var(--cream) 40%, transparent) 0%,
-        color-mix(in srgb, var(--cream) 90%, transparent) 55%,
-        var(--cream) 85%
-      );
-    }
-
-    .gd-stage {
-      min-height: min(72svh, 34rem);
-    }
-  }
-
-  /* ---------------- Notice ---------------- */
-  .gd-notice {
+  .art__notice {
     border: 1px solid var(--gold);
     border-radius: var(--radius-m);
     padding: var(--space-l);
-    background: var(--white);
-    max-width: 62ch;
+    background: var(--cream);
+    margin-bottom: var(--space-xl);
   }
 
-  .gd-notice p {
+  .art__notice p {
     margin-bottom: var(--space-s);
   }
 
-  .gd-notice p:last-child {
+  .art__notice p:last-child {
     margin-bottom: 0;
   }
 
-  .gd-notice__meta {
+  .art__notice-meta {
     font-size: var(--step--1);
     color: var(--ink-soft);
   }
 
-  /* ---------------- Long read ---------------- */
-  .gd-section {
-    display: grid;
-    gap: var(--space-l);
-    align-items: start;
+  .art__lede {
+    font-size: var(--step-1);
+    line-height: 1.6;
   }
 
-  @media (min-width: 64rem) {
-    .gd-section {
-      grid-template-columns: 17rem minmax(0, 1fr) minmax(0, 21rem);
-      gap: var(--space-xl);
-    }
-  }
-
-  .gd-section__number {
-    display: block;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: var(--step-2);
-    color: var(--gold-ink);
-    margin-bottom: var(--space-2xs);
-  }
-
-  .gd-section__title {
-    font-size: var(--step-3);
-    margin: 0;
-  }
-
-  .gd-para,
-  .gd-section__intro {
+  .art__para,
+  .art__intro {
     font-size: var(--step-0);
-    line-height: 1.7;
-    max-width: 62ch;
+    line-height: 1.75;
   }
 
-  .gd-section__intro {
+  .art__intro {
     font-style: italic;
     color: var(--ink-soft);
     border-left: 2px solid var(--gold);
     padding-left: var(--space-m);
   }
 
-  /* A citation sits on its own line, quiet, always present. */
-  .gd-cite {
+  /* A citation sits under its own paragraph, quiet and always present. */
+  .art__cite {
     display: block;
     font-style: normal;
     font-family: var(--font-sans);
@@ -711,68 +625,50 @@ const sourceList = Array.from(
     margin-top: var(--space-3xs);
   }
 
-  .gd-cite a {
+  .art__cite a {
     color: var(--ink-soft);
-    text-decoration-thickness: 1px;
     text-underline-offset: 0.2em;
   }
 
-  .gd-cite a:hover {
+  .art__cite a:hover {
     color: var(--teal-ink);
   }
 
-  .gd-callout {
-    border: 1px solid var(--sand);
-    border-left: 3px solid var(--teal);
-    border-radius: var(--radius-m);
-    background: var(--white);
-    padding: var(--space-l);
-    margin-top: var(--space-l);
-  }
-
-  .gd-callout__title {
-    font-size: var(--step-1);
-    margin-bottom: var(--space-s);
-  }
-
-  .gd-section__figure {
-    margin: 0;
-  }
-
-  .gd-section__figure :global(.pic img) {
-    border-radius: var(--radius-m);
-  }
-
   /* ---------------- Her words ---------------- */
-  .gd-flare__title {
-    font-size: var(--step-3);
+  .art__flare {
+    margin-block: var(--space-xl);
+    padding: var(--space-xl) var(--space-l);
+    background: var(--sand-tint);
+    border-radius: var(--radius-m);
+  }
+
+  .art__flare-title {
+    font-size: var(--step-2);
     margin-bottom: var(--space-m);
   }
 
-  .gd-flare__frame {
+  .art__flare-frame {
     font-size: var(--step--1);
     color: var(--ink-soft);
-    max-width: 58ch;
   }
 
-  .gd-flare__quote {
+  .art__quote {
     margin: var(--space-l) 0 var(--space-s);
     padding-left: var(--space-l);
     border-left: 2px solid var(--gold);
   }
 
-  .gd-flare__quote p {
+  .art__quote p {
     font-family: var(--font-display);
     font-size: var(--step-1);
     line-height: 1.5;
-    max-width: 52ch;
   }
 
-  .gd-flare__quote p:last-child {
+  .art__quote p:last-child {
     margin-bottom: 0;
   }
 
-  .gd-flare__attr {
+  .art__quote-attr {
     font-family: var(--font-sans);
     font-size: var(--step--2);
     text-transform: uppercase;
@@ -781,109 +677,171 @@ const sourceList = Array.from(
     padding-left: calc(var(--space-l) + 2px);
   }
 
-  .gd-flare__after {
+  .art__flare-after {
     margin-top: var(--space-l);
+    margin-bottom: 0;
     font-size: var(--step--1);
     color: var(--ink-soft);
   }
 
-  /* ---------------- Facts ---------------- */
-  .gd-head {
-    margin-bottom: var(--space-xl);
+  /* ---------------- Contents ---------------- */
+  .art__toc {
+    margin-block: var(--space-xl);
+    padding: var(--space-l);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
   }
 
-  .gd-h2 {
-    font-size: var(--step-4);
-    margin: 0 0 var(--space-s);
-  }
-
-  .gd-head__lede {
-    max-width: 60ch;
-    color: var(--ink-soft);
-  }
-
-  .gd-facts {
+  .art__toc ol {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    gap: var(--space-l);
   }
 
-  @media (min-width: 48rem) {
-    .gd-facts {
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: var(--space-2xl);
-    }
-  }
-
-  .gd-fact {
+  .art__toc a {
     display: grid;
-    grid-template-columns: 3rem 1fr;
+    grid-template-columns: 2.5rem 1fr;
+    align-items: baseline;
     gap: var(--space-s);
-    align-items: start;
-    padding-top: var(--space-m);
-    border-top: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+    padding-block: var(--space-2xs);
+    text-decoration: none;
+    color: var(--ink);
   }
 
-  .gd-fact__n {
+  .art__toc a:hover {
+    color: var(--teal-ink);
+  }
+
+  .art__toc-n {
     font-family: var(--font-display);
     font-style: italic;
-    font-size: var(--step-2);
     color: var(--gold-ink);
-    line-height: 1;
   }
 
-  .gd-fact__text {
+  .art__toc-t {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  /* ---------------- Chapters ---------------- */
+  .art__chapter {
+    margin-top: var(--space-2xl);
+    scroll-margin-top: 6rem;
+  }
+
+  .art__chapter-n {
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-widest);
+    color: var(--gold-ink);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .art__chapter-title {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-l);
+  }
+
+  .art__callout {
+    border: 1px solid var(--sand);
+    border-left: 3px solid var(--teal);
+    border-radius: var(--radius-m);
+    background: var(--cream);
+    padding: var(--space-l);
+    margin-block: var(--space-l);
+  }
+
+  .art__callout-title {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-s);
+  }
+
+  .art__figure {
+    margin: var(--space-xl) 0 0;
+  }
+
+  .art__figure :global(.pic img) {
+    border-radius: var(--radius-m);
+  }
+
+  /* ---------------- Facts ---------------- */
+  .art__facts,
+  .art__support,
+  .art__sources {
+    margin-top: var(--space-2xl);
+  }
+
+  .art__facts-title {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-l);
+  }
+
+  .art__facts-list {
     margin: 0;
-    font-size: var(--step-0);
-    line-height: 1.6;
+    padding-left: var(--space-m);
+  }
+
+  .art__facts-list li {
+    margin-bottom: var(--space-m);
+    padding-left: var(--space-2xs);
+  }
+
+  .art__facts-list li::marker {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--gold-ink);
   }
 
   /* ---------------- Support ---------------- */
-  .gd-support {
+  .art__orgs {
     list-style: none;
-    margin: 0;
+    margin: var(--space-l) 0 0;
     padding: 0;
     display: grid;
-    gap: var(--space-l);
+    gap: var(--space-m);
   }
 
-  @media (min-width: 48rem) {
-    .gd-support {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .art__org {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-m);
+    padding: var(--space-l);
   }
 
-  @media (min-width: 72rem) {
-    .gd-support {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .gd-org__where {
+  .art__org-where {
     font-family: var(--font-sans);
     font-size: var(--step--2);
     text-transform: uppercase;
     letter-spacing: var(--track-widest);
     color: var(--teal-ink);
     margin-bottom: var(--space-2xs);
-    display: block;
   }
 
-  .gd-org__detail {
+  .art__org-name {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    margin-bottom: var(--space-xs);
+  }
+
+  .art__org-detail {
     font-size: var(--step--1);
     color: var(--ink-soft);
   }
 
-  .gd-org__note {
+  .art__org-note {
     font-size: var(--step--2);
     color: var(--ink-soft);
   }
 
-  .gd-org__link {
-    margin-top: auto;
-    padding-top: var(--space-m);
+  .art__org p:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .art__org-link {
+    margin-top: var(--space-m);
     font-family: var(--font-sans);
     font-size: var(--step--2);
     text-transform: uppercase;
@@ -895,7 +853,7 @@ const sourceList = Array.from(
   }
 
   /* ---------------- Sources ---------------- */
-  .gd-sources {
+  .art__source-list {
     list-style: none;
     margin: 0 0 var(--space-m);
     padding: 0;
@@ -904,13 +862,22 @@ const sourceList = Array.from(
     gap: var(--space-2xs) var(--space-m);
   }
 
-  .gd-sources a {
+  .art__source-list a {
     font-size: var(--step--1);
   }
 
-  .gd-sources__note {
+  .art__sources-note {
     font-size: var(--step--2);
     color: var(--ink-soft);
-    max-width: 66ch;
+  }
+
+  .art__footback {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--sand);
+  }
+
+  .art__footback a {
+    margin-bottom: 0;
   }
 </style>
