@@ -52,7 +52,7 @@ const sections = [
   {
     id: 'what-it-is',
     number: '01',
-    title: "What Graves' disease is",
+    title: "What is Graves' disease?",
     image: 'graves-body',
     imageAlt: 'Soft daylight falling across a cupped hand.',
     paras: [
@@ -65,7 +65,7 @@ const sections = [
   {
     id: 'how-it-shows-up',
     number: '02',
-    title: 'How it shows up',
+    title: 'What are the effects?',
     image: 'graves-symptoms',
     imageAlt: 'An empty linen bed in late afternoon light, shutters half closed.',
     paras: [
@@ -86,7 +86,7 @@ const sections = [
   {
     id: 'who-it-affects',
     number: '03',
-    title: 'Who it affects',
+    title: 'Who does it affect?',
     image: 'graves-living',
     imageAlt: 'A figure at a window looking out onto a warm Mediterranean morning.',
     paras: [
@@ -100,7 +100,7 @@ const sections = [
   {
     id: 'getting-diagnosed',
     number: '04',
-    title: 'Getting diagnosed',
+    title: 'How is it diagnosed?',
     image: 'graves-diagnosis',
     imageAlt: 'A glass of water, a folded paper and a pen on a table in window light.',
     paras: [
@@ -113,7 +113,7 @@ const sections = [
   {
     id: 'treatment',
     number: '05',
-    title: 'What treatment looks like',
+    title: 'What does treatment look like?',
     image: null,
     imageAlt: '',
     intro: 'This section describes what exists. It is not a recommendation, and nothing here should be read as advice about your own care. Which treatment suits a person is a decision made with their doctor. Cleveland Clinic notes plainly that there is no agreement in the medical community on which treatment is best.',
@@ -129,7 +129,7 @@ const sections = [
   {
     id: 'living-with-it',
     number: '06',
-    title: 'Living with it',
+    title: 'What is it like to live with?',
     image: 'graves-support',
     imageAlt: 'Two pairs of hands resting together on cream linen.',
     paras: [
@@ -218,6 +218,17 @@ const flare = {
   attribution: 'Nani Rosen, founder of The StillHer Foundation, describing a flare while in one.',
 };
 
+/**
+ * Byline and dates. The review date is when every source on this page was
+ * fetched and read. Keep them honest: if the page is edited, move the
+ * published date; if the sources are re-checked, move the review date.
+ */
+const byline = {
+  author: 'The StillHer Foundation',
+  published: '17 September 2026',
+  reviewed: '16 September 2026',
+} as const;
+
 const sourceList = Array.from(
   new Map(Object.values(SRC).map((s) => [s.name, s])).values()
 ) as Src[];
@@ -249,6 +260,12 @@ const sourceList = Array.from(
           A guide for the people living with it, the people who love them, and the people who
           have only just heard the name.
         </p>
+
+        <p class="gd-byline">
+          By {byline.author}
+          <span aria-hidden="true">&middot;</span>
+          <time datetime="2026-09-17">{byline.published}</time>
+        </p>
       </div>
     </div>
   </section>
@@ -270,6 +287,50 @@ const sourceList = Array.from(
           picking one. Nothing here recommends a treatment.
         </p>
       </aside>
+    </div>
+  </section>
+
+  <!-- Her words. Moved to the top: this is the reason anyone reads the page. -->
+  <section class="section section--sand">
+    <div class="wrap wrap--narrow gd-flare">
+      <span class="label">Start here</span>
+      <h2 class="gd-flare__title">
+        Here is what a flare actually looks like, in the founder's <span class="em">own words</span>
+      </h2>
+      <p class="gd-flare__frame">
+        Nani Rosen said this while it was happening to her. It is one woman's experience of one
+        flare, not a description of the condition and not a checklist. Everything after it is
+        sourced and cited.
+      </p>
+
+      <blockquote class="gd-flare__quote">
+        {flare.lines.map((line) => <p>{line}</p>)}
+      </blockquote>
+      <p class="gd-flare__attr">{flare.attribution}</p>
+
+      <p class="gd-flare__after">
+        As Nani put it on the same call, it shows up differently in different bodies. If any of
+        this sounds like you, or like someone you know, speak to a doctor.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contents. Six questions, so the page can be skimmed or dipped into. -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <h2 class="label">What this page answers</h2>
+      <ol class="gd-toc">
+        {
+          sections.map((section) => (
+            <li>
+              <a href={`#${section.id}`}>
+                <span class="gd-toc__n">{section.number}</span>
+                <span class="gd-toc__t">{section.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
     </div>
   </section>
 
@@ -347,28 +408,6 @@ const sourceList = Array.from(
     ))
   }
 
-  <!-- Her words -->
-  <section class="section section--sand">
-    <div class="wrap wrap--narrow gd-flare">
-      <span class="label">In her own words</span>
-      <h2 class="gd-flare__title">What a flare actually <span class="em">looks</span> like</h2>
-      <p class="gd-flare__frame">
-        These are Nani's words about her own body, said while it was happening. They are one
-        woman's experience of one flare. They are not a description of the condition, and they
-        are not a checklist.
-      </p>
-
-      <blockquote class="gd-flare__quote">
-        {flare.lines.map((line) => <p>{line}</p>)}
-      </blockquote>
-      <p class="gd-flare__attr">{flare.attribution}</p>
-
-      <p class="gd-flare__after">
-        As Nani put it on the same call, it shows up differently in different bodies. If any of
-        this sounds like you, or like someone you know, speak to a doctor.
-      </p>
-    </div>
-  </section>
 
   <!-- Did you know -->
   <section class="section" id="did-you-know">
@@ -442,9 +481,10 @@ const sourceList = Array.from(
         }
       </ul>
       <p class="gd-sources__note">
-        Checked 16 September 2026. Medical guidance changes, so if you are reading this long
-        after that date, follow the links to the source. Our full research notes, including the
-        claims we chose not to publish and why, are kept with the site.
+        Every source on this page was fetched and read on {byline.reviewed}. Medical guidance
+        changes, so if you are reading this long after that date, follow the links to the
+        source. Our full research notes, including the claims we chose not to publish and why,
+        are kept with the site.
       </p>
     </div>
   </section>
@@ -519,6 +559,66 @@ const sourceList = Array.from(
     font-size: var(--step-1);
     line-height: 1.5;
     max-width: 34ch;
+  }
+
+  .gd-byline {
+    margin-top: var(--space-m);
+    margin-bottom: 0;
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+    color: var(--ink-soft);
+  }
+
+  .gd-byline span {
+    margin-inline: 0.4em;
+  }
+
+  /* ---------------- Contents ---------------- */
+  .gd-toc {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    counter-reset: none;
+  }
+
+  @media (min-width: 48rem) {
+    .gd-toc {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: var(--space-2xl);
+    }
+  }
+
+  .gd-toc a {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    align-items: baseline;
+    gap: var(--space-s);
+    padding-block: var(--space-s);
+    border-bottom: 1px solid color-mix(in srgb, var(--sand) 70%, transparent);
+    text-decoration: none;
+    color: var(--ink);
+    transition: color var(--dur-fast) var(--ease);
+  }
+
+  .gd-toc a:hover {
+    color: var(--teal-ink);
+  }
+
+  .gd-toc__n {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-0);
+    color: var(--gold-ink);
+  }
+
+  .gd-toc__t {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.25;
   }
 
   @media (max-width: 47.999rem) {

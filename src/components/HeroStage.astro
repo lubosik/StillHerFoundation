@@ -107,29 +107,17 @@ const { slides, footLabel } = Astro.props;
   <div class="stage__foot">
     {footLabel && <span class="stage__footlabel">{footLabel}</span>}
 
-    <div class="stage__controls">
-      <ul class="stage__dots" role="tablist" aria-label="Choose a slide">
-        {
-          slides.map((slide, i) => (
-            <li role="presentation">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={i === 0 ? 'true' : 'false'}
-                aria-controls={`hero-${slide.id}`}
-                data-dot={i}
-              >
-                <span class="visually-hidden">{slide.kicker}</span>
-              </button>
-            </li>
-          ))
-        }
-      </ul>
-
-      <button type="button" class="stage__pause" data-pause>
-        <span data-pause-label>Pause</span>
-      </button>
-    </div>
+    <!--
+      The dots and the visible pause row are gone: the hero simply swipes on
+      its own. A pause control still has to exist, because content that moves
+      by itself for more than five seconds needs a way to stop it, so this one
+      is invisible until a keyboard reaches it. Anyone tabbing through gets it;
+      nobody else ever sees it. It also pauses on hover and on focus, and under
+      prefers-reduced-motion it does not move at all.
+    -->
+    <button type="button" class="stage__pause" data-pause>
+      <span data-pause-label>Pause the slideshow</span>
+    </button>
   </div>
 </section>
 
@@ -276,7 +264,6 @@ const { slides, footLabel } = Astro.props;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-m);
     width: min(100% - (var(--gutter) * 2), var(--measure-wide));
     margin-inline: auto;
@@ -291,57 +278,43 @@ const { slides, footLabel } = Astro.props;
     color: var(--ink-soft);
   }
 
-  .stage__controls {
-    display: flex;
-    align-items: center;
-    gap: var(--space-m);
-  }
 
-  .stage__dots {
-    display: flex;
-    gap: var(--space-2xs);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
 
-  .stage__dots button {
-    width: 2.25rem;
-    height: 2rem;
-    display: grid;
-    place-items: center;
-    background: none;
-    border: 0;
-    padding: 0;
-  }
 
-  .stage__dots button::before {
-    content: '';
-    width: 100%;
-    height: 2px;
-    background: color-mix(in srgb, var(--ink-soft) 45%, transparent);
-    transition: background-color var(--dur-fast) var(--ease);
-  }
 
-  .stage__dots button[aria-selected='true']::before {
-    background: var(--teal-ink);
-  }
 
+  /* Clipped out of sight until a keyboard focuses it, then it appears. */
   .stage__pause {
-    background: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
     border: 0;
-    border-bottom: 1px solid transparent;
-    padding: 0.4rem 0.1rem;
+    background: none;
     font-family: var(--font-sans);
     font-size: var(--step--2);
     text-transform: uppercase;
     letter-spacing: var(--track-wide);
     color: var(--ink);
-    transition: border-color var(--dur-fast) var(--ease);
   }
 
-  .stage__pause:hover {
-    border-bottom-color: var(--gold-ink);
+  .stage__pause:focus-visible {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    padding: 0.4rem 0.8rem;
+    background: var(--white);
+    border: 1px solid var(--gold-ink);
+    border-radius: var(--radius-pill);
   }
 
   /* On a phone the scrim goes full width, because there is no side to clear. */
@@ -373,7 +346,6 @@ const { slides, footLabel } = Astro.props;
   if (stage) {
     const layers = Array.from(stage.querySelectorAll<HTMLElement>('[data-layer]'));
     const panels = Array.from(stage.querySelectorAll<HTMLElement>('[data-panel]'));
-    const dots = Array.from(stage.querySelectorAll<HTMLButtonElement>('[data-dot]'));
     const pauseBtn = stage.querySelector<HTMLButtonElement>('[data-pause]');
     const pauseLabel = stage.querySelector<HTMLElement>('[data-pause-label]');
 
@@ -405,8 +377,6 @@ const { slides, footLabel } = Astro.props;
           else a.setAttribute('tabindex', '-1');
         });
       });
-
-      dots.forEach((dot, i) => dot.setAttribute('aria-selected', i === index ? 'true' : 'false'));
     }
 
     function start() {
@@ -429,12 +399,6 @@ const { slides, footLabel } = Astro.props;
       else start();
     }
 
-    dots.forEach((dot, i) =>
-      dot.addEventListener('click', () => {
-        show(i);
-        if (!paused) start();
-      })
-    );
 
     pauseBtn?.addEventListener('click', () => setPaused(!paused));
 
